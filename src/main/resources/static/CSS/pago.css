@@ -1,0 +1,159 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    background-color: #002B49;
+    color: white;
+    padding: 10px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box; 
+}
+
+.logo {
+    flex-shrink: 0; 
+}
+
+.logo img {
+    width: 66px;
+    height: auto;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 20px;
+    flex-grow: 1; 
+    justify-content: flex-end; 
+}
+
+.nav-menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    line-height: 50px;
+    white-space: nowrap; 
+    font-weight: bold;
+}
+
+.nav-menu a:hover {
+    text-decoration: underline;
+}
+
+.payment-container {
+    margin-top: 120px; 
+    width: 90%;
+    max-width: 900px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-left: auto;
+    margin-right: auto;
+    flex: 1; 
+}
+
+.payment-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.payment-info {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.payment-details,
+.payment-method {
+    width: 48%;
+    box-sizing: border-box; 
+}
+
+.payment-method {
+    text-align: center;
+}
+
+.payment-method button {
+    background-color: #e9f3fa;
+    border: none;
+    border-radius: 8px;
+    margin: 5px 0;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.payment-method button img {
+    width: auto;
+    height: 100px; 
+    display: block;
+    margin: 0 auto;
+    max-width: 80%; 
+}
+
+.payment-method button:hover {
+    background-color: #d1e7f6;
+}
+
+.hidden {
+    display: none;
+}
+
+.payment-details form label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.payment-details form input {
+    width: calc(100% - 20px);
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+footer {
+    background-color: #002B49;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+}
+
+.informacion-pago {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-pagar {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: block;
+    margin: 20px auto 0;
+}
+
+.btn-pagar:hover {
+    background-color: #0056b3;
+}

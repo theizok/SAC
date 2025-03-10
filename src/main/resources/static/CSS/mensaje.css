@@ -1,0 +1,154 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9fafc;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #1e3c5a;
+    color: white;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+header img {
+    margin-left: 20px;
+    max-height: 80px;
+    width: auto;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.messages-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.message-box {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    width: 30%;
+}
+
+.message-box ul li a {
+    display: block;
+    text-align: center;
+    background-color: #1e3c5a;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.message-box ul li a:hover {
+    background-color: #14406b;
+}
+
+
+.message-box h2 {
+    background-color: #333;
+    color: white;
+    padding: 15px;
+    border-radius: 10px 10px 0 0;
+    margin: -20px -20px 20px -20px;
+    text-align: center;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4a6a8c;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    color: white;
+}
+
+#filter-button {
+    background-color: #5a82a6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.message-box ul {
+    list-style: none;
+    padding: 0;
+}
+
+.message-box ul li {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+}
+
+.message-box ul li:hover {
+    background-color: #ececec;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin-bottom: 5px;
+}
+
+form input, form textarea {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    padding: 10px;
+    background-color: #1e3c5a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    background-color: #1e3c5a;
+    color: white;
+    padding: 15px 0;
+    border-radius: 0 0 10px 10px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
