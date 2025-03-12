@@ -15,7 +15,6 @@ public class Apartamento {
     private long numeroApartamento;
     @Column(name="idresidente")
     private long idResidente;
-    /*
-    @Column(name="idPropietario")
-    private long idPropietario;*/
+    @Column(name="idpropietario")
+    private long idPropietario;
 }

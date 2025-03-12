@@ -15,9 +15,12 @@ public class Administrador {
     private Long idAdministrador;
     @Column(name = "nombre")
     private String nombreAdministrador;
-    /*private String correoAdministrador;/*
-    /*
-    private String contraseñaAdministrador;*/
+    @Column (name = "correo")
+    private String correoAdministrador;
+    @Column (name = "contraseña")
+    private String contraseñaAdministrador;
+    @Column (name = "telefono")
+    private String telefono;
     @Column(name ="idcuenta")
     private long idCuenta;
     @Column(name="idrol")

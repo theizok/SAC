@@ -13,11 +13,18 @@ public class ResidenteService {
     @Autowired
     private ResidenteRepository residenteRepository;
 
-    public Residente crear(Residente residente) {return residenteRepository.save(residente);}
-
+    public Residente crearResidente(Residente residente) {return residenteRepository.save(residente);}
 
     public List<Residente> obtenerTodos() {
         return residenteRepository.findAll();
     }
+
+    public Residente actualizarResidente(Residente residente) {return residenteRepository.save(residente);}
+
+    public List<Residente> obtenerResidentePorDocumento(String documento) {
+        return residenteRepository.findByDocumento(documento);
+    }
+
+    public void eliminarResidente(Residente residente) {}
 
 }

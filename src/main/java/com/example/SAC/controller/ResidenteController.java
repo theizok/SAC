@@ -18,4 +18,12 @@ public class ResidenteController {
     public List<Residente> obtenerResidentes() {
         return residenteService.obtenerTodos();
     }
+
+    @PostMapping("/")
+    public Residente guardarResidente(@RequestBody Residente residente) {
+        return residenteService.crearResidente(residente);
+    }
+
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.SAC.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Null;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
@@ -16,7 +17,12 @@ public class Residente {
     private String nombre;
     @Column(name="edad")
     private int edad;
-    /*private String correo;*/
+    @Column (name = "correo")
+    private String correo;
+    @Column (name = "contraseña")
+    private String contraseña;
+    @Column (name = "telefono")
+    private String telefono;
     @Column(name="documento")
     private String documento;
     @Column(name="idcuenta")
@@ -25,6 +31,4 @@ public class Residente {
     private long idrol;
     @Column(name="idapartamento")
     private long idapartamento;
-
-
 }
