@@ -9,8 +9,13 @@ import lombok.Data;
 public class Apartamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="idapartamento")
     private long idApartamento;
-    private String numeroApartamento;
-    private int idResidente;
-    private int idPropietario;
+    @Column(name="numeroapartamento")
+    private long numeroApartamento;
+    @Column(name="idresidente")
+    private long idResidente;
+    /*
+    @Column(name="idPropietario")
+    private long idPropietario;*/
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -11,9 +12,15 @@ import java.sql.Date;
 public class Publicacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="idpublicacion")
     private long idPublicacion;
-    private Date fechaPublicacion;
+    @Column(name="fecha")
+    private LocalDateTime fechaPublicacion;
+    @Column(name="contenido")
     private String contenidoPublicacion;
-    private int idAdministrador;
+    @Column(name="idadministrador")
+    private long idAdministrador;
+    @Column(name="idresidente")
+    private long idResidente;
 
 }

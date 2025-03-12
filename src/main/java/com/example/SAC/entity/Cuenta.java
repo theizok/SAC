@@ -9,6 +9,8 @@ import lombok.Data;
 public class Cuenta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="idcuenta")
     private long idCuenta;
+    @Column(name="numerodecuenta")
     private String numeroDeCuenta;
 }

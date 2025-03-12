@@ -9,11 +9,13 @@ import lombok.Data;
 public class Propietario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="idpropietario")
     private long idPropietario;
+    @Column(name="nombre")
     private String nombrePropietario;
-    private String apellidoPropietario;
-    private String correoPropietario;
-    private String telefonoPropietario;
+    @Column(name="documento")
     private String documentoPropietario;
-    private String contraseñaPropietario;
+    /*private String correoPropietario;
+    private String telefonoPropietario;
+    private String contraseñaPropietario;*/
 }

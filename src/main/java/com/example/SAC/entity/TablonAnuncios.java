@@ -9,6 +9,8 @@ import lombok.Data;
 public class TablonAnuncios {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="idtablonanuncios")
     private long idtablonAnuncios;
+    @Column(name="idpublicacion")
     private int idPublicacion;
 }
