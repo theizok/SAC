@@ -1,0 +1,202 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header ajustado */
+header {
+    background-color: #002B45;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px; /* Padding similar al anterior */
+}
+
+/* Logo más grande */
+.logo-container img {
+    height: 80px; /* Tamaño del logo aumentado */
+}
+
+/* Nav con letras en negrita */
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    align-items: center; /* Centrado vertical */
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold; /* Letras en negrita */
+    font-size: 16px; /* Tamaño de letra un poco más grande */
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Main sin cambios */
+main {
+    padding: 30px 0;
+    margin: 0;
+    flex: 1;
+}
+
+.publicaciones {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.publicaciones h2 {
+    text-align: left;
+    color: #000;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.botones {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.btn {
+    background-color: #5d89a8;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.btn:hover {
+    background-color: #4a7090;
+}
+
+/* Dropdown para filtro */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 13px;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+#contenedor-publicaciones {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.publicacion {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 0;
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+}
+
+.publicacion-header {
+    background-color: #5d89a8;
+    color: white;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.publicacion-header h3 {
+    font-weight: normal;
+    font-size: 15px;
+    margin: 0;
+}
+
+.btn-eliminar {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.btn-eliminar:hover {
+    color: #ff9999;
+}
+
+.publicacion-body {
+    padding: 15px;
+}
+
+.publicacion-body p {
+    margin: 10px 0;
+    color: #333;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.publicacion-body p:first-child {
+    color: #666;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.fecha {
+    text-align: right;
+}
+
+/* Footer ajustado y pulido */
+footer {
+    background-color: #002B45;
+    color: white;
+    text-align: center;
+    padding: 20px; /* Más padding para mayor altura */
+    margin-top: auto;
+    font-size: 16px; /* Tamaño de letra más grande */
+    height: 80px; /* Altura aumentada */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centrado vertical */
+    border-top: 2px solid rgba(255, 255, 255, 0.1); /* Borde superior sutil */
+}

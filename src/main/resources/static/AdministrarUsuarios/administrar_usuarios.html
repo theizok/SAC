@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - Aplicativo Residencial</title>
+    <link rel="stylesheet" href="administrar_usuarios.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../Inicio/image.png" alt="Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../Inicio/Index.html">Inicio</a></li>
+                <li><a href="../Mensaje/mensaje.html">Mensajes</a></li>
+                <li><a href="../Pago/pago.html">Pagos</a></li>
+                <li><a href="../Contacto/contacto.html">Contacto</a></li>
+                <li><a href="../TablonAnuncios/tablon_anuncios.html">Tablón de anuncios</a></li>
+                <li><a href="administrar_usuarios.html">Gestión de Usuarios</a></li>
+                <li><a href="../AdminPagos/admin_pagos.html" class="active">Administrar Pagos</a></li>
+                <li><a href="../Perfil/perfil.html">Perfil</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Gestión de Usuarios</h1>
+            <button id="btn-agregar-usuario" class="btn">Agregar Usuario</button>
+
+            <div class="tabla-container">
+                <table id="tabla-usuarios">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Documento</th>
+                            <th>Correo</th>
+                            <th>Celular</th>
+                            <th>Apartamento</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los usuarios se cargarán dinámicamente desde JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Modal de Edición -->
+    <div id="modal-editar" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar">&times;</span>
+            <h2>Editar Usuario</h2>
+            <form id="form-editar-usuario">
+                <input type="text" id="editar-nombre" placeholder="Nombre" required>
+                <input type="text" id="editar-documento" placeholder="Documento" required>
+                <input type="email" id="editar-correo" placeholder="Correo" required>
+                <input type="text" id="editar-celular" placeholder="Celular" required>
+                <input type="text" id="editar-apartamento" placeholder="Apartamento" required>
+                <input type="text" id="editar-rol" placeholder="Rol" required>
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="administrar_u.js"></script>
+</body>
+</html>

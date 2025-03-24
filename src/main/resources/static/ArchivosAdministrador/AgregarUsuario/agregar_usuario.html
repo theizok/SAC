@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Usuario - Aplicativo Residencial</title>
+    <link rel="stylesheet" href="agregar_usuarios.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../Inicio/image.png" alt="Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="../Mensaje/mensaje.html">Mensajes</a></li>
+                <li><a href="../Pago/pago.html">Pagos</a></li>
+                <li><a href="../Contacto/contacto.html">Contacto</a></li>
+                <li><a href="../TablonAnuncios/tablon_anuncios.html">Tablón de anuncios</a></li>
+                <li><a href="../Perfil/perfil.html">Perfil</a></li>
+                <li><a href="../AdministrarUsuarios/administrar_usuarios.html">Gestión de Usuarios</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Agregar Usuario</h1>
+            <form id="form-agregar-usuario">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="documento">Documento</label>
+                    <input type="text" id="documento" required>
+                </div>
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico</label>
+                    <input type="email" id="correo" required>
+                </div>
+                <div class="form-group">
+                    <label for="celular">Celular</label>
+                    <input type="text" id="celular" required>
+                </div>
+                <div class="form-group">
+                    <label for="apartamento">Apartamento</label>
+                    <input type="text" id="apartamento" required>
+                </div>
+                <div class="form-group">
+                    <label for="rol">Rol</label>
+                    <select id="rol" required>
+                        <option value="residente">Residente</option>
+                        <option value="propietario">Propietario</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="contrasena">Contraseña</label>
+                    <input type="password" id="contrasena" required>
+                </div>
+                <button type="submit" class="btn">Agregar Usuario</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="agregaru.js"></script>
+</body>
+</html>

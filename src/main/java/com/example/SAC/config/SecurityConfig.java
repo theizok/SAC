@@ -1,33 +1,94 @@
-/*package com.example.SAC.config;
+package com.example.SAC.config;
 
+import com.example.SAC.service.CustomUserDetailsService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(csrf -> csrf.disable()) // Desactivar CSRF si usas JWT
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Sin sesiones (JWT)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login").permitAll() // Permitir acceso a login
-                        .anyRequest().authenticated() // Todas las demás rutas requieren autenticación
+   @Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/api/register/residente","api/register/propietario").permitAll();
+                    auth.requestMatchers("/noAuth/**", "/Login/**","/Login/1.jpg").permitAll();
+                    auth.requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll();
+                    auth.requestMatchers("/api/residente/**").hasAuthority("RESIDENTE");
+                    auth.requestMatchers("/api/propietario/**").hasAuthority("PROPIETARIO");
+                    auth.requestMatchers("/api/administrador/**").hasAuthority("ADMINISTRADOR");
+                 auth.anyRequest().authenticated();
+                })
+                .csrf(csrf -> csrf.disable())
+                .formLogin(form -> form.disable())//Se deshabilita el form login de spring
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(session -> session
+                        .sessionFixation().migrateSession()
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                        .invalidSessionUrl("/noAuth/Login")
+                        .maximumSessions(1)
+                        .expiredUrl("/noAuth/Login")
                 )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("{\"error\": \"No autorizado\"}");
+                        })
+                        )
+                .addFilterBefore(new RequestLoggingFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig,
+                                                       CustomUserDetailsService customUserDetailsService,
+                                                       PasswordEncoder passwordEncoder) throws Exception {
+       //Comparacion de contraseña ingresada con la base de datos
+       DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+       daoAuthenticationProvider.setUserDetailsService(customUserDetailsService);
+       daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+
+       return authConfig.getAuthenticationManager();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+
+       return new BCryptPasswordEncoder();
     }
+
+    public class RequestLoggingFilter extends OncePerRequestFilter {
+        @Override
+        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+            System.out.println("Solicitud recibida: " + request.getMethod() + " " + request.getRequestURI());
+            filterChain.doFilter(request, response);
+        }
+    }
+
 }
-*/

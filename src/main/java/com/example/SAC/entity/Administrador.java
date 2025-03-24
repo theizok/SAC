@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Null;
 import lombok.Data;
 
 
-@Data
+    @Data
     @Entity
     @Table(name="administrador")
 public class Administrador {
@@ -16,14 +16,23 @@ public class Administrador {
     @Column(name = "nombre")
     private String nombreAdministrador;
     @Column (name = "correo")
-    private String correoAdministrador;
+    private String correo;
     @Column (name = "contraseña")
-    private String contraseñaAdministrador;
+    private String contraseña;
     @Column (name = "telefono")
     private String telefono;
     @Column(name ="idcuenta")
     private long idCuenta;
     @Column(name="idrol")
     private long idRol;
+
+    //Getters
+        public String getCorreo() {
+            return correo;
+        }
+
+        public String getContraseña(){
+            return contraseña;
+        }
 
 }

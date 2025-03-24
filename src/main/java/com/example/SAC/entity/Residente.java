@@ -31,4 +31,47 @@ public class Residente {
     private long idrol;
     @Column(name="idapartamento")
     private long idapartamento;
+
+
+
+    public Residente(String nombre, String contraseña, int edad, String correo, String telefono, String documento, long idcuenta, long idrol, long idapartamento) {
+        this.nombre = nombre;
+        this.contraseña = contraseña;
+        this.edad = edad;
+        this.correo = correo;
+        this.telefono = telefono;
+        this.documento = documento;
+        this.idcuenta = idcuenta;
+        this.idrol = idrol;
+        this.idapartamento = idapartamento;
+    }
+
+    public Residente() {
+
+    }
+
+
+    //Getters
+    //Get Correo
+
+    public String getCorreo() {
+        return correo;
+    }
+    //Get Contraseña
+    public String getContraseña(){
+        return contraseña;
+    }
+
+    //Setters
+
+    //Set correo
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    //Set contraseña
+    public void setContraseña(){
+        this.contraseña = contraseña;
+    }
+
 }

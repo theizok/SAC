@@ -16,11 +16,14 @@ public class Propietario {
     @Column(name="documento")
     private String documentoPropietario;
     @Column (name = "correo")
-    private String correoPropietario;
+    private String correo;
     @Column (name = "telefono")
     private String telefonoPropietario;
     @Column (name = "contraseña")
-    private String contraseñaPropietario;
+    private String contraseña;
     @Column (name = "idapartamento")
     private long idApartamentoPropietario;
+
+
+
 }
