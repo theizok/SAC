@@ -12,12 +12,31 @@ public class ApartamentoService {
     @Autowired
     private ApartamentoRepository apartamentoRepository;
 
-    public List<Apartamento> buscarApartamentos() {
+    public List<Apartamento> mostrarApartamentos() {
         return apartamentoRepository.findAll();
     }
 
+
+    //Obtener Apartamentos
+    public List<Apartamento> obtenerApartamentos(){
+        return apartamentoRepository.findAll();
+    }
+
+    //Agregar apartamento
     public Apartamento agregarApartamento(Apartamento apartamento) {
         return apartamentoRepository.save(apartamento);
     }
+
+    //Editar apartamento
+    public Apartamento editarApartamento(Apartamento apartamento) {
+        return apartamentoRepository.save(apartamento);
+    }
+
+    //Eliminar apartamento
+    public void eLiminarApartamento(long id) {
+        apartamentoRepository.deleteById(id);
+    }
+
+    //
 
 }

@@ -6,4 +6,6 @@ import com.example.SAC.entity.Apartamento;
 
 @Repository
 public interface ApartamentoRepository extends JpaRepository<Apartamento, Long> {
+
+
 }

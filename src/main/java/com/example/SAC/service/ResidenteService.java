@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ResidenteService {
@@ -17,31 +18,31 @@ public class ResidenteService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    //Crear residente
     public Residente crearResidente(Residente residente) {
         residente.setContraseña(passwordEncoder.encode(residente.getContraseña()));//Encriptar la contraseña antes de ingresarla en la base de datos
         return residenteRepository.save(residente);}
 
-
-    public void actualizarContraseñas() {
-        List<Residente> residentes = residenteRepository.findAll();
-        for (Residente residente : residentes) {
-            if (!residente.getContraseña().startsWith("$2a$")) { // Si no está encriptada
-                residente.setContraseña(passwordEncoder.encode(residente.getContraseña()));
-                residenteRepository.save(residente);
-            }
-        }
-    }
-
+    //Obtener residentes
     public List<Residente> obtenerTodos() {
         return residenteRepository.findAll();
     }
 
-    public Residente actualizarResidente(Residente residente) {return residenteRepository.save(residente);}
-
-    public List<Residente> obtenerResidentePorDocumento(String documento) {
-        return residenteRepository.findByDocumento(documento);
+    //Obtener residente por nombre
+    public Residente obtenerResidentePorNombre(String nombre) {
+        return residenteRepository.getByNombre(nombre);
     }
 
-    public void eliminarResidente(Residente residente) {}
+    //Obtener residente por id para obtener datos para actualizar
+    public Residente actualizarResidente(Residente residente) {return residenteRepository.save(residente);}
 
+    //Eliminar residente por id
+    public void eliminarResidentePorId(long Id) {
+        residenteRepository.deleteById(Id);
+    }
+
+    //Obtener por id
+    public Optional<Residente> obtenerPorId(long id) {
+        return residenteRepository.findById(id);
+    }
 }

@@ -15,4 +15,6 @@ public interface ResidenteRepository extends JpaRepository<Residente, Long> {
     List<Residente> findByNombre(String nombre);
     Optional<Residente> findByCorreo(String correo);
     List<Residente> findByDocumento(String documento);
+
+    Residente getByNombre(String nombre);
 }

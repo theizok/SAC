@@ -1,12 +1,15 @@
 package com.example.SAC.controller;
 
+import com.example.SAC.entity.Publicacion;
 import com.example.SAC.entity.Residente;
+import com.example.SAC.service.PublicacionService;
 import com.example.SAC.service.ResidenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/residente")
@@ -15,25 +18,38 @@ public class ResidenteController {
     @Autowired
     private ResidenteService residenteService;
 
-    @GetMapping
-    public List<Residente> obtenerResidentes() {
-        return residenteService.obtenerTodos();
+    @Autowired
+    private PublicacionService publicacionService;
+
+    //Obtener residente por id
+    @GetMapping("/obtenerPorId")
+    public Optional<Residente> obtenerResidentePorId(long id){
+        return residenteService.obtenerPorId(id);
     }
 
-    @GetMapping("/actualizar")
-    public void actualizarContraseñas(){
-        residenteService.actualizarContraseñas();
+    //Se <actualiza wl residente
+    @PutMapping("/actualizar")
+    public Residente actualizarResidente(@RequestBody Residente residente) {
+        return residenteService.actualizarResidente(residente);
     }
 
-    @PostMapping("/crear")
-    public Residente guardarResidente(@RequestBody Residente residente) {
-        return residenteService.crearResidente(residente);
+    //Se elimina residente por id
+    @DeleteMapping("eliminar")
+    public void eliminarResidente(@RequestParam Long id) {
+        residenteService.eliminarResidentePorId(id);
     }
 
-    //Vistas
-    @GetMapping("/dashboard")
-    public RedirectView dashboard() {
-        return new RedirectView("http://localhost:8080/Inicio/Inicio.html");
+    //Obtener todas las publicaciones
+    @GetMapping("/ObtenerPublicacion")
+    public List<Publicacion> getPublicacion() {
+        return publicacionService.obtenerPublicaciones();
+    }
+
+
+    //Crear Publicacion
+    @PostMapping("/crearPublicacion")
+    public Publicacion agregarPublicacion(@RequestBody Publicacion publicacion){
+        return publicacionService.crearPublicacion(publicacion);
     }
 
 }
