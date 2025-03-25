@@ -12,7 +12,7 @@ public class Propietario {
     @Column(name="idpropietario")
     private long idPropietario;
     @Column(name="nombre")
-    private String nombrePropietario;
+    private String nombre;
     @Column(name="documento")
     private String documentoPropietario;
     @Column (name = "correo")
