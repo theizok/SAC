@@ -10,6 +10,11 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequestMapping("/noAuth/")
 public class VistaController {
 
+    @GetMapping("Register")
+    public RedirectView register() {
+        return new RedirectView("/Registro/Registro.html");
+    }
+
     @GetMapping("Login")
     public RedirectView Login(){
         return new RedirectView("/Login/Index.html");

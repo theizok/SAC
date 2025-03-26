@@ -28,13 +28,18 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
         
         const data = await respuesta.json();
-        const role = data.userType; //Obtener rol
+        const role = data.userType;
+        sessionStorage.setItem("userType", data.userType) //Almacenar tipo de usuario en navegador mientras la pestaña este abierta
+        sessionStorage.setItem("id", data.id)//Almacenar id en navegador
+
+
+        
 
         //Redireccion segun rol
         if (role === "ADMINISTRADOR") {
             window.location.href = "http://localhost:8080/api/admin/dashboard";
         }else if (role === "RESIDENTE") {
-            window.location.href = "../Inicio/Index.html"
+            window.location.href = "/Inicio/Index.html"
         }else if (role === "PROPIETARIO") {
             window.location.href = "http://localhost:8080/api/propietario/dashboard"
         } else {

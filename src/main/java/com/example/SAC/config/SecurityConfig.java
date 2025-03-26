@@ -1,6 +1,6 @@
 package com.example.SAC.config;
 
-import com.example.SAC.service.CustomUserDetailsService;
+import com.example.SAC.service.CustomUserDetails.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -19,8 +18,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -35,7 +32,7 @@ public class SecurityConfig {
         return httpSecurity
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/register/residente","api/register/propietario").permitAll();
-                    auth.requestMatchers("/noAuth/**", "/Login/**","/Login/1.jpg").permitAll();
+                    auth.requestMatchers("/noAuth/**", "/Login/**","/Login/1.jpg", "/InicioNoAuth/**","/", "/noAuth/Register","/Registro/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll();
                     auth.requestMatchers("/api/residente/**").hasAuthority("RESIDENTE");
                     auth.requestMatchers("/api/propietario/**").hasAuthority("PROPIETARIO");
@@ -48,7 +45,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionFixation().migrateSession()
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                        .invalidSessionUrl("/noAuth/Login")
+                        .invalidSessionUrl("/")
                         .maximumSessions(1)
                         .expiredUrl("/noAuth/Login")
                 )

@@ -1,6 +1,7 @@
 package com.example.SAC.controller;
 
 import com.example.SAC.entity.LoginRequest;
+import com.example.SAC.service.CustomUserDetails.CustomUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -69,6 +70,10 @@ public class AuthController {
             HttpSession session = request.getSession(true);
             session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
 
+            //Obtener usuario autenticado
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            Long userId = userDetails.getId();
+
             //Obtener rol del usuario para responder con tipo de usuario
             String userRole = authentication.getAuthorities().stream()
                     .findFirst()
@@ -82,6 +87,7 @@ public class AuthController {
             response.put("message", "Autenticacion exitosa");
             response.put("userType", userType);
             response.put("sessionId", session.getId());
+            response.put("id", userId);
 
             return ResponseEntity.ok(response);
 

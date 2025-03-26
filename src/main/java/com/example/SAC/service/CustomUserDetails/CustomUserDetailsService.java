@@ -1,4 +1,4 @@
-package com.example.SAC.service;
+package com.example.SAC.service.CustomUserDetails;
 
 import com.example.SAC.entity.Administrador;
 import com.example.SAC.entity.Propietario;
@@ -58,37 +58,41 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     //Metodo para contruir UserDetails
     private UserDetails buildUserDetails(Object usuario, String tipo) {
-        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(tipo));
 
         String correo = "";
         String contraseña = "";
+        long id = 0;
+
+        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(tipo));
+
 
         if (usuario instanceof Residente) {
             Residente residente = (Residente) usuario;
             correo = residente.getCorreo();
             contraseña = residente.getContraseña();
+            id = residente.getIdresidente();
         }else if (usuario instanceof Propietario) {
             Propietario propietario = (Propietario) usuario;
             correo = propietario.getCorreo();
             contraseña = propietario.getContraseña();
+            id = propietario.getIdPropietario();
         }else if( usuario instanceof Administrador) {
             Administrador administrador = (Administrador) usuario;
             correo = administrador.getCorreo();
             contraseña = administrador.getContraseña();
+            id = administrador.getIdAdministrador();
         }
 
         System.out.println("Rol:" + tipo);
         System.out.println("Correo recibido: " + correo);
         System.out.println("Contraseña en BD: " + contraseña);
+        System.out.println("Id usuario: " + id );
 
 
-        return new User(
+        return new CustomUserDetails(
+                id,
                 correo,
                 contraseña,
-                true,
-                true,
-                true,
-                true,
                 authorities
         );
 

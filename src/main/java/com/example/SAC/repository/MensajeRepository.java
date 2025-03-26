@@ -6,4 +6,5 @@ import com.example.SAC.entity.Mensaje;
 
 @Repository
 public interface MensajeRepository extends JpaRepository<Mensaje, Long> {
+    Mensaje findByIdResidente(long idResidente);
 }

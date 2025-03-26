@@ -1,14 +1,18 @@
 package com.example.SAC.controller;
 
+import com.example.SAC.dto.PasswordRequest;
 import com.example.SAC.entity.Publicacion;
 import com.example.SAC.entity.Residente;
 import com.example.SAC.service.PublicacionService;
 import com.example.SAC.service.ResidenteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -23,14 +27,25 @@ public class ResidenteController {
 
     //Obtener residente por id
     @GetMapping("/obtenerPorId")
-    public Optional<Residente> obtenerResidentePorId(long id){
+    public Optional<Residente> obtenerResidentePorId(@RequestParam long id){
         return residenteService.obtenerPorId(id);
     }
 
     //Se <actualiza wl residente
     @PutMapping("/actualizar")
-    public Residente actualizarResidente(@RequestBody Residente residente) {
-        return residenteService.actualizarResidente(residente);
+    public Residente actualizarResidente(@RequestParam long id, @RequestBody Residente residente) {
+        return residenteService.actualizarResidente(id, residente);
+    }
+
+    //Cambiar contraseña
+    @PutMapping("/cambiarContraseña")
+    public ResponseEntity<?> cambiarContraseña(@RequestBody PasswordRequest request) {
+        try {
+            residenteService.cambiarContraseña(request.getIdUsuario(), request.getPasswordActual(), request.getPasswordNueva());
+            return ResponseEntity.ok(Map.of("message", "Contraseña actualizada correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
     }
 
     //Se elimina residente por id

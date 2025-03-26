@@ -7,6 +7,8 @@ import com.example.SAC.service.PublicacionService;
 import com.example.SAC.service.ResidenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -94,4 +96,11 @@ public class AdministradorController {
     public Publicacion agregarPublicacion(@RequestBody Publicacion publicacion){
         return publicacionService.crearPublicacion(publicacion);
     }
+
+    //Vistas del administrador
+    @GetMapping("/dashboard")
+    public RedirectView dashboard(){
+        return new RedirectView("/ArchivosAdministrador/Inicio/Index.html");
+    }
+
 }

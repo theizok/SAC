@@ -5,8 +5,8 @@ document.getElementById('registro-form').addEventListener('submit', function(e) 
     const apellido = document.getElementById('apellido').value;
     const documento = document.getElementById('documento').value;
     const telefono = document.getElementById('telefono').value;
-    const correo = document.getElementById('email').value; // Campo correo
-    const password = document.getElementById('password').value;
+    const correo = document.getElementById('correo').value; // Campo correo
+    const password = document.getElementById('contraseña').value;
     const apartamento = document.getElementById('apartamento').value;
     const rol = document.getElementById('rol').value;
 
@@ -19,6 +19,9 @@ document.getElementById('registro-form').addEventListener('submit', function(e) 
         alert('El correo electrónico ya está registrado.');
         return;
     }
+
+
+
 
     // Crear nuevo usuario con todos los campos
     const nuevoUsuario = {
