@@ -2,7 +2,7 @@
     const btnCrear = document.getElementById('btn-crear');
     if (btnCrear) {
         btnCrear.addEventListener('click', function() {
-            window.location.href = 'crear_publi.html';
+            window.location.href = '/api/tablon/crearPublicacion';
         });
     }
     
@@ -16,7 +16,7 @@
         });
     });
 
-    // Función para cargar publicaciones desde localStorage
+
     function cargarPublicaciones() {
         const publicaciones = JSON.parse(localStorage.getItem('publicaciones')) || [];
         const contenedorPublicaciones = document.getElementById('contenedor-publicaciones');
@@ -38,83 +38,51 @@
         });
     }
     
-    // Función para crear la publicación de ejemplo
-    function crearPublicacionEjemplo() {
-        const divPublicacion = document.createElement('div');
-        divPublicacion.className = 'publicacion';
-        divPublicacion.setAttribute('data-id', 'ejemplo');
-        
-        divPublicacion.innerHTML = `
-            <div class="publicacion-header">
-                <h3>Corte de agua en el edificio</h3>
-                <button class="btn-eliminar" title="Eliminar publicación">×</button>
-            </div>
-            <div class="publicacion-body">
-                <p><strong>Por:</strong> Administrador <span class="fecha"><strong>Fecha:</strong> 2024-08-26</span></p>
-                <p>Se le informa a los residentes de Miraflores que el día 30 de agosto del 2024 se realizará mantenimiento al alcantarillado del edificio, por ende, se cortará el agua de 12 p.m. a 6 p.m. del mismo día. Muchas gracias.</p>
-            </div>
-        `;
-        
-        // Agregar evento para el botón eliminar
-        const btnEliminar = divPublicacion.querySelector('.btn-eliminar');
-        btnEliminar.addEventListener('click', function() {
-            if (confirm('¿Estás seguro de eliminar esta publicación?')) {
-                divPublicacion.remove();
-            }
-        });
-        
-        return divPublicacion;
-    }
-    
-    // Función para crear elemento HTML de una publicación
-    function crearElementoPublicacion(publicacion) {
-        // Formatear la fecha para mostrarla en el formato adecuado
-        const fechaRaw = publicacion.fecha;
-        const fechaFormateada = formatearFecha(fechaRaw);
-        
-        // Crear elemento de publicación
-        const divPublicacion = document.createElement('div');
-        divPublicacion.className = 'publicacion';
-        divPublicacion.setAttribute('data-id', publicacion.id);
-        divPublicacion.setAttribute('data-fecha', fechaRaw);
-        divPublicacion.setAttribute('data-autor', publicacion.autor);
-        
-        // Crear HTML interno
-        divPublicacion.innerHTML = `
-            <div class="publicacion-header">
-                <h3>${publicacion.titulo}</h3>
-                <button class="btn-eliminar" title="Eliminar publicación">×</button>
-            </div>
-            <div class="publicacion-body">
-                <p><strong>Por:</strong> ${publicacion.autor} <span class="fecha"><strong>Fecha:</strong> ${fechaFormateada}</span></p>
-                <p>${publicacion.contenido}</p>
-            </div>
-        `;
-        
-        // Agregar evento para el botón eliminar
-        const btnEliminar = divPublicacion.querySelector('.btn-eliminar');
-        btnEliminar.addEventListener('click', function() {
-            eliminarPublicacion(publicacion.id);
-        });
-        
-        return divPublicacion;
-    }
-    
-    // Función para eliminar una publicación
-    function eliminarPublicacion(id) {
-        if (confirm('¿Estás seguro de eliminar esta publicación?')) {
-            // Eliminar del DOM
-            const publicacionElement = document.querySelector(`.publicacion[data-id="${id}"]`);
-            if (publicacionElement) {
-                publicacionElement.remove();
-            }
-            
-            // Eliminar del localStorage
-            let publicaciones = JSON.parse(localStorage.getItem('publicaciones')) || [];
-            publicaciones = publicaciones.filter(pub => pub.id !== id);
-            localStorage.setItem('publicaciones', JSON.stringify(publicaciones));
-        }
-    }
+
+
+    //Cargar las publicaciones
+ document.addEventListener("DOMContentLoaded", async function () {
+     const publicacionesContainer = document.getElementById("contenedor-publicaciones");
+
+     try {
+         //Peticion al back
+         const response = await fetch("http://localhost:8080/api/tablon/publicaciones");
+         if(!response.ok) {
+             throw new Error("Error al obtener publicaciones");
+         }
+         const publicaciones = await response.json();
+
+         //Verificacion de publicaciones (Si hay o no)
+         if (publicaciones.length === 0) {
+             publicacionesContainer.innerHTML = "<p>No hay publicaciones disponibles.</p>";
+             return;
+         }
+
+         // Iterar sobre las publicaciones y agregarlas al DOM
+         publicaciones.forEach(publicacion => {
+             const divPublicacion = document.createElement("div");
+             divPublicacion.className = "publicacion";
+             divPublicacion.setAttribute("data-id", publicacion.id);
+
+             divPublicacion.innerHTML = `
+                <div class="publicacion-header">
+                    <h3>${publicacion.titulo}</h3>
+                    <button class="btn-eliminar" title="Eliminar publicación">×</button>
+                </div>
+                <div class="publicacion-body">
+                    <p><strong>Por:</strong>"Adminstrador"<span class="fecha"><strong>Fecha:</strong> ${publicacion.fecha}</span></p>
+                    <p>${publicacion.contenido}</p>
+                </div>
+            `;
+             // Agregar publicación al contenedor
+            publicacionesContainer.appendChild(divPublicacion);
+            });
+            } catch (error) {
+            console.error("Error al cargar publicaciones:", error);
+            publicacionesContainer.innerHTML = "<p>Error al cargar las publicaciones.</p>";
+     }
+ });
+
     
     // Función para filtrar publicaciones
     function filtrarPublicaciones(filtro) {

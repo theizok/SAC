@@ -15,12 +15,9 @@ public class Publicacion {
     @Column(name="idpublicacion")
     private long idPublicacion;
     @Column(name="fecha")
-    private LocalDateTime fechaPublicacion;
+    private LocalDateTime fecha;
     @Column(name="contenido")
-    private String contenidoPublicacion;
-    @Column(name="idadministrador")
-    private long idAdministrador;
-    @Column(name="idresidente")
-    private long idResidente;
-
+    private String contenido;
+    @Column(name="titulo")
+    private String titulo;
 }

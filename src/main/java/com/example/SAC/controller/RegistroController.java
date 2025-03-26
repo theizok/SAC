@@ -1,8 +1,10 @@
 package com.example.SAC.controller;
 
+import com.example.SAC.entity.Administrador;
 import com.example.SAC.entity.Propietario;
 import com.example.SAC.entity.Residente;
 import com.example.SAC.repository.ResidenteRepository;
+import com.example.SAC.service.AdministradorService;
 import com.example.SAC.service.PropietarioService;
 import com.example.SAC.service.ResidenteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ public class RegistroController {
     PropietarioController propietarioController;
     @Autowired
     private PropietarioService propietarioService;
+    @Autowired
+    private AdministradorService administradorService;
 
     //Registrar residente
     @GetMapping("/residente")
@@ -30,6 +34,10 @@ public class RegistroController {
         return propietarioService.agregarPropietario(propietario);
     }
 
+    @GetMapping("/administrador")
+    public Administrador registrarAdministrador(@RequestBody Administrador administrador) {
+        return administradorService.agregarAdministrador(administrador);
+    }
 
 
 }
