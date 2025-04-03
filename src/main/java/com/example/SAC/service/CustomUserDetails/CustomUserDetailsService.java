@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLOutput;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.List;
@@ -61,7 +62,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         String correo = "";
         String contraseña = "";
+        //Id en su tabla
         long id = 0;
+        //Id de cuenta
+        long idCuenta = 0;
 
         List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(tipo));
 
@@ -71,26 +75,31 @@ public class CustomUserDetailsService implements UserDetailsService {
             correo = residente.getCorreo();
             contraseña = residente.getContraseña();
             id = residente.getIdresidente();
+            idCuenta = residente.getIdcuenta();
         }else if (usuario instanceof Propietario) {
             Propietario propietario = (Propietario) usuario;
             correo = propietario.getCorreo();
             contraseña = propietario.getContraseña();
             id = propietario.getIdPropietario();
+            idCuenta = propietario.getIdCuenta();
         }else if( usuario instanceof Administrador) {
             Administrador administrador = (Administrador) usuario;
             correo = administrador.getCorreo();
             contraseña = administrador.getContraseña();
             id = administrador.getIdAdministrador();
+            idCuenta = administrador.getIdCuenta();
         }
 
         System.out.println("Rol:" + tipo);
         System.out.println("Correo recibido: " + correo);
         System.out.println("Contraseña en BD: " + contraseña);
-        System.out.println("Id usuario: " + id );
+        System.out.println("Id en su tabla: " + id );
+        System.out.println("Id de cuenta:" + idCuenta);
 
 
         return new CustomUserDetails(
                 id,
+                idCuenta,
                 correo,
                 contraseña,
                 authorities

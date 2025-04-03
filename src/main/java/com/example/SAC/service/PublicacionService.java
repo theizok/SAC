@@ -1,5 +1,6 @@
 package com.example.SAC.service;
 
+import com.example.SAC.dto.PublicacionDTO;
 import com.example.SAC.entity.Publicacion;
 import com.example.SAC.repository.PublicacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,19 @@ public class PublicacionService {
         return publicacionRepository.save(publicacion);
     }
 
-    //Obtener publicaciones
-    public List<Publicacion> obtenerPublicaciones(){
-        return publicacionRepository.findAll();
+    //Obtener publicaciones administrador
+    public List<PublicacionDTO> obtenerPublicacionesAdministrador(){
+        return publicacionRepository.showWithAuthorAdministrador();
+    }
+
+    //Obtener publicaciones residentes
+    public List<PublicacionDTO> obtenerPublicacionesResidentes(){
+        return publicacionRepository.showWithAuthorResidente();
+    }
+
+    //Obtener publicaciones propietarios
+    public List<PublicacionDTO> obtenerPublicacionesPropietarios(){
+        return publicacionRepository.showWithAuthorPropietario();
     }
 
     //Eliminar publicaciones

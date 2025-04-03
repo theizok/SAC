@@ -23,8 +23,7 @@ public class Administrador {
     private String telefono;
     @Column(name ="idcuenta")
     private long idCuenta;
-    @Column(name="idrol")
-    private long idRol;
+
 
     //Getters
         public String getCorreo() {

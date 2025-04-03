@@ -5,5 +5,6 @@ import com.example.SAC.entity.AreaComun;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AreaComunRepository extends JpaRepository<AreaComun, Integer> {
+public interface AreaComunRepository extends JpaRepository<AreaComun, Long> {
+
 }

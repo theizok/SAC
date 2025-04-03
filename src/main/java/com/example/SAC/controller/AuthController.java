@@ -73,6 +73,7 @@ public class AuthController {
             //Obtener usuario autenticado
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             Long userId = userDetails.getId();
+            Long idCuenta = userDetails.getIdCuenta();
 
             //Obtener rol del usuario para responder con tipo de usuario
             String userRole = authentication.getAuthorities().stream()
@@ -87,7 +88,10 @@ public class AuthController {
             response.put("message", "Autenticacion exitosa");
             response.put("userType", userType);
             response.put("sessionId", session.getId());
+            //Id de usuario en la tabla de su respectiva entidad
             response.put("id", userId);
+            //Id de cuenta general
+            response.put("idCuenta", idCuenta);
 
             return ResponseEntity.ok(response);
 
