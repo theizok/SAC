@@ -19,6 +19,11 @@ public class PublicacionService {
         return publicacionRepository.save(publicacion);
     }
 
+    //Obtener todas las publicaciones
+    public List<PublicacionDTO> obtenerPublicacionesAll(){
+        return publicacionRepository.showWithAuthorAll();
+    }
+
     //Obtener publicaciones administrador
     public List<PublicacionDTO> obtenerPublicacionesAdministrador(){
         return publicacionRepository.showWithAuthorAdministrador();

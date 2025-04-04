@@ -17,6 +17,12 @@ public class TablonController {
     @Autowired
     PublicacionService publicacionService;
 
+    //Obtener todas las publicaciones
+    @GetMapping("/publicacionesAll")
+    public List<PublicacionDTO> getAllPublicaciones(){
+        return publicacionService.obtenerPublicacionesAll();
+    }
+
 
     //Obtener todas las publicaciones del administrador
     @GetMapping("/publicacionesAdministrador")

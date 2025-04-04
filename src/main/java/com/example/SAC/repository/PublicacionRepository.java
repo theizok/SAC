@@ -22,4 +22,8 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
     //Obtener publicacion con su respectivo autor (Si es administrador)
     @Query(value = "SELECT publicacion.idpublicacion, publicacion.fecha, publicacion.contenido, publicacion.titulo, cuenta.tipo_cuenta, cuenta.idcuenta, administrador.nombre FROM publicacion JOIN cuenta ON publicacion.idcuenta = cuenta.idcuenta JOIN administrador ON cuenta.idcuenta = administrador.idcuenta ORDER BY publicacion.fecha DESC", nativeQuery = true)
     List<PublicacionDTO> showWithAuthorAdministrador();
+
+    //Obtener todas las publicaciones
+    @Query(value = "", nativeQuery = true)
+    List<PublicacionDTO> showWithAuthorAll();
 }
