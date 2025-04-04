@@ -29,9 +29,9 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
         
         const data = await respuesta.json();
         const role = data.userType;
-        sessionStorage.setItem("userType", data.userType) //Almacenar tipo de usuario en navegador mientras la pestaña este abierta
-        sessionStorage.setItem("id", data.id)//Almacenar id en navegador
-
+        sessionStorage.setItem("userType", data.userType); //Almacenar tipo de usuario en navegador mientras la pestaña este abierta
+        sessionStorage.setItem("id", data.id);//Almacenar id en navegador
+        sessionStorage.setItem("idCuenta", data.idCuenta);
 
         
 

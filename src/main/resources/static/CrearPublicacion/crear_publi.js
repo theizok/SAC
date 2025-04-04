@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        window.location.href = '/TablonAnuncios/tablon_anuncios.html';
+        //window.location.href = '/TablonAnuncios/tablon_anuncios.html';
     });
 
 
