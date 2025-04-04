@@ -11,6 +11,6 @@ public class Cuenta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idcuenta")
     private long idCuenta;
-    @Column(name="numerodecuenta")
-    private String numeroDeCuenta;
+    @Column(name="tipo_cuenta", nullable=true)
+    private String tipoCuenta;
 }

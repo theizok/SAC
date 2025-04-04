@@ -1,9 +1,8 @@
 package com.example.SAC.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Null;
 import lombok.Data;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+
 
 @Data
 @Entity
@@ -27,14 +26,14 @@ public class Residente {
     private String documento;
     @Column(name="idcuenta")
     private long idcuenta;
-    @Column(name="idrol")
-    private long idrol;
-    @Column(name="idapartamento")
-    private long idapartamento;
+
+    @ManyToOne
+    @JoinColumn(name="id_apartamento", nullable=true)
+    private Apartamento apartamento;
 
 
 
-    public Residente(String nombre, String contraseña, int edad, String correo, String telefono, String documento, long idcuenta, long idrol, long idapartamento) {
+    public Residente(String nombre, String contraseña, int edad, String correo, String telefono, String documento, long idcuenta) {
         this.nombre = nombre;
         this.contraseña = contraseña;
         this.edad = edad;
@@ -42,8 +41,6 @@ public class Residente {
         this.telefono = telefono;
         this.documento = documento;
         this.idcuenta = idcuenta;
-        this.idrol = idrol;
-        this.idapartamento = idapartamento;
     }
 
     public Residente() {

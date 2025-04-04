@@ -29,7 +29,7 @@ public class RegistroController {
         return residenteService.crearResidente(residente);
     }
     //Registrar propietario
-    @GetMapping("/propietario")
+    @PostMapping("/propietario")
     public Propietario registrarPropietario(@RequestBody Propietario propietario) {
         return propietarioService.agregarPropietario(propietario);
     }

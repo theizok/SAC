@@ -1,5 +1,6 @@
 package com.example.SAC.controller;
 
+import com.example.SAC.dto.PublicacionDTO;
 import com.example.SAC.entity.*;
 import com.example.SAC.service.ApartamentoService;
 import com.example.SAC.service.PropietarioService;
@@ -85,9 +86,9 @@ public class AdministradorController {
     }
 
     //Obtener todas las publicaciones
-    @GetMapping("/ObtenerPublicacion")
-    public List<Publicacion> getPublicacion() {
-        return publicacionService.obtenerPublicaciones();
+    @GetMapping("/ObtenerPublicacionesAdministrador")
+    public List<PublicacionDTO> getPublicacion() {
+        return publicacionService.obtenerPublicacionesAdministrador();
     }
 
 

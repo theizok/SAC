@@ -2,9 +2,11 @@ package com.example.SAC.controller;
 
 import com.example.SAC.dto.PasswordRequest;
 import com.example.SAC.entity.Apartamento;
+import com.example.SAC.entity.Mensaje;
 import com.example.SAC.entity.Propietario;
 import com.example.SAC.entity.Publicacion;
 import com.example.SAC.service.ApartamentoService;
+import com.example.SAC.service.MensajeService;
 import com.example.SAC.service.PropietarioService;
 import com.example.SAC.service.PublicacionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class PropietarioController {
 
     @Autowired
     private PropietarioService propietarioService;
+    @Autowired
+    private MensajeService mensajeService;
 
 
     //Obtener propietario por id
@@ -56,11 +60,7 @@ public class PropietarioController {
 
     //Eliminar propietario
 
-    //Obtener todas las publicaciones
-    @GetMapping("/ObtenerPublicacion")
-    public List<Publicacion> getPublicacion() {
-        return publicacionService.obtenerPublicaciones();
-    }
+
 
 
     //Crear Publicacion
@@ -75,5 +75,15 @@ public class PropietarioController {
         return apartamentoService.editarApartamento(apartamento);
     }
 
+    //Enviar mensaje
+    @PostMapping("/enviarMensaje")
+    public Mensaje sendMensaje(@RequestBody Mensaje mensaje){
+        return mensajeService.sendMensaje(mensaje);
+    }
+    //Obtener Mensajes
+    @GetMapping("/obtenerMensajes")
+    public List<Mensaje> obtenerMensajes(@RequestParam long idCuenta){
+        return mensajeService.findMensajeByIdCuentaPropietario(idCuenta);
+    }
 
 }

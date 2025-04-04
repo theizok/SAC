@@ -22,9 +22,8 @@ public class Mensaje {
         private String Contenido;
         @Column(name="fecha")
         private  LocalDateTime fecha;
-        @Column(name="idadmnistrador")
-        private int idAdministrador;
-        @Column(name="idresidente")
-        private int idResidente;
+        @OneToOne
+        @JoinColumn(name = "idcuenta")
+        private Cuenta cuenta;
 
 }
