@@ -24,7 +24,7 @@ public class RegistroController {
     private AdministradorService administradorService;
 
     //Registrar residente
-    @GetMapping("/residente")
+    @PostMapping("/residente")
     public Residente registrarResidente(@RequestBody Residente residente) {
         return residenteService.crearResidente(residente);
     }
@@ -34,7 +34,7 @@ public class RegistroController {
         return propietarioService.agregarPropietario(propietario);
     }
 
-    @GetMapping("/administrador")
+    @PostMapping("/administrador")
     public Administrador registrarAdministrador(@RequestBody Administrador administrador) {
         return administradorService.agregarAdministrador(administrador);
     }
