@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAC Admin - Mensajes Recibidos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="mensaje.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <a href="/SAC/src/main/resources/static/Administrador/ArchivosAdministrador/Inicio/Index.html" class="logo-container">
+                <img src="/SAC/src/main/resources/static/IMG/image.png" alt="Logo SAC" class="logo">
+            </a>
+            
+            <nav class="main-nav">
+                <ul class="nav-center">
+                    <li><a href="/SAC/src/main/resources/static/Administrador/ArchivosAdministrador/Inicio/Index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Administrador/ArchivosAdministrador/mensaje_Admin/mensajes_admin.html"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Administrador/ArchivosAdministrador/TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Administrador/ArchivosAdministrador/AdministrarUsuarios/administrar_usuarios.html" class=""><i class="fas fa-users-cog"></i>Usuarios</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Administrador/ArchivosAdministrador/AdminPagos/admin_pagos.html"><i class="fas fa-cog"></i> Administrar Pagos</a></li>
+                </ul>
+            </nav>
+            
+            <div class="profile-menu">
+                <input type="checkbox" id="profile-toggle" class="profile-toggle">
+                <label for="profile-toggle" class="profile-button">
+                    <i class="fas fa-user-circle"></i>
+                </label>
+                <ul class="profile-dropdown">
+                    <li><a href="/SAC/src/main/resources/static/Administrador/ArchivosAdministrador/Perfil_A/Perfil_A.html"><i class="fas fa-user"></i> Mi Perfil</a></li>
+                    <li><a href="#" class="logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="mensajes-recibidos">
+            <div class="section-header">
+                <h1><i class="fas fa-inbox"></i> Mensajes Recibidos</h1>
+                
+                <div class="actions">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="buscar" placeholder="Buscar mensajes...">
+                    </div>
+                </div>
+            </div>
+
+            <div class="messages-container">
+                <div class="messages-list">
+                    <!-- Ejemplo de mensaje -->
+                    <div class="message-item">
+                        <div class="message-header">
+                            <div class="sender-info">
+                                <span class="sender-name">Juan Pérez</span>
+                                <span class="sender-apto">Apto 302</span>
+                            </div>
+                            <span class="message-date">Hoy, 10:30 AM</span>
+                        </div>
+                        <div class="message-preview">
+                            <h3 class="message-subject">Problema con tubería en cocina</h3>
+                            <p class="message-excerpt">Buen día, quisiera reportar un problema con la tubería de la cocina que está goteando constantemente...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Otro mensaje -->
+                    <div class="message-item">
+                        <div class="message-header">
+                            <div class="sender-info">
+                                <span class="sender-name">María González</span>
+                                <span class="sender-apto">Apto 105</span>
+                            </div>
+                            <span class="message-date">Ayer, 4:15 PM</span>
+                        </div>
+                        <div class="message-preview">
+                            <h3 class="message-subject">Consulta sobre pago extraordinario</h3>
+                            <p class="message-excerpt">Quisiera saber a qué corresponde el pago extraordinario que aparece en mi estado de cuenta...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message-detail">
+                    <div class="detail-header">
+                        <h2 class="detail-subject">Problema con tubería en cocina</h2>
+                        <div class="detail-sender">
+                            <div class="sender-info">
+                                <span class="sender-name">Juan Pérez</span>
+                                <span class="sender-apto">Apto 302</span>
+                            </div>
+                            <span class="message-date">Hoy, 10:30 AM</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-content">
+                        <p>Buen día administración,</p>
+                        
+                        <p>Quisiera reportar un problema con la tubería de la cocina que está goteando constantemente desde ayer por la tarde. El agua ya comenzó a filtrarse por el gabinete inferior y temo que pueda causar daños mayores.</p>
+                        
+                        <p>Por favor, necesito que un plomero revise la situación lo antes posible. Estaré en mi apartamento toda la mañana.</p>
+                        
+                        <p>Quedo atento a su respuesta,</p>
+                        <p>Juan Pérez<br>Apto 302</p>
+                    </div>
+                    
+                    <div class="detail-actions">
+                        <button class="btn primary">
+                            <i class="fas fa-reply"></i> Responder
+                        </button>
+                        <button class="btn">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>SAC</h4>
+                <p>Sistema de Administración Condominal diseñado para hacer tu vida más fácil.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Enlaces rápidos</h4>
+                <ul>
+                    <li><a href="/SAC/src/main/resources/static/Administrador/ArchivosAdministrador/Inicio/Index.html">Inicio</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Administrador/ArchivosAdministrador/AdminPagos/admin_pagos.html">Administrar Pagos</a></li>
+                    <li><a href="/SAC/src/main/resources/static/TablonAnuncios/tablon_anuncios.html">Anuncios</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p><i class="fas fa-phone"></i> +123 456 7890</p>
+                <p><i class="fas fa-envelope"></i> admin@sac.com</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 SAC - Sistema de Administración Condominal. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>

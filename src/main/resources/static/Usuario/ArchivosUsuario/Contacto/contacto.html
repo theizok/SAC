@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAC - Contacto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="contacto.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Inicio/Index.html" class="logo-container">
+                <img src="/SAC/src/main/resources/static/IMG/image.png" alt="Logo SAC" class="logo">
+            </a>
+            
+            <nav class="main-nav">
+                <ul class="nav-center">
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Inicio/Index.html" class="active"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Mensaje/mensaje.html"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Pago/pago.html"><i class="fas fa-credit-card"></i> Pagos</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                </ul>
+            </nav>
+            
+            <div class="profile-menu">
+                <input type="checkbox" id="profile-toggle" class="profile-toggle">
+                <label for="profile-toggle" class="profile-button">
+                    <i class="fas fa-user-circle"></i>
+                </label>
+                <ul class="profile-dropdown">
+                    <li><a href="/SAC/src/main/resources/static/Perfil/perfil.html"><i class="fas fa-user"></i> Mi Perfil</a></li>
+                    <li><a href="#" class="logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="contact-section">
+            <div class="contact-card">
+                <h2><i class="fas fa-headset"></i> Contacto con la Administración</h2>
+                
+                <div class="contact-grid">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h3>Correo Electrónico</h3>
+                            <a href="mailto:adminmiraflores@gmail.com">adminmiraflores@gmail.com</a>
+                            <p class="contact-description">Para consultas generales, facturas o documentación</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h3>Teléfono y WhatsApp</h3>
+                            <a href="tel:+573012317543">+57 301 231 7543</a>
+                            <p class="contact-description">Atención telefónica y mensajería instantánea</p>
+                            <a href="https://wa.me/573012317543" class="whatsapp-button">
+                                <i class="fab fa-whatsapp"></i> Enviar mensaje
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="far fa-clock"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h3>Horario de Atención</h3>
+                            <p>Lunes a Viernes: 8:00 AM - 5:00 PM<br>Sábados: 9:00 AM - 1:00 PM</p>
+                            <p class="contact-description">Fuera de este horario, puede dejarnos un mensaje</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h3>Preguntas Frecuentes</h3>
+                            <p>¿Necesitas ayuda rápida?</p>
+                            <a href="../FAQ/faq.html" class="faq-button">Ver preguntas frecuentes</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form-container">
+                    <h3><i class="fas fa-paper-plane"></i> Envíanos un mensaje directo</h3>
+                    <form class="contact-form">
+                        <div class="form-group">
+                            <label for="name">Nombre completo</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Correo electrónico</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Asunto</label>
+                            <select id="subject" required>
+                                <option value="">Seleccione un tema</option>
+                                <option value="pagos">Consulta sobre pagos</option>
+                                <option value="documentos">Solicitud de documentos</option>
+                                <option value="reportes">Reporte de problemas</option>
+                                <option value="otros">Otros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Mensaje</label>
+                            <textarea id="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-button">Enviar mensaje <i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>SAC</h4>
+                <p>Sistema de Administración Condominal diseñado para hacer tu vida más fácil.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Enlaces rápidos</h4>
+                <ul>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Inicio/Index.html">Inicio</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Pago/pago.html">Realizar pago</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/TablonAnuncios/tablon_anuncios.html">Anuncios</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Contacto/contacto.html">Contacto</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p><i class="fas fa-phone"></i> +57 301 231 7543</p>
+                <p><i class="fas fa-envelope"></i> adminmiraflores@gmail.com</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 SAC - Sistema de Administración Condominal. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>

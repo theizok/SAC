@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAC - Sistema de Administración Condominal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="inicio.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Inicio/Index.html" class="logo-container">
+                <img src="/SAC/src/main/resources/static/IMG/image.png" alt="Logo SAC" class="logo">
+            </a>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <nav class="main-nav">
+                <ul class="nav-center">
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Inicio/Index.html" class="active"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Mensaje/mensaje.html"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Pago/pago.html"><i class="fas fa-credit-card"></i> Pagos</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                </ul>
+            </nav>
+            
+            <div class="profile-menu">
+                <input type="checkbox" id="profile-toggle" class="profile-toggle">
+                <label for="profile-toggle" class="profile-button">
+                    <i class="fas fa-user-circle"></i>
+                </label>
+                <ul class="profile-dropdown">
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Perfil/perfil.html"><i class="fas fa-user"></i> Mi Perfil</a></li>
+                    <li><a href="#" class="logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>¡Bienvenido a SAC!</h1>
+                <p class="subtitle">Sistema de Administración Condominal</p>
+                <p>Nos complace tenerte aquí. Explora todas las opciones que ofrecemos para tu comodidad.</p>
+                <div class="cta-buttons">
+                    <a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Pago/pago.html" class="btn primary">Realizar Pago</a>
+                    <a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Mensaje/mensaje.html" class="btn secondary">Enviar Mensaje</a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="gallery">
+            <div class="gallery-container">
+                <div class="gallery-item">
+                    <img src="3.jpg" alt="Áreas comunes del conjunto residencial">
+                    <div class="gallery-caption">Áreas Comunes</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="3.jpg" alt="Seguridad del conjunto">
+                    <div class="gallery-caption">Seguridad 24/7</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="3.jpg" alt="Espacios verdes">
+                    <div class="gallery-caption">Espacios Verdes</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="features">
+            <h2 class="section-title">Soluciones a tu alcance</h2>
+            <p class="section-subtitle">Todo lo que necesitas para la administración de tu condominio</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Administración Eficiente</h3>
+                    <p>Observa fácilmente todos los aspectos de la administración de tu conjunto residencial. Con nuestra plataforma, la administración siempre estará disponible para ti.</p>
+                    <a href="#" class="feature-link">Más información <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <h3>Quejas y Sugerencias</h3>
+                    <p>Envía tus quejas o sugerencias en cualquier momento y recibe respuestas rápidas y efectivas. No más demoras ni preocupaciones.</p>
+                    <a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Mensaje/mensaje.html" class="feature-link">Enviar mensaje <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3>Pagos Puntuales</h3>
+                    <p>Realiza tus pagos desde la comodidad de tu hogar y mantén un registro claro de todas tus transacciones. Evita retrasos y penalizaciones.</p>
+                    <a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Pago/pago.html" class="feature-link">Pagar ahora <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="newsletter">
+            <div class="newsletter-container">
+                <h3>Mantente informado</h3>
+                <p>Suscríbete a nuestro boletín para recibir las últimas noticias y anuncios</p>
+                <form class="newsletter-form" action="#" method="post">
+                    <input type="email" placeholder="Tu correo electrónico" required>
+                    <button type="submit" class="btn primary">Suscribirse</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>SAC</h4>
+                <p>Sistema de Administración Condominal diseñado para hacer tu vida más fácil.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Enlaces rápidos</h4>
+                <ul>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Inicio/Index.html">Inicio</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Pago/pago.html">Realizar pago</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/TablonAnuncios/tablon_anuncios.html">Anuncios</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Contacto/contacto.html">Contacto</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p><i class="fas fa-phone"></i> +123 456 7890</p>
+                <p><i class="fas fa-envelope"></i> info@sacadmin.com</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 SAC - Sistema de Administración Condominal. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>

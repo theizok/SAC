@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - SAC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Inicio/Inicio.css">
+    <link rel="stylesheet" href="perfil.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo-container">
+                <img src="/SAC/src/main/resources/static/IMG/image.png" alt="Logo SAC" class="logo">
+            </a>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <nav class="main-nav">
+                <ul class="nav-center">
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Inicio/Index.html" class="active"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Mensaje/mensaje.html"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Pago/pago.html"><i class="fas fa-credit-card"></i> Pagos</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    <li><a href="/SAC/src/main/resources/static/Usuario/ArchivosUsuario/TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                </ul>
+            </nav>
+            
+            <div class="profile-menu">
+                <input type="checkbox" id="profile-toggle" class="profile-toggle">
+                <label for="profile-toggle" class="profile-button">
+                    <i class="fas fa-user-circle"></i>
+                </label>
+                <ul class="profile-dropdown">
+                    <li><a href="perfil.html" class="active"><i class="fas fa-user"></i> Mi Perfil</a></li>
+                    <li><a href="#" class="logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    
+    <main class="profile-main">
+        <section class="profile-header">
+            <h1><i class="fas fa-user"></i> Mi Perfil</h1>
+            <p>Administra tu información personal y configuración de cuenta</p>
+        </section>
+        
+        <section class="profile-content">
+            <div class="perfil-tabs">
+                <div class="perfil-tab active" data-tab="info-personal"><i class="fas fa-user-edit"></i> Información Personal</div>
+                <div class="perfil-tab" data-tab="seguridad"><i class="fas fa-lock"></i> Seguridad</div>
+                <div class="perfil-tab" data-tab="eliminar-cuenta"><i class="fas fa-exclamation-triangle"></i> Eliminar Cuenta</div>
+            </div>
+            
+            <div class="perfil-content active" id="info-personal">
+                <form id="form-datos-personales" class="profile-form">
+                    <div id="responseMessage" class="response-message"></div>
+                    <div class="form-group">
+                        <label for="nombre"><i class="fas fa-user"></i> Nombre</label>
+                        <input type="text" id="nombre" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="documento"><i class="fas fa-id-card"></i> Documento</label>
+                            <input type="text" id="documento" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono"><i class="fas fa-phone"></i> Teléfono</label>
+                            <input type="tel" id="telefono" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="correo"><i class="fas fa-envelope"></i> Correo Electrónico</label>
+                        <input type="email" id="correo" required>
+                    </div>
+                    
+                    <button type="submit" class="btn primary"><i class="fas fa-save"></i> Guardar Cambios</button>
+                </form>
+            </div>
+            
+            <div class="perfil-content" id="seguridad">
+                <form id="form-cambiar-password" class="profile-form">
+                    <div class="form-group">
+                        <label for="password-actual"><i class="fas fa-key"></i> Contraseña Actual</label>
+                        <input type="password" id="password-actual" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password-nueva"><i class="fas fa-key"></i> Nueva Contraseña</label>
+                        <input type="password" id="password-nueva" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password-confirmar"><i class="fas fa-key"></i> Confirmar Contraseña</label>
+                        <input type="password" id="password-confirmar" required>
+                    </div>
+                    
+                    <button type="submit" class="btn primary"><i class="fas fa-sync-alt"></i> Actualizar Contraseña</button>
+                </form>
+            </div>
+            
+            <div class="perfil-content" id="eliminar-cuenta">
+                <div class="warning-box">
+                    <h3><i class="fas fa-exclamation-circle"></i> Advertencia</h3>
+                    <p>Esta acción eliminará permanentemente tu cuenta y toda la información asociada. No podrás recuperar tus datos después de esta acción.</p>
+                </div>
+                
+                <form id="form-eliminar-cuenta" class="profile-form">
+                    <div class="form-group">
+                        <label for="motivo-eliminacion"><i class="fas fa-question-circle"></i> Motivo (opcional)</label>
+                        <select id="motivo-eliminacion">
+                            <option value="">-- Selecciona un motivo --</option>
+                            <option value="mudanza">Me mudé del conjunto</option>
+                            <option value="insatisfecho">Insatisfecho con el servicio</option>
+                            <option value="privacidad">Preocupaciones de privacidad</option>
+                            <option value="otro">Otro motivo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="comentarios-eliminacion"><i class="fas fa-comment"></i> Comentarios adicionales</label>
+                        <textarea id="comentarios-eliminacion" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password-confirmar-eliminacion"><i class="fas fa-key"></i> Contraseña actual para confirmar</label>
+                        <input type="password" id="password-confirmar-eliminacion" required>
+                    </div>
+                    
+                    <button type="submit" class="btn danger"><i class="fas fa-trash-alt"></i> Eliminar Cuenta Permanentemente</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>SAC</h4>
+                <p>Sistema de Administración Condominal diseñado para hacer tu vida más fácil.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p><i class="fas fa-phone"></i> +123 456 7890</p>
+                <p><i class="fas fa-envelope"></i> info@sacadmin.com</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 SAC - Sistema de Administración Condominal. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="perfil.js"></script>
+</body>
+</html>
