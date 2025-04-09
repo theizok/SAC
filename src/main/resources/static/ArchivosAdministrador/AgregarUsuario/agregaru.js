@@ -35,7 +35,16 @@
                contraseña:contrasena,
                telefonoPropietario:celular
            })
-       }else{
+       } else if(rol === "administrador"){
+               usuario  = JSON.stringify({
+                   nombreAdministrador:nombre,
+                   documento:documento,
+                   correo:correo,
+                   contraseña:contrasena,
+                   telefono:celular
+               })
+           }
+       else{
            Console.log("Tipo de usuario no valido")
        }
 

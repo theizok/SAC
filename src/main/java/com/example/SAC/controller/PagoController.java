@@ -84,13 +84,13 @@ public class PagoController {
             try {
                 PaymentClient client = new PaymentClient();
 
-                // ✅ Aquí se obtiene el pago real desde Mercado Pago
+                //Aquí se obtiene el pago real desde Mercado Pago
                 Payment payment = client.get(Long.parseLong(id));
 
                 String estado = payment.getStatus(); // approved, pending, etc.
                 Long externalReference = Long.parseLong(payment.getExternalReference());
 
-                // ✅ Aquí actualizas el pago en tu base de datos
+                //Aquí actualizas el pago en tu base de datos
                 pagoService.actualizarEstadoPago(externalReference, estado);
 
                 return ResponseEntity.ok("Webhook procesado correctamente");
@@ -107,4 +107,6 @@ public class PagoController {
     public List<Pago> obtenerPagos() {
         return pagoService.obtenerPagos();
     }
+
+
 }

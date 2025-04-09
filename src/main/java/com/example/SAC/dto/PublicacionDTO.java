@@ -6,24 +6,17 @@ import lombok.Setter;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 public class PublicacionDTO {
     private Long idpublicacion;
-    @Setter
-    @Getter
     private Timestamp fecha;
-    @Setter
-    @Getter
     private String contenido;
-    @Setter
-    @Getter
     private String titulo;
-    @Setter
-    @Getter
     private String tipo_cuenta;
     private Long idcuenta;
-    @Setter
-    @Getter
     private String nombre;
+
 
     // Constructor
     public PublicacionDTO(Long idpublicacion, Timestamp fecha, String contenido, String titulo,

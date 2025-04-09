@@ -17,6 +17,8 @@ public class Administrador {
     private String nombreAdministrador;
     @Column (name = "correo")
     private String correo;
+    @Column(name="documento")
+    private String documento;
     @Column (name = "contraseña")
     private String contraseña;
     @Column (name = "telefono")

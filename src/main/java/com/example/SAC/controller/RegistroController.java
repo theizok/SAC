@@ -29,10 +29,7 @@ public class RegistroController {
     //Registrar residente
     @PostMapping("/residente")
     public Residente registrarResidente(@RequestBody Residente residente) {
-        String correo = residente.getCorreo();
-        String asunto = "Creación de cuenta";
-        String contenido = "Te has registrado de forma correcta en SAC";
-        emailService.sendSimpleMail(correo,asunto,contenido);
+
         return residenteService.crearResidente(residente);
     }
     //Registrar propietario

@@ -175,6 +175,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function obtenerDatosPerfil(url, id) {
     try {
+        rol = sessionStorage.getItem("userType").toLowerCase();
+
         const response = await fetch(`${url}?id=${id}`, {
             method: "GET",
             headers: {
@@ -192,8 +194,15 @@ async function obtenerDatosPerfil(url, id) {
         if (document.getElementById("id")) {
             document.getElementById("id").value = data.id;
         }
+        if(rol === "administrador")
+        {
+            if (document.getElementById("nombre")) {
+                document.getElementById("nombre").value = data.nombreAdministrador;
+            }
+        }else{
         if (document.getElementById("nombre")) {
             document.getElementById("nombre").value = data.nombre;
+        }
         }
         if (document.getElementById("correo")) {
             document.getElementById("correo").value = data.correo;

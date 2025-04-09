@@ -15,6 +15,8 @@ public class UsuarioDTOService {
     ResidenteService residenteService;
     @Autowired
     PropietarioService propietarioService;
+    @Autowired
+    AdministradorService administradorService;
 
     public List<UsuarioDTO> obtenerUsuarios(){
         List<UsuarioDTO> usuarios = new ArrayList<>();
@@ -36,6 +38,16 @@ public class UsuarioDTOService {
                     propietario.getCorreo(),
                     propietario.getDocumentoPropietario(),
                     "Propietario"
+            ));
+        });
+
+        administradorService.obtenerAdministradores().forEach(administrador -> {
+            usuarios.add(new UsuarioDTO(
+                    administrador.getIdAdministrador()
+                    ,administrador.getNombreAdministrador()
+                    ,administrador.getCorreo()
+                    ,administrador.getDocumento()
+                    ,"Administrador"
             ));
         });
 

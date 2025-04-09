@@ -3,6 +3,7 @@ package com.example.SAC.service;
 import com.example.SAC.dto.UsuarioDTO;
 import com.example.SAC.entity.Administrador;
 import com.example.SAC.entity.Cuenta;
+import com.example.SAC.entity.Residente;
 import com.example.SAC.repository.AdministradorRepository;
 import com.example.SAC.repository.CuentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,45 @@ public class AdministradorService {
 
         administrador.setContraseña(passwordEncoder.encode(administrador.getContraseña()));//Encriptar la contraseña antes de ingresarla en la base de datos
         return administradorRepository.save(administrador);
+    }
+
+    //Actualizar residente
+    public Administrador actualizarAdministrador(Long id, Administrador nuevosDatos) {
+        return administradorRepository.findById(id).map(administrador -> {
+            administrador.setNombreAdministrador(nuevosDatos.getNombreAdministrador());
+            administrador.setDocumento(nuevosDatos.getDocumento());
+            administrador.setCorreo(nuevosDatos.getCorreo());
+            administrador.setTelefono(nuevosDatos.getTelefono());
+            return administradorRepository.save(administrador);
+        } ).orElseThrow(() -> new RuntimeException("No se encontro el propietario"));
+    }
+
+    //Cambiar contraseña
+    public boolean cambiarContraseña(Long idResidente, String passwordActual, String passwordNueva) {
+        Optional<Administrador> administradorOpt = administradorRepository.findById(idResidente);
+
+        if (administradorOpt.isEmpty()) {
+            throw new RuntimeException("Residente no encontrado");
+        }
+
+        Administrador administrador = administradorOpt.get();
+
+        // Verificar si la contraseña actual es correcta
+        if (!passwordEncoder.matches(passwordActual, administrador.getContraseña())) {
+            throw new RuntimeException("La contraseña actual es incorrecta");
+        }
+
+        // Guardar la nueva contraseña encriptada
+        administrador.setContraseña(passwordEncoder.encode(passwordNueva));
+        administradorRepository.save(administrador);
+
+        return true; // Indica que se cambió la contraseña con éxito
+    }
+
+
+
+    public List<Administrador> obtenerAdministradores() {
+        return administradorRepository.findAll();
     }
 
     public Optional<Administrador> obtenerAdministradorPorId(Long id){
