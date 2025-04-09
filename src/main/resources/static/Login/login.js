@@ -37,9 +37,9 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
         //Redireccion segun rol
         if (role === "ADMINISTRADOR") {
-            window.location.href = "http://localhost:8080/api/admin/dashboard";
+            window.location.href = "http://localhost:8080/api/administrador/dashboard";
         }else if (role === "RESIDENTE") {
-            window.location.href = "/Inicio/Index.html"
+            window.location.href = "http://localhost:8080/api/residente/dashboard"
         }else if (role === "PROPIETARIO") {
             window.location.href = "http://localhost:8080/api/propietario/dashboard"
         } else {

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Pagos - Aplicativo Residencial</title>
+    <link rel="stylesheet" href="admin_pagos.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../Inicio/image.png" alt="Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../Inicio/Index.html">Inicio</a></li>
+                <li><a href="../Mensaje/mensaje.html">Mensajes</a></li>
+                <li><a href="../Pago/pago.html">Pagos</a></li>
+                <li><a href="../Contacto/contacto.html">Contacto</a></li>
+                <li><a href="../TablonAnuncios/tablon_anuncios.html">Tablón de anuncios</a></li>
+                <li><a href="../AdministrarUsuarios/administrar_usuarios.html">Gestión de Usuarios</a></li>
+                <li><a href="admin_pagos.html" class="active">Administrar Pagos</a></li>
+                <li><a href="../Perfil/perfil.html">Perfil</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Administrar Pagos</h1>
+            
+            <div class="filtros">
+                <div class="filtro">
+                    <label for="filtro-tipo">Filtrar por tipo:</label>
+                    <select id="filtro-tipo">
+                        <option value="todos">Todos los pagos</option>
+                        <option value="administracion">Pagos de Administración</option>
+                        <option value="reserva">Reservas de Áreas Comunes</option>
+                    </select>
+                </div>
+                <button id="btn-exportar" class="btn">Exportar a Excel</button>
+            </div>
+
+            <div class="tabla-container">
+                <table id="tabla-pagos">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Usuario</th>
+                            <th>Tipo</th>
+                            <th>Detalle</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pagos-body">
+                        <!-- Los pagos se cargarán dinámicamente desde JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="admin_pagos.js"></script>
+</body>
+</html>

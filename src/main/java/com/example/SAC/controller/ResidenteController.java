@@ -78,4 +78,10 @@ public class ResidenteController {
         return mensajeService.findMensajeByIdCuentaResidente(idCuenta);
     }
 
+    //Vistas
+    @GetMapping("/dashboard")
+    public RedirectView dashboard(){
+        return new RedirectView("/Inicio/Index.html");
+    }
+
 }

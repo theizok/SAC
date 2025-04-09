@@ -59,6 +59,10 @@ public class Residente {
         return contraseña;
     }
 
+    public int getIdresidente() {
+        return idresidente;
+    }
+
     //Setters
 
     //Set correo

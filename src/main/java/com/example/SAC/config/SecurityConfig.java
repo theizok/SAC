@@ -30,6 +30,7 @@ public class SecurityConfig {
    @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(HttpMethod.POST,"api/register/propietario","api/register/administrador", "api/register/residente").permitAll();
                     auth.requestMatchers("/noAuth/**", "/Login/**","/Login/1.jpg", "/InicioNoAuth/**","/", "/noAuth/Register","/Registro/**","/favicon.ico").permitAll();

@@ -1,11 +1,9 @@
 package com.example.SAC.controller;
 
 import com.example.SAC.dto.PublicacionDTO;
+import com.example.SAC.dto.UsuarioDTO;
 import com.example.SAC.entity.*;
-import com.example.SAC.service.ApartamentoService;
-import com.example.SAC.service.PropietarioService;
-import com.example.SAC.service.PublicacionService;
-import com.example.SAC.service.ResidenteService;
+import com.example.SAC.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,6 +27,9 @@ public class AdministradorController {
 
     @Autowired
     private ResidenteService residenteService;
+
+    @Autowired
+    private UsuarioDTOService usuarioDTOService;
 
     //Obtener todos los residentes
     @GetMapping("/obtenerResidentes")
@@ -54,6 +55,11 @@ public class AdministradorController {
         return propietarioService.obtenerPropietarioPorNombre(nombre);
     }
 
+    //Obtener todos los usuarios
+    @GetMapping("/obtenerUsuarios")
+    public List<UsuarioDTO> obtenerUsuarios(){
+        return usuarioDTOService.obtenerUsuarios();
+    }
 
     //Agregar residente
     @PostMapping("/agregarResidente")
@@ -84,6 +90,7 @@ public class AdministradorController {
     public Apartamento updateApartamento(@RequestBody Apartamento apartamento) {
         return apartamentoService.editarApartamento(apartamento);
     }
+
 
     //Obtener todas las publicaciones
     @GetMapping("/ObtenerPublicacionesAdministrador")
