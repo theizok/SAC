@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablon de anuncios</title>
+    <link rel="stylesheet" href="tablon.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../Inicio/image.png" alt="Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../Inicio/Index.html">Inicio</a></li>
+                <li><a href="../Mensaje/mensaje.html">Mensajes</a></li>
+                <li><a href="../Pago/pago.html">Pagos</a></li>
+                <li><a href="../Contacto/contacto.html">Contacto</a></li>
+                <li><a href="tablon_anuncios.html">Tablón de anuncios</a></li>
+                <li><a href="../AdministrarUsuarios/administrar_usuarios.html">Gestión de Usuarios</a></li>
+                <li><a href="../AdminPagos/admin_pagos.html" class="active">Administrar Pagos</a></li>
+                <li><a href="../Perfil/perfil.html">Perfil</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="publicaciones">
+            <h2>Publicaciones</h2>
+            <div class="botones">
+                <button class="btn" id="btn-crear">Crear publicación</button>
+                <div class="dropdown">
+                    <button class="btn" id="btn-filtrar">Filtrar</button>
+                    <div class="dropdown-content" id="filtro-opciones">
+                        <a href="#" data-filter="todos">Todos</a>
+                        <a href="#" data-filter="administrador">Por el administrador</a>
+                        <a href="#" data-filter="residentes">Por residentes</a>
+                        <a href="#" data-filter="propietarios">Por propietarios</a>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div id="contenedor-publicaciones">
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+    </footer>
+    <script src="tablon.js"></script>
+</body>
+</html>

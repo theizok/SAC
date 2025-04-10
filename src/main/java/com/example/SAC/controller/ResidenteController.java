@@ -1,8 +1,10 @@
 package com.example.SAC.controller;
 
 import com.example.SAC.dto.PasswordRequest;
+import com.example.SAC.entity.Mensaje;
 import com.example.SAC.entity.Publicacion;
 import com.example.SAC.entity.Residente;
+import com.example.SAC.service.MensajeService;
 import com.example.SAC.service.PublicacionService;
 import com.example.SAC.service.ResidenteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class ResidenteController {
 
     @Autowired
     private PublicacionService publicacionService;
+    @Autowired
+    private MensajeService mensajeService;
 
     //Obtener residente por id
     @GetMapping("/obtenerPorId")
@@ -54,17 +58,30 @@ public class ResidenteController {
         residenteService.eliminarResidentePorId(id);
     }
 
-    //Obtener todas las publicaciones
-    @GetMapping("/ObtenerPublicacion")
-    public List<Publicacion> getPublicacion() {
-        return publicacionService.obtenerPublicaciones();
-    }
+
 
 
     //Crear Publicacion
     @PostMapping("/crearPublicacion")
     public Publicacion agregarPublicacion(@RequestBody Publicacion publicacion){
         return publicacionService.crearPublicacion(publicacion);
+    }
+
+    //Enviar mensaje
+    @PostMapping("/enviarMensaje")
+    public Mensaje enviarMensaje(@RequestBody Mensaje mensaje){
+        return mensajeService.sendMensaje(mensaje);
+    }
+
+    //Encontrar mensajes de residente especifico
+    @GetMapping("/obtenerMensajes") public List<Mensaje> obtenerMensajesPorIdCuentaResidente(@RequestParam long idCuenta ){
+        return mensajeService.findMensajeByIdCuentaResidente(idCuenta);
+    }
+
+    //Vistas
+    @GetMapping("/dashboard")
+    public RedirectView dashboard(){
+        return new RedirectView("/Inicio/Index.html");
     }
 
 }

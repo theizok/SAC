@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="propietario")
-public class Propietario {
+public class  Propietario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idpropietario")
@@ -21,8 +21,13 @@ public class Propietario {
     private String telefonoPropietario;
     @Column (name = "contraseña")
     private String contraseña;
-    @Column (name = "idapartamento")
-    private long idApartamentoPropietario;
+    @Column(name = "idcuenta")
+    private long idCuenta;
+
+
+    @ManyToOne
+    @JoinColumn (name = "idapartamento", nullable = true)
+    private Apartamento apartamento;
 
 
 

@@ -1,7 +1,9 @@
 package com.example.SAC.service;
 
+import com.example.SAC.entity.Cuenta;
 import com.example.SAC.entity.Propietario;
 import com.example.SAC.entity.Residente;
+import com.example.SAC.repository.CuentaRepository;
 import com.example.SAC.repository.ResidenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,10 +19,25 @@ public class ResidenteService {
     private ResidenteRepository residenteRepository;
 
     @Autowired
+    CuentaRepository cuentaRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
 
     //Crear residente
     public Residente crearResidente(Residente residente) {
+
+        //Creacion de cuenta antes de registrar el residente
+        Cuenta nuevaCuenta = new Cuenta();
+        //Se le asigna el tipo de cuenta al que se le relaciona
+        nuevaCuenta.setTipoCuenta("Residente");
+        //Se crea la cuenta en la base de datos
+        cuentaRepository.save(nuevaCuenta);
+
+        //Se le asigna el id de la cuenta creada al residente
+        residente.setIdcuenta(nuevaCuenta.getIdCuenta());
+        //Se encripta la contraseña
         residente.setContraseña(passwordEncoder.encode(residente.getContraseña()));//Encriptar la contraseña antes de ingresarla en la base de datos
         return residenteRepository.save(residente);}
 

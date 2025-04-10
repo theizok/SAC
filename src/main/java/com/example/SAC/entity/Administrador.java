@@ -17,14 +17,15 @@ public class Administrador {
     private String nombreAdministrador;
     @Column (name = "correo")
     private String correo;
+    @Column(name="documento")
+    private String documento;
     @Column (name = "contraseña")
     private String contraseña;
     @Column (name = "telefono")
     private String telefono;
     @Column(name ="idcuenta")
     private long idCuenta;
-    @Column(name="idrol")
-    private long idRol;
+
 
     //Getters
         public String getCorreo() {

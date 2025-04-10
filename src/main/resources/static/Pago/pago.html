@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pagos - Aplicativo Residencial</title>
     <link rel="stylesheet" href="pago.css">
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
 <body>
     <header>
@@ -18,8 +19,7 @@
                 <li><a href="pago.html">Pagos</a></li>
                 <li><a href="../Contacto/contacto.html">Contacto</a></li>
                 <li><a href="../TablonAnuncios/tablon_anuncios.html">Tablón de anuncios</a></li>
-                <li><a href="../AdministrarUsuarios/administrar_usuarios.html">Gestión de Usuarios</a></li>
-                <li><a href="../AdminPagos/admin_pagos.html" class="active">Administrar Pagos</a></li>
+
                 <li><a href="../Perfil/perfil.html">Perfil</a></li>
             </ul>
         </nav>
@@ -66,7 +66,7 @@
                         </div>
                         <div class="form-group">
                             <label for="monto-admin">Monto a pagar:</label>
-                            <input type="text" id="monto-admin" value="150.000" readonly>
+                            <input type="text" id="monto-admin" readonly>
                         </div>
                     </div>
 
@@ -102,7 +102,7 @@
                     <div class="form-group">
                         <label for="metodo-pago">Método de pago:</label>
                         <select id="metodo-pago" required>
-                            <option value="pse">PSE</option>
+                            <option value="pse">Mercado Pago</option>
                         </select>
                     </div>
 
@@ -177,7 +177,7 @@
                 <div class="resumen-pago">
                     <h4>Resumen del pago</h4>
                     <p id="pse-detalle">Pago de administración - Mes: Marzo</p>
-                    <p>Valor a pagar: <strong id="pse-valor">$150.000</strong></p>
+                    <p>Valor a pagar: <strong id="pse-valor"></strong></p>
                 </div>
 
                 <button type="button" id="btn-pago-pse" class="btn">Pagar</button>
@@ -201,5 +201,6 @@
     </footer>
     
     <script src="pago.js"></script>
+
 </body>
 </html>

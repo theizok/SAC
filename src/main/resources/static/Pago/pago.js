@@ -1,7 +1,14 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function () {
     // Elementos del DOM
     const tipoPago = document.getElementById('tipo-pago');
+
+    //Cargar elementos guardados por sesion
+    const idCuenta = sessionStorage.getItem("idCuenta");
+
+    //Campos de pago de administración
     const camposAdmin = document.getElementById('campos-administracion');
+
+
     const camposReserva = document.getElementById('campos-reserva');
     const continuarPagoBtn = document.getElementById('continuar-pago');
     const modalPSE = document.getElementById('modal-pse');
@@ -17,6 +24,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const horaReserva = document.getElementById('hora-reserva');
     const montoReserva = document.getElementById('monto-reserva');
 
+    //Cargar valor de Administración
+    try {
+
+        const responseValorAdmin = await fetch("http://localhost:8080/api/tarifa", {
+            method: "GET"
+        })
+
+        if (!responseValorAdmin.ok) {
+            throw new Error("Error al obtener el valor de la administración")
+        }
+
+        const data = await responseValorAdmin.json();
+
+        const tarifaAdmin = data.find(t => t.categoria === "Administración");
+
+        if(tarifaAdmin) {
+            document.getElementById("monto-admin").value = tarifaAdmin.valor
+            let categoria = tarifaAdmin.categoria;
+
+        }else {
+            console.error("No se encontro la tarifa de administración")
+        }
+    } catch (e) {
+        console.error("Error al cargar la tarifa\nError: "+ e)
+    };
+
+
+
+
     // Establecer fecha mínima para la reserva (hoy)
     const hoy = new Date();
     const fechaMinima = hoy.toISOString().split('T')[0];
@@ -29,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listeners
 
     // Cambio en el tipo de pago
-    tipoPago.addEventListener('change', function() {
+    tipoPago.addEventListener('change', function () {
         // Ocultar todos los campos específicos
         camposAdmin.style.display = 'none';
         camposReserva.style.display = 'none';
@@ -49,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Cambio de pestañas
     tabBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             const tabId = this.getAttribute('data-tab');
 
             // Desactivar todas las pestañas
@@ -68,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Filtrar historial
-    filtroTipo.addEventListener('change', function() {
+    filtroTipo.addEventListener('change', function () {
         const tipo = this.value;
         const filas = document.querySelectorAll('#historial-body tr');
 
@@ -82,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Continuar con el pago
-    continuarPagoBtn.addEventListener('click', function() {
+    continuarPagoBtn.addEventListener('click', async function () {
         const tipoPagoValue = tipoPago.value;
 
         if (!tipoPagoValue) {
@@ -90,15 +126,27 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Validaciones adicionales según el tipo de pago
+        let pago = {
+            valor: 0,
+            cuenta: {
+                idCuenta: idCuenta // asegúrate de tener esto definido globalmente
+            },
+            descripcion: '',
+            categoria: ''
+        };
+
         if (tipoPagoValue === 'administracion') {
             const mesPago = document.getElementById('mes-pago').value;
             const montoAdmin = document.getElementById('monto-admin').value;
 
+            pago.valor = parseFloat(montoAdmin);
+            pago.descripcion = `Pago administracion mes: ${mesPago}`;
+            pago.categoria = 'Administración';
+
             document.getElementById('pse-detalle').textContent = `Pago de administración - Mes: ${mesPago.charAt(0).toUpperCase() + mesPago.slice(1)}`;
             document.getElementById('pse-valor').textContent = `$${montoAdmin}`;
+
         } else if (tipoPagoValue === 'reserva') {
-            // Validar que se haya seleccionado una fecha
             if (!fechaReserva.value) {
                 alert('Por favor, seleccione una fecha para la reserva');
                 return;
@@ -109,100 +157,43 @@ document.addEventListener('DOMContentLoaded', function() {
             const horaSeleccionada = horaReserva.options[horaReserva.selectedIndex].text;
             const montoReservaValue = montoReserva.value;
 
+            pago.valor = parseFloat(montoReservaValue.replace(/\./g, '').replace(/,/g, ''));
+            pago.descripcion = `Reserva de ${areaSeleccionada} - ${fechaSeleccionada} - ${horaSeleccionada}`;
+            pago.categoria = 'Reserva';
+
             document.getElementById('pse-detalle').textContent = `Reserva de ${areaSeleccionada} - ${fechaSeleccionada} - ${horaSeleccionada}`;
             document.getElementById('pse-valor').textContent = `$${montoReservaValue}`;
         }
 
-        // Mostrar modal de PSE
-        modalPSE.style.display = 'block';
+        try {
+            const response = await fetch('http://localhost:8080/api/pago/mercado-pago', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(pago)
+            });
 
-        // Limpiar campos del formulario PSE
-        document.getElementById('pse-banco').value = '';
-        document.getElementById('pse-documento').value = '';
-        document.getElementById('pse-email').value = '';
-    });
+            if (!response.ok) {
+                throw new Error('Error al generar la preferencia de pago');
+            }
 
-    // Cerrar modal PSE
-    closeBtn.addEventListener('click', function() {
-        modalPSE.style.display = 'none';
-    });
+            const data = await response.json();
 
-    // Procesar pago PSE
-    btnPagoPSE.addEventListener('click', function() {
-        const banco = document.getElementById('pse-banco').value;
-        const documento = document.getElementById('pse-documento').value;
-        const email = document.getElementById('pse-email').value;
+            if (data.init_point) {
+                // Redirige a Mercado Pago
+                window.location.href = data.init_point;
+            } else if (data.id) {
+                // Alternativa: redirigir usando el SDK de Mercado Pago (si estás usando el frontend JS oficial)
+                // mp.checkout({ preference: { id: data.id }, ... })
+                console.log("ID de preferencia:", data.id);
+            } else {
+                alert('No se recibió una URL de pago válida');
+            }
 
-        // Validaciones de los campos del formulario PSE
-        if (!banco) {
-            alert('Por favor, seleccione un banco');
-            return;
-        }
-
-        if (!documento) {
-            alert('Por favor, ingrese su número de documento');
-            return;
-        }
-
-        if (!email) {
-            alert('Por favor, ingrese su correo electrónico');
-            return;
-        }
-
-        if (!validarEmail(email)) {
-            alert('Por favor, ingrese un correo electrónico válido');
-            return;
-        }
-
-        // Simular procesamiento de pago
-        modalPSE.style.display = 'none';
-
-        // Mostrar indicador de carga (podría añadirse un elemento visual aquí)
-
-        setTimeout(function() {
-            // Generar número de transacción aleatorio
-            const numTransaccion = 'PSE' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-            document.getElementById('num-transaccion').textContent = numTransaccion;
-
-            // Fecha actual para la transacción
-            const fechaActual = new Date();
-            document.getElementById('fecha-transaccion').textContent = fechaActual.toLocaleString('es-CO');
-
-            // Guardar pago en historial
-            guardarPagoEnHistorial(numTransaccion, fechaActual);
-
-            // Mostrar confirmación
-            modalConfirmacion.style.display = 'block';
-        }, 1500); // Simular tiempo de procesamiento
-    });
-
-    // Cerrar modal de confirmación
-    btnCerrarConfirmacion.addEventListener('click', function() {
-        modalConfirmacion.style.display = 'none';
-
-        // Limpiar formulario
-        document.getElementById('pago-form').reset();
-        camposAdmin.style.display = 'none';
-        camposReserva.style.display = 'none';
-
-        // Mostrar pestaña de historial
-        tabBtns.forEach(btn => btn.classList.remove('active'));
-        tabContents.forEach(content => content.classList.remove('active'));
-
-        document.querySelector('[data-tab="historial-pagos"]').classList.add('active');
-        document.getElementById('historial-pagos').classList.add('active');
-
-        // Recargar historial
-        cargarHistorialPagos();
-    });
-
-    // Cerrar modales al hacer clic fuera de ellos
-    window.addEventListener('click', function(event) {
-        if (event.target === modalPSE) {
-            modalPSE.style.display = 'none';
-        }
-        if (event.target === modalConfirmacion) {
-            modalConfirmacion.style.display = 'none';
+        } catch (error) {
+            console.error('Error al generar pago con Mercado Pago:', error);
+            alert('Hubo un error al procesar el pago. Intenta nuevamente.');
         }
     });
 
@@ -216,10 +207,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Precios según área y horario
         const precios = {
-            salon: { manana: 80000, tarde: 100000, noche: 120000 },
-            piscina: { manana: 50000, tarde: 70000, noche: 90000 },
-            bbq: { manana: 60000, tarde: 80000, noche: 100000 },
-            gimnasio: { manana: 30000, tarde: 40000, noche: 50000 }
+            salon: {manana: 80000, tarde: 100000, noche: 120000},
+            piscina: {manana: 50000, tarde: 70000, noche: 90000},
+            bbq: {manana: 60000, tarde: 80000, noche: 100000},
+            gimnasio: {manana: 30000, tarde: 40000, noche: 50000}
         };
 
         if (area && hora) {

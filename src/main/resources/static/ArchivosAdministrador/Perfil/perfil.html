@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario - Aplicativo Residencial</title>
+    <link rel="stylesheet" href="perfil.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../Inicio/image.png" alt="Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../Inicio/Index.html">Inicio</a></li>
+                <li><a href="../Mensaje/mensaje.html">Mensajes</a></li>
+                <li><a href="../Pago/pago.html">Pagos</a></li>
+                <li><a href="../Contacto/contacto.html">Contacto</a></li>
+                <li><a href="../TablonAnuncios/tablon_anuncios.html">Tablón de anuncios</a></li>
+                <li><a href="../AdministrarUsuarios/administrar_usuarios.html">Gestión de Usuarios</a></li>
+                <li><a href="../AdminPagos/admin_pagos.html" class="active">Administrar Pagos</a></li>
+                <li><a href="perfil.html">Perfil</a></li>
+                <!-- Botón de Cerrar Sesión -->
+                <li><a href="#" id="logout">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="perfil-container">
+            <div class="perfil-header">
+                <h1>Perfil de Usuario</h1>
+                <p>Gestiona tu información personal y configuración de cuenta</p>
+            </div>
+
+            <div class="perfil-tabs">
+                <div class="perfil-tab active" data-tab="info-personal">Información Personal</div>
+                <div class="perfil-tab" data-tab="seguridad">Seguridad</div>
+                <div class="perfil-tab" data-tab="eliminar-cuenta">Eliminar Cuenta</div>
+            </div>
+
+            <div class="perfil-content active" id="info-personal">
+                <div class="datos-personales">
+                    <h2>Datos Personales</h2>
+                    <form id="form-datos-personales">
+                        <div class="form-row">
+                            <div class="form-column">
+                                <div class="form-group">
+                                    <label for="nombre">Nombre</label>
+                                    <input type="text" id="nombre" value="" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-column">
+                                <div class="form-group">
+                                    <label for="documento">Número de Documento</label>
+                                    <input type="text" id="documento" value="" readonly>
+                                </div>
+                            </div>
+                            <div class="form-column">
+                                <div class="form-group">
+                                    <label for="telefono">Teléfono</label>
+                                    <input type="text" id="telefono" value="" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="correo">Correo Electrónico</label>
+                            <input type="email" id="correo" value="" required>
+                        </div>
+
+                        <button type="submit" class="btn">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="perfil-content" id="seguridad">
+                <h2>Cambiar Contraseña</h2>
+                <form id="form-cambiar-password">
+                    <div class="form-group">
+                        <label for="password-actual">Contraseña Actual</label>
+                        <input type="password" id="password-actual" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password-nueva">Nueva Contraseña</label>
+                        <input type="password" id="password-nueva" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password-confirmar">Confirmar Nueva Contraseña</label>
+                        <input type="password" id="password-confirmar" required>
+                    </div>
+
+                    <button type="submit" class="btn">Cambiar Contraseña</button>
+                </form>
+            </div>
+
+            <div class="perfil-content" id="eliminar-cuenta">
+                <h2>Eliminar mi cuenta</h2>
+                <p>Esta acción eliminará permanentemente tu cuenta y toda la información asociada a ella. Esta acción no puede deshacerse.</p>
+                
+                <div class="form-group">
+                    <label for="motivo-eliminacion">Motivo de eliminación (opcional)</label>
+                    <select id="motivo-eliminacion">
+                        <option value="">-- Seleccione un motivo --</option>
+                        <option value="mudanza">Me mudé del conjunto residencial</option>
+                        <option value="experiencia">Mala experiencia con la plataforma</option>
+                        <option value="funcionalidad">Falta de funcionalidad</option>
+                        <option value="privacidad">Preocupaciones de privacidad</option>
+                        <option value="otro">Otro motivo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comentarios-eliminacion">Comentarios adicionales</label>
+                    <textarea id="comentarios-eliminacion" rows="3"></textarea>
+                </div>
+
+                <button type="button" id="btn-solicitar-eliminacion" class="btn btn-danger">Solicitar Eliminación de Cuenta</button>
+
+                <div class="confirm-delete" id="confirm-delete" style="display: none;">
+                    <h3>Confirmar eliminación</h3>
+                    <p>Por favor, ingresa tu contraseña para confirmar la eliminación de tu cuenta:</p>
+                    <div class="form-group">
+                        <input type="password" id="password-confirmar-eliminacion" required>
+                    </div>
+                    <button type="button" id="btn-confirmar-eliminacion" class="btn btn-danger">Confirmar Eliminación</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+    </footer>
+    
+    <script src="perfil.js"></script>
+</body>
+</html>

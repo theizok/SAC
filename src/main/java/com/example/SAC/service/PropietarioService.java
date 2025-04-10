@@ -1,8 +1,8 @@
 package com.example.SAC.service;
 
+import com.example.SAC.entity.Cuenta;
 import com.example.SAC.entity.Propietario;
-import com.example.SAC.entity.Publicacion;
-import com.example.SAC.entity.Residente;
+import com.example.SAC.repository.CuentaRepository;
 import com.example.SAC.repository.PropietarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +21,9 @@ public class PropietarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private CuentaRepository cuentaRepository;
+
     //Obtener todos los propietarios
     public List<Propietario> obtenerTodos() {
         return propietarioRepository.findAll();
@@ -28,7 +31,20 @@ public class PropietarioService {
 
     //Agregar propietario
     public Propietario agregarPropietario(Propietario propietario) {
+
+        //Se crea la cuenta
+        Cuenta cuentanueva = new Cuenta();
+        //Se define el tipo de cuenta que se crea
+        cuentanueva.setTipoCuenta("Propietario");
+
+        //Se guarda la cuenta en la bd
+        cuentaRepository.save(cuentanueva);
+
+        //El propietario obtiene su id de cuenta
+        propietario.setIdCuenta(cuentanueva.getIdCuenta());
+        //Se encripta la contraseña ingresada antes de enviar el propietario a la bd
         propietario.setContraseña(passwordEncoder.encode(propietario.getContraseña()));//Se encripta la contraseña del propietario con psword encoder
+        //Se guarda el propietario en la base de datos
         return propietarioRepository.save(propietario);
     }
 
@@ -43,7 +59,6 @@ public class PropietarioService {
         } ).orElseThrow(() -> new RuntimeException("No se encontro el propietario"));
     }
 
-    //Cambiar contraseña
     //Cambiar contraseña
     public boolean cambiarContraseña(Long idPropietario, String passwordActual, String passwordNueva) {
         Optional<Propietario> propietarioOpt = propietarioRepository.findById(idPropietario);

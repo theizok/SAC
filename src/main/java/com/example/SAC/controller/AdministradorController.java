@@ -1,16 +1,19 @@
 package com.example.SAC.controller;
 
+import com.example.SAC.dto.PasswordRequest;
+import com.example.SAC.dto.PublicacionDTO;
+import com.example.SAC.dto.UsuarioDTO;
 import com.example.SAC.entity.*;
-import com.example.SAC.service.ApartamentoService;
-import com.example.SAC.service.PropietarioService;
-import com.example.SAC.service.PublicacionService;
-import com.example.SAC.service.ResidenteService;
+import com.example.SAC.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -28,6 +31,13 @@ public class AdministradorController {
 
     @Autowired
     private ResidenteService residenteService;
+
+    @Autowired
+    private UsuarioDTOService usuarioDTOService;
+    @Autowired
+    private AdministradorService administradorService;
+    @Autowired
+    private MensajeService mensajeService;
 
     //Obtener todos los residentes
     @GetMapping("/obtenerResidentes")
@@ -53,6 +63,47 @@ public class AdministradorController {
         return propietarioService.obtenerPropietarioPorNombre(nombre);
     }
 
+    //Obtener administrador por id
+    @GetMapping("obtenerPorId")
+    public Optional<Administrador> obtenerPorId(Long id) {
+        return administradorService.obtenerAdministradorPorId(id);
+    }
+
+    //Se <actualiza admin
+    @PutMapping("/actualizar")
+    public Administrador actualizarAdministrador(@RequestParam long id, @RequestBody Administrador administrador) {
+        return administradorService.actualizarAdministrador(id, administrador);
+    }
+
+    //Obtener mensajes
+    @GetMapping("/obtenerMensajes")
+    public List<Mensaje> getMensajes() {
+        return mensajeService.findAllMensajes();
+    }
+
+    //ELiminar publicaciones
+    @DeleteMapping("/eliminarPublicacion")
+    public void eliminarPublicacion(@RequestParam long id) {
+        publicacionService.eliminarPublicacion(id);
+    }
+
+
+    //Cambiar Contraseña por id
+    //Cambiar contraseña
+    @PutMapping("/cambiarContraseña")
+    public ResponseEntity<?> cambiarContraseña(@RequestBody PasswordRequest request) {
+        try {
+            administradorService.cambiarContraseña(request.getIdUsuario(), request.getPasswordActual(), request.getPasswordNueva());
+            return ResponseEntity.ok(Map.of("message", "Contraseña actualizada correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+    //Obtener todos los usuarios
+    @GetMapping("/obtenerUsuarios")
+    public List<UsuarioDTO> obtenerUsuarios(){
+        return usuarioDTOService.obtenerUsuarios();
+    }
 
     //Agregar residente
     @PostMapping("/agregarResidente")
@@ -84,10 +135,11 @@ public class AdministradorController {
         return apartamentoService.editarApartamento(apartamento);
     }
 
+
     //Obtener todas las publicaciones
-    @GetMapping("/ObtenerPublicacion")
-    public List<Publicacion> getPublicacion() {
-        return publicacionService.obtenerPublicaciones();
+    @GetMapping("/ObtenerPublicacionesAdministrador")
+    public List<PublicacionDTO> getPublicacion() {
+        return publicacionService.obtenerPublicacionesAdministrador();
     }
 
 
@@ -95,6 +147,12 @@ public class AdministradorController {
     @PostMapping("/crearPublicacion")
     public Publicacion agregarPublicacion(@RequestBody Publicacion publicacion){
         return publicacionService.crearPublicacion(publicacion);
+    }
+
+    //Agregar admin
+    @PostMapping("agregarAdministrador")
+    public Administrador agregarAdministrador(@RequestBody Administrador administrador){
+        return administradorService.agregarAdministrador(administrador);
     }
 
     //Vistas del administrador

@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
         UPDATE_URL = "http://localhost:8080/api/residente/actualizar";
         CHANGE_URL = "http://localhost:8080/api/residente/cambiarContraseña";
     } else if (rol === "propietario") {
-        API_URL = "http://localhost:8080/api/propietario/obtenerPropietarioById";
+        API_URL = "http://localhost:8080/api/propietario/ObtenerPropietarioById";
         UPDATE_URL = "http://localhost:8080/api/propietario/actualizar";
         CHANGE_URL = "http://localhost:8080/api/propietario/cambiarContraseña";
     } else {

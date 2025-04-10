@@ -19,11 +19,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const titulo = document.getElementById('titulo').value;
         const contenido = document.getElementById('contenido').value;
         const fecha = document.getElementById('fecha').value;
-  
+        const idCuenta = sessionStorage.getItem("idCuenta");
+
         const nuevaPublicacion = JSON.stringify({
             titulo: titulo,
             contenido: contenido,
-            fecha: fecha
+            fecha: fecha,
+            cuenta: {
+                idCuenta: idCuenta
+            }
         });
 
         try {
@@ -47,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        window.location.href = '/TablonAnuncios/tablon_anuncios.html';
+        //window.location.href = '/TablonAnuncios/tablon_anuncios.html';
     });
 
 

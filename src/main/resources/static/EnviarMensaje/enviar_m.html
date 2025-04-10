@@ -16,9 +16,6 @@
                 <li><a href="../Mensaje/mensaje.html">Mensajes</a></li>
                 <li><a href="../Pago/pago.html">Pagos</a></li>
                 <li><a href="../Contacto/contacto.html">Contacto</a></li>
-                <li><a href="../TablonAnuncios/tablon_anuncios.html">Tablón de anuncios</a></li>
-                <li><a href="../AdministrarUsuarios/administrar_usuarios.html">Gestión de Usuarios</a></li>
-                <li><a href="../AdminPagos/admin_pagos.html" class="active">Administrar Pagos</a></li>
                 <li><a href="../Perfil/perfil.html">Perfil</a></li>
             </ul>
         </nav>
@@ -28,11 +25,11 @@
         <section class="enviar-mensaje">
             <h1>Enviar mensaje</h1>
 
-            <form class="enviar-mensaje">
+            <form class="enviar-mensaje" id="enviar-mensaje">
                 <div class="contenedor-columnas">
                     <div class="contenido-mensaje">
                         <h2>Contenido del mensaje</h2>
-                        <textarea placeholder="Escribe tu mensaje aquí..." rows="6"></textarea>
+                        <textarea placeholder="Escribe tu mensaje aquí..." rows="6" id="contenido"></textarea>
                     </div>
 
                     <div class="info-mensaje">
@@ -42,16 +39,9 @@
                             <input type="text" id="asunto" placeholder="Ej: Basuras en pasillo">
                         </div>
                         <div class="campo">
-                            <label for="remitente">Remitente:</label>
-                            <input type="text" id="remitente" placeholder="Ej: Helena Rosales Martinez">
-                        </div>
-                        <div class="campo">
                             <label for="destinatario">Destinatario:</label>
                             <select id="destinatario">
-                                <option value="administrador">Administrador</option>
-                                <option value="vecino1">Vecino 1</option>
-                                <option value="vecino2">Vecino 2</option>
-                                <option value="vecino3">Vecino 3</option>
+                                <option value="administrador" selected>Administrador</option>
                             </select>
                         </div>
                     </div>
@@ -66,6 +56,6 @@
         <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
     </footer>
 
-    <script src="../Enviados/mensaje.js"></script>
+    <script src="EnviarMensaje.js"></script>
 </body>
 </html>
