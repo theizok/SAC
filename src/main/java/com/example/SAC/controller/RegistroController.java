@@ -35,16 +35,11 @@ public class RegistroController {
     //Registrar propietario
     @PostMapping("/propietario")
     public Propietario registrarPropietario(@RequestBody Propietario propietario) {
-        String correo = propietario.getCorreo();
-        String asunto = "Creación de cuenta";
-        String contenido = "Te has registrado de forma correcta en SAC";
-        emailService.sendSimpleMail(correo,asunto,contenido);
         return propietarioService.agregarPropietario(propietario);
     }
 
     @PostMapping("/administrador")
     public Administrador registrarAdministrador(@RequestBody Administrador administrador) {
-
         return administradorService.agregarAdministrador(administrador);
     }
 
