@@ -29,6 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    let usuario = "";
+
     const rol = userType.toLowerCase(); // Convertir a minúscula para comparación
     let API_URL = "";
     let UPDATE_URL = "";
@@ -38,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         API_URL = "http://localhost:8080/api/residente/obtenerPorId";
         UPDATE_URL = "http://localhost:8080/api/residente/actualizar";
         CHANGE_URL = "http://localhost:8080/api/residente/cambiarContraseña";
+
     } else if (rol === "propietario") {
         API_URL = "http://localhost:8080/api/propietario/ObtenerPropietarioById";
         UPDATE_URL = "http://localhost:8080/api/propietario/actualizar";
@@ -80,18 +83,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await response.json();
 
-            // Crear objeto con datos actualizados
-            const usuario = JSON.stringify({
-                nombre,
-                documento,
-                correo,
-                telefono,
-                contraseña: data.contraseña,
-                edad: data.edad,
-                idcuenta: data.idcuenta,
-                idrol: data.idrol,
-                idapartamento: data.idapartamento
-            });
+            switch(rol){
+                case "residente":
+                   let usuario = JSON.stringify({
+                       nombre,
+                       documento,
+                       correo,
+                       telefono,
+                       contraseña: data.contraseña,
+                       edad: data.edad,
+                       idcuenta: data.idcuenta,
+                       idrol: data.idrol,
+                       idapartamento: data.idapartamento
+                   });
+                   break
+                case "propietario":
+                    let propietario = JSON.stringify({
+                        nombre:nombre,
+                        documentoPropietario:documento,
+                        correo:correo,
+                        telefonoPropietario:telefono,
+                        contraseña: data.contraseña,
+                        edad: data.edad,
+                        idcuenta: data.idcuenta,
+                        idrol: data.idrol,
+                        idapartamento: data.idapartamento
+                    });
+                    break
+            }
+
 
             // Enviar datos al backend con PUT
             const respuesta = await fetch(`${UPDATE_URL}?id=${id}`, {
@@ -190,23 +210,54 @@ async function obtenerDatosPerfil(url, id) {
         }
 
         const data = await response.json();
+        let rol = sessionStorage.getItem("userType").toLowerCase();
 
         // Verificar que los elementos existen antes de asignar valores
-        if (document.getElementById("id")) {
-            document.getElementById("id").value = data.id;
+        switch (rol) {
+            case ("residente"):
+                if (document.getElementById("id")) {
+                    document.getElementById("id").value = data.id;
+                }
+                if (document.getElementById("nombre")) {
+                    document.getElementById("nombre").value = data.nombre;
+                }
+                if (document.getElementById("correo")) {
+                    document.getElementById("correo").value = data.correo;
+                }
+
+                if (document.getElementById("telefono")) {
+                    document.getElementById("telefono").value = data.telefono;
+                }
+
+                if (document.getElementById("documento")) {
+                    document.getElementById("documento").value = data.documento;
+                }
+                break
+            case ("propietario"):
+                if (document.getElementById("id")) {
+                    document.getElementById("id").value = data.id;
+                }
+                if (document.getElementById("nombre")) {
+                    document.getElementById("nombre").value = data.nombre;
+                }
+                if (document.getElementById("correo")) {
+                    document.getElementById("correo").value = data.correo;
+                }
+
+                if (document.getElementById("telefono")) {
+                    document.getElementById("telefono").value = data.telefonoPropietario;
+                }
+
+                if (document.getElementById("documento")) {
+                    document.getElementById("documento").value = data.documentoPropietario;
+                }
+                break
+            default:
         }
-        if (document.getElementById("nombre")) {
-            document.getElementById("nombre").value = data.nombre;
-        }
-        if (document.getElementById("correo")) {
-            document.getElementById("correo").value = data.correo;
-        }
-        if (document.getElementById("telefono")) {
-            document.getElementById("telefono").value = data.telefono;
-        }
-        if (document.getElementById("documento")) {
-            document.getElementById("documento").value = data.documento;
-        }
+
+
+
+
 
     } catch (error) {
         console.error("Error al obtener datos:", error);
