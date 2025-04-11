@@ -1,6 +1,6 @@
 # Requisitos para el correcto funcionamiento del proyecto
 
-1. Instalar **JDK 23** (preferiblemente) para asegurar la compatibilidad del proyecto.
+1. Instalar **SDK 23 Amazon Corretto 23.0.2 Java 23** (preferiblemente) para asegurar la compatibilidad del proyecto.
 2. Agregar y utilizar la base de datos que viene incluida junto al proyecto.
 
 ---
