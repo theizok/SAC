@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    let usuario = "";
 
     const rol = userType.toLowerCase(); // Convertir a minúscula para comparación
     let API_URL = "";
@@ -47,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
         CHANGE_URL = "http://localhost:8080/api/propietario/cambiarContraseña";
     } else {
         console.error("Tipo de usuario no válido");
-        tipoUsuario = "TIpo de usuario no encontrado"
         return;
     }
 
@@ -82,10 +80,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const data = await response.json();
+            let usuario = "";
+
+
 
             switch(rol){
                 case "residente":
-                   let usuario = JSON.stringify({
+                    usuario = JSON.stringify({
                        nombre,
                        documento,
                        correo,
@@ -98,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    });
                    break
                 case "propietario":
-                    let propietario = JSON.stringify({
+                    usuario = JSON.stringify({
                         nombre:nombre,
                         documentoPropietario:documento,
                         correo:correo,
