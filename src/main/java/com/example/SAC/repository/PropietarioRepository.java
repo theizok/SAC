@@ -11,4 +11,6 @@ public interface PropietarioRepository extends JpaRepository<Propietario, Long> 
     Optional<Propietario> findByCorreo(String correo);
 
     Propietario findByNombre(String nombre);
+
+    void deleteByDocumento(String document);
 }

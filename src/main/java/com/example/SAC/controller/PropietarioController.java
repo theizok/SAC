@@ -61,12 +61,19 @@ public class PropietarioController {
         }
     }
 
-    //Agregar propietario
-    @PostMapping("/agregarPropietario")
-    public Propietario agregarPropietario(@RequestBody Propietario propietario) {
-        return propietarioService.agregarPropietario(propietario);
-    }
+    //ELiminar cuenta por id
+    @DeleteMapping("/eliminarCuenta")
+    public ResponseEntity<?> eliminarCuenta(@RequestParam long id) {
+        try
+        {
+            propietarioService.eliminarPropietarioPorId(id);
+            return ResponseEntity.ok(Map.of("message", "Cuenta eLiminada correctamente"));
 
+        } catch (Exception ex)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
 
     //Crear Publicacion
     @PostMapping("/crearPublicacion")
@@ -92,6 +99,7 @@ public class PropietarioController {
         return mensajeService.findMensajeByIdCuentaPropietario(idCuenta);
     }
 
+    //Vista de inicio
     @GetMapping("/dashboard")
     public RedirectView dashboard() {
         return new RedirectView("/Inicio/Index.html");

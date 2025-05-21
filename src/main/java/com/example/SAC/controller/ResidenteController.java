@@ -7,6 +7,7 @@ import com.example.SAC.entity.Residente;
 import com.example.SAC.service.MensajeService;
 import com.example.SAC.service.PublicacionService;
 import com.example.SAC.service.ResidenteService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,8 +55,17 @@ public class ResidenteController {
 
     //Se elimina residente por id
     @DeleteMapping("eliminar")
-    public void eliminarResidente(@RequestParam Long id) {
-        residenteService.eliminarResidentePorId(id);
+    public ResponseEntity<?> eliminarResidente(@RequestParam Long id) {
+
+        try
+        {
+            residenteService.eliminarResidentePorId(id);
+            return ResponseEntity.ok(Map.of("message", "Cuenta eLiminada correctamente"));
+
+        } catch(Exception ex)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
     }
 
 
