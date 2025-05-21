@@ -17,4 +17,6 @@ public interface ResidenteRepository extends JpaRepository<Residente, Long> {
     List<Residente> findByDocumento(String documento);
 
     Residente getByNombre(String nombre);
+
+    void deleteByDocumento(String documento);
 }

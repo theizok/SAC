@@ -53,6 +53,12 @@ public class ResidenteService {
         } ).orElseThrow(() -> new RuntimeException("No se encontro el propietario"));
     }
 
+    //Eliminar residente
+    public void eliminarResidente(String documento) {
+        residenteRepository.deleteByDocumento(documento);
+    }
+
+
     //Cambiar contraseña
     public boolean cambiarContraseña(Long idResidente, String passwordActual, String passwordNueva) {
         Optional<Residente> residenteOpt = residenteRepository.findById(idResidente);

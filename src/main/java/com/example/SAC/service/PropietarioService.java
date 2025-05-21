@@ -91,7 +91,14 @@ public class PropietarioService {
         return propietarioRepository.findByNombre(nombre);
     }
 
+    //ELiminar propietario por documento
+    public void eliminarPropietariobyDocumento(String document) {
+        propietarioRepository.deleteByDocumento(document);
+    }
 
+    //ELiminar propietario por id
+    public void eliminarPropietarioPorId(Long id) {
+        propietarioRepository.deleteById(id);
 
-
+    }
 }
