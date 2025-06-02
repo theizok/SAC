@@ -4,151 +4,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pagos - Aplicativo Residencial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="pago.css">
     <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
 <body>
     <header>
-        <div class="logo-container">
-            <img src="../Inicio/image.png" alt="Logo">
+        <div class="header-container">
+            <a href="../Inicio/Index.html" class="logo-container">
+                <img src="../Inicio/image.png" alt="Logo" class="logo">
+            </a>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="../Inicio/Index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="../Mensaje/mensaje.html"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="pago.html" class="active"><i class="fas fa-credit-card"></i> Pagos</a></li>
+                    <li><a href="../Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    <li><a href="../TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                    <li><a href="../Perfil/perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+                </ul>
+            </nav>
         </div>
-        <nav>
-            <ul>
-                <li><a href="../Inicio/Index.html">Inicio</a></li>
-                <li><a href="../Mensaje/mensaje.html">Mensajes</a></li>
-                <li><a href="pago.html">Pagos</a></li>
-                <li><a href="../Contacto/contacto.html">Contacto</a></li>
-                <li><a href="../TablonAnuncios/tablon_anuncios.html">Tablón de anuncios</a></li>
-
-                <li><a href="../Perfil/perfil.html">Perfil</a></li>
-            </ul>
-        </nav>
     </header>
 
     <main>
-        <div class="container">
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="realizar-pago">Realizar Pago</button>
-                <button class="tab-btn" data-tab="historial-pagos">Historial de Pagos</button>
-            </div>
-
-            <div class="tab-content active" id="realizar-pago">
-                <h2>Realizar Pago</h2>
+        <section class="payment-section">
+            <div class="container">
+                <h1 class="section-title"><i class="fas fa-credit-card"></i> Sistema de Pagos</h1>
+                <p class="section-subtitle">Realiza tus pagos de administración y reserva de áreas comunes de forma segura</p>
                 
-                <form id="pago-form">
-                    <div class="form-group">
-                        <label for="tipo-pago">Tipo de Pago:</label>
-                        <select id="tipo-pago" required>
-                            <option value="">-- Seleccione un tipo de pago --</option>
-                            <option value="administracion">Pago de Administración</option>
-                            <option value="reserva">Reserva de Área Común</option>
-                        </select>
-                    </div>
-
-                    <!-- Campos específicos para Pago de Administración -->
-                    <div class="campos-especificos" id="campos-administracion">
-                        <div class="form-group">
-                            <label for="mes-pago">Mes a pagar:</label>
-                            <select id="mes-pago">
-                                <option value="enero">Enero</option>
-                                <option value="febrero">Febrero</option>
-                                <option value="marzo">Marzo</option>
-                                <option value="abril">Abril</option>
-                                <option value="mayo">Mayo</option>
-                                <option value="junio">Junio</option>
-                                <option value="julio">Julio</option>
-                                <option value="agosto">Agosto</option>
-                                <option value="septiembre">Septiembre</option>
-                                <option value="octubre">Octubre</option>
-                                <option value="noviembre">Noviembre</option>
-                                <option value="diciembre">Diciembre</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="monto-admin">Monto a pagar:</label>
-                            <input type="text" id="monto-admin" readonly>
-                        </div>
-                    </div>
-
-                    <!-- Campos específicos para Reserva de Área Común -->
-                    <div class="campos-especificos" id="campos-reserva">
-                        <div class="form-group">
-                            <label for="area-comun">Área común:</label>
-                            <select id="area-comun">
-                                <option value="salon">Salón Social</option>
-                                <option value="piscina">Piscina</option>
-                                <option value="bbq">Zona BBQ</option>
-                                <option value="gimnasio">Gimnasio</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="fecha-reserva">Fecha de reserva:</label>
-                            <input type="date" id="fecha-reserva" min="">
-                        </div>
-                        <div class="form-group">
-                            <label for="hora-reserva">Hora de reserva:</label>
-                            <select id="hora-reserva">
-                                <option value="manana">Mañana (8:00 AM - 12:00 PM)</option>
-                                <option value="tarde">Tarde (1:00 PM - 5:00 PM)</option>
-                                <option value="noche">Noche (6:00 PM - 10:00 PM)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="monto-reserva">Monto a pagar:</label>
-                            <input type="text" id="monto-reserva" readonly>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="metodo-pago">Método de pago:</label>
-                        <select id="metodo-pago" required>
-                            <option value="pse">Mercado Pago</option>
-                        </select>
-                    </div>
-
-                    <button type="button" id="continuar-pago" class="btn">Continuar con el pago</button>
-                </form>
-            </div>
-
-            <div class="tab-content" id="historial-pagos">
-                <h2>Historial de Pagos</h2>
-                <div class="filtro-historial">
-                    <label for="filtro-tipo">Filtrar por tipo:</label>
-                    <select id="filtro-tipo">
-                        <option value="todos">Todos los pagos</option>
-                        <option value="administracion">Pagos de Administración</option>
-                        <option value="reserva">Reservas de Áreas Comunes</option>
-                    </select>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="realizar-pago">
+                        <i class="fas fa-money-bill-wave"></i> Realizar Pago
+                    </button>
+                    <button class="tab-btn" data-tab="historial-pagos">
+                        <i class="fas fa-history"></i> Historial
+                    </button>
                 </div>
-                
-                <div class="tabla-container">
-                    <table id="tabla-historial">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Tipo</th>
-                                <th>Detalle</th>
-                                <th>Monto</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody id="historial-body">
-                            <!-- El historial se cargará dinámicamente desde JS -->
-                        </tbody>
-                    </table>
+
+                <div class="tab-content active" id="realizar-pago">
+                    <div class="payment-card">
+                        <h2><i class="fas fa-wallet"></i> Realizar Pago</h2>
+                        
+                        <form id="pago-form">
+                            <div class="form-group">
+                                <label for="tipo-pago"><i class="fas fa-tags"></i> Tipo de Pago:</label>
+                                <select id="tipo-pago" required>
+                                    <option value="">-- Seleccione un tipo de pago --</option>
+                                    <option value="administracion">Pago de Administración</option>
+                                    <option value="reserva">Reserva de Área Común</option>
+                                </select>
+                            </div>
+
+                            <!-- Campos específicos para Pago de Administración -->
+                            <div class="campos-especificos" id="campos-administracion">
+                                <div class="form-group">
+                                    <label for="mes-pago"><i class="fas fa-calendar-alt"></i> Mes a pagar:</label>
+                                    <select id="mes-pago">
+                                        <option value="enero">Enero</option>
+                                        <option value="febrero">Febrero</option>
+                                        <option value="marzo">Marzo</option>
+                                        <option value="abril">Abril</option>
+                                        <option value="mayo">Mayo</option>
+                                        <option value="junio">Junio</option>
+                                        <option value="julio">Julio</option>
+                                        <option value="agosto">Agosto</option>
+                                        <option value="septiembre">Septiembre</option>
+                                        <option value="octubre">Octubre</option>
+                                        <option value="noviembre">Noviembre</option>
+                                        <option value="diciembre">Diciembre</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="monto-admin"><i class="fas fa-dollar-sign"></i> Monto a pagar:</label>
+                                    <input type="text" id="monto-admin" readonly>
+                                </div>
+                            </div>
+
+                            <!-- Campos específicos para Reserva de Área Común -->
+                            <div class="campos-especificos" id="campos-reserva">
+                                <div class="form-group">
+                                    <label for="area-comun"><i class="fas fa-swimming-pool"></i> Área común:</label>
+                                    <select id="area-comun">
+                                        <option value="salon">Salón Social</option>
+                                        <option value="piscina">Piscina</option>
+                                        <option value="bbq">Zona BBQ</option>
+                                        <option value="gimnasio">Gimnasio</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fecha-reserva"><i class="fas fa-calendar-day"></i> Fecha de reserva:</label>
+                                    <input type="date" id="fecha-reserva" min="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="hora-reserva"><i class="fas fa-clock"></i> Hora de reserva:</label>
+                                    <select id="hora-reserva">
+                                        <option value="manana">Mañana (8:00 AM - 12:00 PM)</option>
+                                        <option value="tarde">Tarde (1:00 PM - 5:00 PM)</option>
+                                        <option value="noche">Noche (6:00 PM - 10:00 PM)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="monto-reserva"><i class="fas fa-dollar-sign"></i> Monto a pagar:</label>
+                                    <input type="text" id="monto-reserva" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="metodo-pago"><i class="fas fa-credit-card"></i> Método de pago:</label>
+                                <select id="metodo-pago" required>
+                                    <option value="pse">Mercado Pago</option>
+                                </select>
+                            </div>
+
+                            <button type="button" id="continuar-pago" class="btn primary">
+                                <i class="fas fa-arrow-right"></i> Continuar con el pago
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="historial-pagos">
+                    <div class="history-card">
+                        <h2><i class="fas fa-file-invoice-dollar"></i> Historial de Pagos</h2>
+                        
+                        <div class="filtro-historial">
+                            <div class="form-group">
+                                <label for="filtro-tipo"><i class="fas fa-filter"></i> Filtrar por tipo:</label>
+                                <select id="filtro-tipo">
+                                    <option value="todos">Todos los pagos</option>
+                                    <option value="administracion">Pagos de Administración</option>
+                                    <option value="reserva">Reservas de Áreas Comunes</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="tabla-container">
+                            <table id="tabla-historial">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-calendar"></i> Fecha</th>
+                                        <th><i class="fas fa-tag"></i> Tipo</th>
+                                        <th><i class="fas fa-info-circle"></i> Detalle</th>
+                                        <th><i class="fas fa-money-bill-wave"></i> Monto</th>
+                                        <th><i class="fas fa-check-circle"></i> Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historial-body">
+                                    <!-- El historial se cargará dinámicamente desde JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
     </main>
 
     <!-- Modal de PSE -->
     <div id="modal-pse" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h3>Pago PSE</h3>
+            <h3><i class="fas fa-university"></i> Pago PSE</h3>
             <form id="form-pse">
                 <div class="form-group">
-                    <label for="pse-banco">Seleccione su banco:</label>
+                    <label for="pse-banco"><i class="fas fa-landmark"></i> Seleccione su banco:</label>
                     <select id="pse-banco" required>
                         <option value="">-- Seleccione su banco --</option>
                         <option value="banco1">Bancolombia</option>
@@ -159,28 +185,30 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="pse-tipopersona">Tipo de persona:</label>
+                    <label for="pse-tipopersona"><i class="fas fa-user-tag"></i> Tipo de persona:</label>
                     <select id="pse-tipopersona" required>
                         <option value="natural">Persona Natural</option>
                         <option value="juridica">Persona Jurídica</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="pse-documento">Número de documento:</label>
+                    <label for="pse-documento"><i class="fas fa-id-card"></i> Número de documento:</label>
                     <input type="text" id="pse-documento" required pattern="[0-9]*">
                 </div>
                 <div class="form-group">
-                    <label for="pse-email">Correo electrónico:</label>
+                    <label for="pse-email"><i class="fas fa-envelope"></i> Correo electrónico:</label>
                     <input type="email" id="pse-email" required>
                 </div>
                 
                 <div class="resumen-pago">
-                    <h4>Resumen del pago</h4>
+                    <h4><i class="fas fa-receipt"></i> Resumen del pago</h4>
                     <p id="pse-detalle">Pago de administración - Mes: Marzo</p>
                     <p>Valor a pagar: <strong id="pse-valor"></strong></p>
                 </div>
 
-                <button type="button" id="btn-pago-pse" class="btn">Pagar</button>
+                <button type="button" id="btn-pago-pse" class="btn primary">
+                    <i class="fas fa-check"></i> Confirmar Pago
+                </button>
             </form>
         </div>
     </div>
@@ -188,19 +216,29 @@
     <!-- Modal de Confirmación -->
     <div id="modal-confirmacion" class="modal">
         <div class="modal-content">
-            <h3>Pago Exitoso</h3>
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>¡Pago Exitoso!</h3>
             <p>Su pago ha sido procesado correctamente.</p>
-            <p>Número de transacción: <span id="num-transaccion"></span></p>
-            <p>Fecha: <span id="fecha-transaccion"></span></p>
-            <button type="button" id="btn-cerrar-confirmacion" class="btn">Cerrar</button>
+            <div class="transaction-details">
+                <p><i class="fas fa-receipt"></i> Número de transacción: <span id="num-transaccion"></span></p>
+                <p><i class="fas fa-calendar-check"></i> Fecha: <span id="fecha-transaccion"></span></p>
+            </div>
+            <button type="button" id="btn-cerrar-confirmacion" class="btn primary">
+                <i class="fas fa-times"></i> Cerrar
+            </button>
         </div>
     </div>
 
     <footer>
-        <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+            </div>
+        </div>
     </footer>
     
     <script src="pago.js"></script>
-
 </body>
 </html>

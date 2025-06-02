@@ -94,14 +94,3 @@
 
      obtenerPublicaiones("todos");
  })
-
-
-
-
-
-
-
-    
-
-    
-

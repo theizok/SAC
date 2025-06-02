@@ -3,47 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacto</title>
+    <title>Contacto - SAC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="contacto.css">
 </head>
 <body>
     <header>
-        <div class="logo">
-            <img src="../Inicio/image.png" alt="Logo SAC">
+        <div class="header-container">
+            <a href="../Inicio/Index.html" class="logo-container">
+                <img src="../Inicio/image.png" alt="Logo SAC" class="logo">
+            </a>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="../Inicio/Index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="../Mensaje/mensaje.html"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="../Pago/pago.html"><i class="fas fa-credit-card"></i> Pagos</a></li>
+                    <li><a href="contacto.html" class="active"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    <li><a href="../TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                    <li><a href="../Perfil/perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+                </ul>
+            </nav>
         </div>
-        <nav>
-            <ul>
-                <li><a href="../Inicio/Index.html">Inicio</a></li>
-                <li><a href="../Mensaje/mensaje.html">Mensajes</a></li>
-                <li><a href="../Pago/pago.html">Pagos</a></li>
-                <li><a href="contacto.html">Contacto</a></li>
-                <li><a href="../TablonAnuncios/tablon_anuncios.html">Tablón de anuncios</a></li>
-
-                <li><a href="../Perfil/perfil.html">Perfil</a></li>
-            </ul>
-        </nav>
     </header>
 
     <main>
-        <div class="contact-info">
-            <h2>Información de contacto de la administración</h2>
-            <div class="contact-details">
-                <div class="contact-item">
-                    <strong>Correo:</strong> adminmiraflores@gmail.com
+        <section class="contact-section">
+            <div class="section-header">
+                <h1 class="section-title">Contacto</h1>
+                <p class="section-subtitle">Información para comunicarte con la administración</p>
+            </div>
+            
+            <div class="contact-container">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Correo Electrónico</h3>
+                        <p>adminmiraflores@gmail.com</p>
+                        <a href="mailto:adminmiraflores@gmail.com" class="btn contact-btn">
+                            <i class="fas fa-paper-plane"></i> Enviar correo
+                        </a>
+                    </div>
                 </div>
-                <div class="contact-item">
-                    <strong>Número de celular:</strong> +57 3012317543
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Teléfono</h3>
+                        <p>+57 3012317543</p>
+                        <a href="tel:+573012317543" class="btn contact-btn">
+                            <i class="fas fa-phone"></i> Llamar ahora
+                        </a>
+                    </div>
                 </div>
-                <div class="contact-item">
-                    <strong>Dirección:</strong> 
-                    Cra. 25 #47-98, Miraflores, Medellín, Buenos Aires, Medellín, Antioquia
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Dirección</h3>
+                        <p>Cra. 25 #47-98, Miraflores, Medellín, Buenos Aires, Medellín, Antioquia</p>
+                        <a href="https://maps.google.com?q=Cra.+25+%2347-98,+Miraflores,+Medellín,+Buenos+Aires,+Medellín,+Antioquia" 
+                           target="_blank" class="btn contact-btn">
+                            <i class="fas fa-map-marked-alt"></i> Ver en mapa
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
+        
+        <section class="contact-form-section">
+            <h2 class="section-title">Formulario de Contacto</h2>
+            <p class="section-subtitle">Envíanos un mensaje directo</p>
+            
+            <form class="contact-form">
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Asunto</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Mensaje</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn primary">
+                    <i class="fas fa-paper-plane"></i> Enviar Mensaje
+                </button>
+            </form>
+        </section>
     </main>
 
     <footer>
-        <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+            </div>
+        </div>
     </footer>
 </body>
 </html>

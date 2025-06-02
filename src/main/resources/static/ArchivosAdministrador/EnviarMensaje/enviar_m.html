@@ -3,46 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enviar mensaje</title>
+    <title>Enviar Mensaje - SAC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="enviar_m.css">
+</head>
 <body>
     <header>
-        <div class="logo-container">
-            <img src="../Inicio/image.png" alt="Logo">
+        <div class="header-container">
+            <a href="../Inicio/Index.html" class="logo-container">
+                <img src="../Inicio/image.png" alt="Logo SAC" class="logo">
+            </a>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="../Inicio/Index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="../Mensaje/mensaje.html"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="../Pago/pago.html"><i class="fas fa-credit-card"></i> Pagos</a></li>
+                    <li><a href="../Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    <li><a href="../TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                    <li><a href="../AdministrarUsuarios/administrar_usuarios.html"><i class="fas fa-users-cog"></i> Usuarios</a></li>
+                    <li><a href="../AdminPagos/admin_pagos.html" class="active"><i class="fas fa-cash-register"></i> Admin Pagos</a></li>
+                    <li><a href="../Perfil/perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+                </ul>
+            </nav>
         </div>
-        <nav>
-            <ul>
-                <li><a href="../Inicio/Index.html">Inicio</a></li>
-                <li><a href="../Mensaje/mensaje.html">Mensajes</a></li>
-                <li><a href="../Pago/pago.html">Pagos</a></li>
-                <li><a href="../Contacto/contacto.html">Contacto</a></li>
-                <li><a href="../TablonAnuncios/tablon_anuncios.html">Tablón de anuncios</a></li>
-                <li><a href="../AdministrarUsuarios/administrar_usuarios.html">Gestión de Usuarios</a></li>
-                <li><a href="../AdminPagos/admin_pagos.html" class="active">Administrar Pagos</a></li>
-                <li><a href="../Perfil/perfil.html">Perfil</a></li>
-            </ul>
-        </nav>
     </header>
 
     <main>
-        <section class="enviar-mensaje">
-            <h1>Enviar mensaje</h1>
-
-            <form class="enviar-mensaje" id="enviar-mensaje">
-                <div class="contenedor-columnas">
-                    <div class="contenido-mensaje">
-                        <h2>Contenido del mensaje</h2>
-                        <textarea placeholder="Escribe tu mensaje aquí..." rows="6" id="contenido"></textarea>
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-paper-plane"></i> Enviar Mensaje</h1>
+                <p class="page-description">Comunícate con el administrador o otros residentes</p>
+            </div>
+            
+            <form class="message-form" id="enviar-mensaje">
+                <div class="form-grid">
+                    <div class="message-content">
+                        <h2><i class="fas fa-align-left"></i> Contenido del Mensaje</h2>
+                        <textarea placeholder="Escribe tu mensaje aquí..." rows="8" id="contenidoMensaje"></textarea>
                     </div>
 
-                    <div class="info-mensaje">
-                        <h2>Información del mensaje</h2>
-                        <div class="campo">
-                            <label for="asunto">Asunto:</label>
+                    <div class="message-info">
+                        <h2><i class="fas fa-info-circle"></i> Información del Mensaje</h2>
+                        <div class="form-group">
+                            <label for="asunto"><i class="fas fa-heading"></i> Asunto:</label>
                             <input type="text" id="asunto" placeholder="Ej: Basuras en pasillo">
                         </div>
-                        <div class="campo">
-                            <label for="destinatario">Destinatario:</label>
+                        <div class="form-group">
+                            <label for="destinatario"><i class="fas fa-user-tag"></i> Destinatario:</label>
                             <select id="destinatario">
                                 <option value="administrador" selected>Administrador</option>
                             </select>
@@ -50,13 +63,19 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-enviar">Enviar</button>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i> Enviar Mensaje
+                </button>
             </form>
-        </section>
+        </div>
     </main>
 
     <footer>
-        <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+            </div>
+        </div>
     </footer>
 
     <script src="EnviarMensaje.js"></script>
