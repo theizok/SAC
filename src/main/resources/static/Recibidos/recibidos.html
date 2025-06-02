@@ -3,32 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAC - Mensajes Enviados</title>
-    <link rel="stylesheet" href="../Enviados/recibidos_enviados.css">
+    <title>Mensajes Recibidos - Aplicativo Residencial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="recibidos_enviados.css">
 </head>
 <body>
     <header>
-        <img src="../Inicio/image.png" alt="SAC Logo" class="logo">
-        <nav>
-            <ul>
-                <li><a href="../Inicio/Index.html">Inicio</a></li>
-                <li><a href="../Mensaje/mensaje.html">Mensajes</a></li>
-                <li><a href="../Pago/pago.html">Pagos</a></li>
-                <li><a href="../Contacto/contacto.html">Contacto</a></li>
-            </ul>
-        </nav>
-    </header>
-    
-    <section class="messages-section">
-        <div class="message-box">
-            <h2>Mensajes Enviados</h2>
-            <!-- Cambié el ID para que coincida con el JS -->
-            <ul id="listaMensajesEnviados"></ul>
+        <div class="header-container">
+            <a href="../Inicio/Index.html" class="logo-container">
+                <img src="../Inicio/image.png" alt="Logo" class="logo">
+            </a>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="../Inicio/Index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="../Mensaje/mensaje.html" class="active"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="../Pago/pago.html"><i class="fas fa-credit-card"></i> Pagos</a></li>
+                    <li><a href="../Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    <li><a href="../Perfil/perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+                </ul>
+            </nav>
         </div>
-    </section>
-    
+    </header>
+
+    <main>
+        <section class="received-messages-section">
+            <div class="container">
+                <div class="messages-header">
+                    <h1 class="section-title"><i class="fas fa-inbox"></i> Mensajes Recibidos</h1>
+                    <div class="message-actions">
+                        <a href="../EnviarMensaje/enviar_m.html" class="btn primary">
+                            <i class="fas fa-plus"></i> Nuevo Mensaje
+                        </a>
+                        <button class="btn secondary" id="btn-refresh">
+                            <i class="fas fa-sync-alt"></i> Actualizar
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="messages-container">
+                    <div class="messages-list" id="listaMensajesEnviados">
+                        <!-- Los mensajes se cargarán aquí dinámicamente -->
+                        <div class="empty-state">
+                            <i class="fas fa-envelope-open-text"></i>
+                            <p>No tienes mensajes recibidos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
     <footer>
-        <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+            </div>
+        </div>
     </footer>
 
     <script src="../Enviados/mensaje.js"></script>

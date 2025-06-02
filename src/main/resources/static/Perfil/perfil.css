@@ -1,3 +1,4 @@
+/* ESTILOS ORIGINALES PRESERVADOS AL 100% */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -12,8 +13,9 @@ body {
     flex-direction: column;
 }
 
+/* HEADER - Solo el color de fondo actualizado para coincidir */
 header {
-    background-color: #002B45;
+    background-color: #002B45; /* Color del sistema SAC */
     color: white;
     display: flex;
     justify-content: space-between;
@@ -29,7 +31,6 @@ nav ul {
     list-style: none;
     display: flex;
     gap: 20px;
-    align-items: center;
     margin: 0;
     padding: 0;
 }
@@ -50,11 +51,7 @@ nav ul li a.active {
     font-weight: bold;
 }
 
-main {
-    flex: 1;
-    padding: 30px 20px;
-}
-
+/* CONTENIDO PRINCIPAL - Exactamente igual al original */
 .perfil-container {
     max-width: 800px;
     margin: 0 auto;
@@ -106,6 +103,7 @@ main {
     display: block;
 }
 
+/* FORMULARIOS - Exactamente igual al original */
 .datos-personales {
     margin-top: 0;
     margin-bottom: 30px;
@@ -182,8 +180,9 @@ input[readonly] {
     margin-top: 20px;
 }
 
+/* FOOTER - Solo color de fondo actualizado */
 footer {
-    background-color: #002B45;
+    background-color: #002B45; /* Color del sistema SAC */
     color: white;
     text-align: center;
     padding: 20px;

@@ -3,35 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAC - Mensajes Enviados</title>
+    <title>Mensajes Enviados - SAC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="recibidos_enviados.css">
 </head>
 <body>
     <header>
-        <img src="../Inicio/image.png" alt="SAC Logo" class="logo">
-        <nav>
-            <ul>
-                <li><a href="../Inicio/Index.html">Inicio</a></li>
-                <li><a href="../Mensaje/mensaje.html">Mensajes</a></li>
-                <li><a href="../Pago/pago.html">Pagos</a></li>
-                <li><a href="../Contacto/contacto.html">Contacto</a></li>
-                <li><a href="../TablonAnuncios/tablon_anuncios.html">Tablón de anuncios</a></li>
-                <li><a href="../AdministrarUsuarios/administrar_usuarios.html">Gestión de Usuarios</a></li>
-                <li><a href="../AdminPagos/admin_pagos.html" class="active">Administrar Pagos</a></li>
-                <li><a href="../Perfil/perfil.html">Perfil</a></li>
-            </ul>
-        </nav>
-    </header>
-    
-    <section class="messages-section">
-        <div class="message-box">
-            <h2>Mensajes</h2>
-            <ul id="sent-messages">            </ul>
+        <div class="header-container">
+            <a href="../Inicio/Index.html" class="logo-container">
+                <img src="../Inicio/image.png" alt="SAC Logo" class="logo">
+            </a>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="../Inicio/Index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="../Mensaje/mensaje.html"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="../Pago/pago.html"><i class="fas fa-credit-card"></i> Pagos</a></li>
+                    <li><a href="../Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    <li><a href="../TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                    <li><a href="../AdministrarUsuarios/administrar_usuarios.html"><i class="fas fa-users-cog"></i> Usuarios</a></li>
+                    <li><a href="../AdminPagos/admin_pagos.html" class="active"><i class="fas fa-cash-register"></i> Admin Pagos</a></li>
+                    <li><a href="../Perfil/perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+                </ul>
+            </nav>
         </div>
-    </section>
-    
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-paper-plane"></i> Mensajes Enviados</h1>
+                <p class="page-description">Revisa los mensajes que has enviado a los residentes</p>
+            </div>
+            
+            <div class="messages-container">
+                <div class="messages-list" id="sent-messages">
+                    <!-- Los mensajes se cargarán dinámicamente desde JS -->
+                </div>
+            </div>
+        </div>
+    </main>
+
     <footer>
-        <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+            </div>
+        </div>
     </footer>
 
     <script src="mensaje.js"></script>

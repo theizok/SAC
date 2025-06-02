@@ -3,59 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enviar mensaje</title>
+    <title>Enviar Mensaje - Aplicativo Residencial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="enviar_m.css">
+</head>
 <body>
     <header>
-        <div class="logo-container">
-            <img src="../Inicio/image.png" alt="Logo">
+        <div class="header-container">
+            <a href="../Inicio/Index.html" class="logo-container">
+                <img src="../Inicio/image.png" alt="Logo" class="logo">
+            </a>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="../Inicio/Index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="../Mensaje/mensaje.html"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="../Pago/pago.html"><i class="fas fa-credit-card"></i> Pagos</a></li>
+                    <li><a href="../Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    <li><a href="../Perfil/perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+                </ul>
+            </nav>
         </div>
-        <nav>
-            <ul>
-                <li><a href="../Inicio/Index.html">Inicio</a></li>
-                <li><a href="../Mensaje/mensaje.html">Mensajes</a></li>
-                <li><a href="../Pago/pago.html">Pagos</a></li>
-                <li><a href="../Contacto/contacto.html">Contacto</a></li>
-                <li><a href="../Perfil/perfil.html">Perfil</a></li>
-            </ul>
-        </nav>
     </header>
 
     <main>
-        <section class="enviar-mensaje">
-            <h1>Enviar mensaje</h1>
-
-            <form class="enviar-mensaje" id="enviar-mensaje">
-                <div class="contenedor-columnas">
-                    <div class="contenido-mensaje">
-                        <h2>Contenido del mensaje</h2>
-                        <textarea placeholder="Escribe tu mensaje aquí..." rows="6" id="contenidoMensaje"></textarea>
-                    </div>
-
-                    <div class="info-mensaje">
-                        <h2>Información del mensaje</h2>
-                        <div class="campo">
-                            <label for="asunto">Asunto:</label>
-                            <input type="text" id="asunto" placeholder="Ej: Basuras en pasillo">
+        <section class="send-message-section">
+            <div class="container">
+                <div class="form-card">
+                    <h1 class="section-title"><i class="fas fa-paper-plane"></i> Enviar Mensaje</h1>
+                    <p class="section-subtitle">Comunícate con la administración o otros residentes</p>
+                    
+                    <form id="enviar-mensaje" class="message-form">
+                        <div class="form-grid">
+                            <div class="form-main">
+                                <div class="form-group">
+                                    <label for="contenidoMensaje"><i class="fas fa-align-left"></i> Contenido del Mensaje</label>
+                                    <textarea id="contenidoMensaje" name="contenido" rows="8" 
+                                              placeholder="Escribe aquí el contenido de tu mensaje..." required></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="form-sidebar">
+                                <div class="form-group">
+                                    <label for="asunto"><i class="fas fa-heading"></i> Asunto</label>
+                                    <input type="text" id="asunto" name="asunto" 
+                                           placeholder="Ej: Basuras en pasillo" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="destinatario"><i class="fas fa-user-tag"></i> Destinatario</label>
+                                    <select id="destinatario" name="destinatario">
+                                        <option value="administrador" selected>Administrador</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn primary">
+                                        <i class="fas fa-paper-plane"></i> Enviar Mensaje
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="campo">
-                            <label for="destinatario">Destinatario:</label>
-                            <select id="destinatario">
-                                <option value="administrador" selected>Administrador</option>
-                            </select>
-                        </div>
-                    </div>
+                    </form>
                 </div>
-
-                <button type="submit" class="btn-enviar">Enviar</button>
-            </form>
+            </div>
         </section>
     </main>
 
     <footer>
-        <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+            </div>
+        </div>
     </footer>
 
-    <script src="EnviarMensaje.js"></script>
+    <script src="enviarMensaje.js"></script>
 </body>
 </html>
