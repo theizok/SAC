@@ -93,7 +93,7 @@ public class PropietarioService {
 
     //ELiminar propietario por documento
     public void eliminarPropietariobyDocumento(String document) {
-        propietarioRepository.deleteByDocumento(document);
+        propietarioRepository.deleteByDocumentoPropietario(document);
     }
 
     //ELiminar propietario por id
