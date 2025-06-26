@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de Usuario - Aplicativo Residencial</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Perfil de Administrador - Aplicativo Residencial</title>
     <link rel="stylesheet" href="perfil.css">
 </head>
 <body>
@@ -21,8 +24,7 @@
                 <li><a href="../AdministrarUsuarios/administrar_usuarios.html">Gestión de Usuarios</a></li>
                 <li><a href="../AdminPagos/admin_pagos.html" class="active">Administrar Pagos</a></li>
                 <li><a href="perfil.html">Perfil</a></li>
-                <!-- Botón de Cerrar Sesión -->
-                <li><a href="#" id="logout">Cerrar Sesión</a></li>
+                <li><a href="javascript:void(0)" id="logout">Cerrar Sesión</a></li>
             </ul>
         </nav>
     </header>
@@ -102,7 +104,7 @@
             <div class="perfil-content" id="eliminar-cuenta">
                 <h2>Eliminar mi cuenta</h2>
                 <p>Esta acción eliminará permanentemente tu cuenta y toda la información asociada a ella. Esta acción no puede deshacerse.</p>
-                
+
                 <div class="form-group">
                     <label for="motivo-eliminacion">Motivo de eliminación (opcional)</label>
                     <select id="motivo-eliminacion">
@@ -137,7 +139,7 @@
     <footer>
         <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
     </footer>
-    
+
     <script src="perfil.js"></script>
 </body>
 </html>

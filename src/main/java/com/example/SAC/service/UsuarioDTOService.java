@@ -36,7 +36,7 @@ public class UsuarioDTOService {
                     propietario.getIdPropietario(),
                     propietario.getNombre(),
                     propietario.getCorreo(),
-                    propietario.getDocumentoPropietario(),
+                    propietario.getDocumento(),
                     "Propietario"
             ));
         });

@@ -52,7 +52,7 @@ public class PropietarioService {
     public Propietario actualizarPropietario(Long id, Propietario nuevosDatos) {
         return propietarioRepository.findById(id).map(propietario -> {
             propietario.setNombre(nuevosDatos.getNombre());
-            propietario.setDocumentoPropietario(nuevosDatos.getDocumentoPropietario());
+            propietario.setDocumento(nuevosDatos.getDocumento());
             propietario.setCorreo(nuevosDatos.getCorreo());
             propietario.setTelefonoPropietario(nuevosDatos.getTelefonoPropietario());
             return propietarioRepository.save(propietario);
@@ -93,7 +93,7 @@ public class PropietarioService {
 
     //ELiminar propietario por documento
     public void eliminarPropietariobyDocumento(String document) {
-        propietarioRepository.deleteByDocumentoPropietario(document);
+        propietarioRepository.deleteByDocumento(document);
     }
 
     //ELiminar propietario por id

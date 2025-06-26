@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 case "propietario":
                     usuario = JSON.stringify({
                         nombre:nombre,
-                        documentoPropietario:documento,
+                        documento:documento,
                         correo:correo,
                         telefonoPropietario:telefono,
                         contraseña: data.contraseña,
@@ -179,8 +179,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (response.ok) {
                     alert('Contraseña actualizada correctamente');
                     formCambiarPassword.reset();
-                    sessionStorage.clear(); // Cerrar sesión para que vuelva a iniciar con la nueva contraseña
-                    window.location.href = "/noAuth/Login"; // Redirigir a la página de login
+                    sessionStorage.clear();
+                    window.location.href = "/noAuth/Login";
                 } else {
                     alert(result.message || 'Error al actualizar la contraseña');
                 }
@@ -191,9 +191,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-
-
-
+    const logoutBtn = document.getElementById("logout");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", e => {
+            e.preventDefault();
+            if (confirm("¿Estás seguro de cerrar sesión?")) {
+                sessionStorage.clear();
+                window.location.href = "../InicioNoAuth/Inicio_no.html";
+            }
+        });
+    }
 
 });
 
@@ -250,23 +257,14 @@ async function obtenerDatosPerfil(url, id) {
                 }
 
                 if (document.getElementById("documento")) {
-                    document.getElementById("documento").value = data.documentoPropietario;
+                    document.getElementById("documento").value = data.documento;
                 }
                 break
             default:
         }
-
-
-
-
 
     } catch (error) {
         console.error("Error al obtener datos:", error);
     }
 
 }
-
-
-
-
-
