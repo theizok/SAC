@@ -60,7 +60,7 @@ public class ResidenteController {
         try
         {
             residenteService.eliminarResidentePorId(id);
-            return ResponseEntity.ok(Map.of("message", "Cuenta eLiminada correctamente"));
+            return ResponseEntity.ok(Map.of("message", "Cuenta Eliminada correctamente"));
 
         } catch(Exception ex)
         {
@@ -91,7 +91,7 @@ public class ResidenteController {
     //Vistas
     @GetMapping("/dashboard")
     public RedirectView dashboard(){
-        return new RedirectView("/Inicio/Index.html");
+        return new RedirectView("/ArchivosUsuarios/Inicio/Index.html");
     }
 
 }
