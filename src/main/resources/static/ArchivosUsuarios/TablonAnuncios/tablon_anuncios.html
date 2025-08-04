@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablón de Anuncios - SAC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="tablon.css">
+</head>
+<body>
+<header>
+    <div class="header-container">
+        <a href="../Inicio/Index.html" class="logo-container">
+            <img src="../Inicio/image.png" alt="Logo SAC" class="logo">
+        </a>
+
+        <input type="checkbox" id="menu-toggle" class="menu-toggle">
+        <label for="menu-toggle" class="menu-button">
+            <i class="fas fa-bars"></i>
+        </label>
+
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <li><a href="../Inicio/Index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="../Mensaje/mensaje.html"><i class="fas fa-comments"></i> Mensajes</a></li>
+                <li><a href="../Pago/pago.html"><i class="fas fa-credit-card"></i> Pagos</a></li>
+                <li><a href="../Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                <li><a href="tablon_anuncios.html" class="active"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                <li><a href="../Perfil/perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section class="announcements-section">
+        <div class="container">
+            <div class="announcements-header">
+                <h1 class="section-title"><i class="fas fa-bullhorn"></i> Tablón de Anuncios</h1>
+                <p class="section-subtitle">Mantente informado sobre las últimas noticias y avisos de tu conjunto residencial</p>
+
+                <div class="announcements-actions">
+                    <button class="btn primary" id="btn-crear">
+                        <i class="fas fa-plus"></i> Nuevo Anuncio
+                    </button>
+
+                    <div class="dropdown">
+                        <button class="btn secondary" id="btn-filtrar">
+                            <i class="fas fa-filter"></i> Filtrar
+                        </button>
+                        <div class="dropdown-content" id="filtro-opciones">
+                            <a href="#" data-filter="todos"><i class="fas fa-list"></i> Todos</a>
+                            <a href="#" data-filter="administrador"><i class="fas fa-user-shield"></i> Administrador</a>
+                            <a href="#" data-filter="residentes"><i class="fas fa-user"></i> Residentes</a>
+                            <a href="#" data-filter="propietarios"><i class="fas fa-user-tie"></i> Propietarios</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="contenedor-publicaciones" class="announcements-grid">
+                <!-- Las publicaciones se cargarán dinámicamente desde JS -->
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-bottom">
+            <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="tablon.js"></script>
+</body>
+</html>

@@ -14,7 +14,7 @@ public class  Propietario {
     @Column(name="nombre")
     private String nombre;
     @Column(name="documento")
-    private String documentoPropietario;
+    private String documento;
     @Column (name = "correo")
     private String correo;
     @Column (name = "telefono")

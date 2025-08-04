@@ -3,47 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mensajes enviados</title>
-    <link rel="stylesheet" href="mensaje.css"> <!-- Usamos el mismo CSS -->
+    <title>Mensajes - SAC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="mensaje.css">
 </head>
 <body>
     <header>
-        <div class="logo-container">
-            <img src="../Inicio/image.png" alt="Logo">
+        <div class="header-container">
+            <a href="../Inicio/Index.html" class="logo-container">
+                <img src="../Inicio/image.png" alt="Logo SAC" class="logo">
+            </a>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="../Inicio/Index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="mensaje.html" class="active"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="../Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    <li><a href="../TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                    <li><a href="../AdministrarUsuarios/administrar_usuarios.html"><i class="fas fa-users-cog"></i> Usuarios</a></li>
+                    <li><a href="../AdminPagos/admin_pagos.html"><i class="fas fa-cash-register"></i> Admin Pagos</a></li>
+                    <li><a href="../Perfil/perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+                </ul>
+            </nav>
         </div>
-        <nav>
-            <ul>
-                <li><a href="../Inicio/Index.html">Inicio</a></li>
-                <li><a href="mensaje.html">Mensajes</a></li>
-                <li><a href="../Pago/pago.html">Pagos</a></li>
-                <li><a href="../Contacto/contacto.html">Contacto</a></li>
-                <li><a href="../TablonAnuncios/tablon_anuncios.html">Tablón de anuncios</a></li>
-                <li><a href="../AdministrarUsuarios/administrar_usuarios.html">Gestión de Usuarios</a></li>
-                <li><a href="../AdminPagos/admin_pagos.html" class="active">Administrar Pagos</a></li>
-                <li><a href="../Perfil/perfil.html">Perfil</a></li>
-            </ul>
-        </nav>
     </header>
 
     <main>
-        <section class="mensajes-enviados">
-            <h1>Mensajes</h1>
-
-            <div class="botones">
-                <a href="../EnviarMensaje/enviar_m.html" class="btn">Enviar mensaje</a>
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-comments"></i> Mensajes Recibidos</h1>
+                <p class="page-description">Revisa y gestiona los mensajes enviados por los residentes</p>
             </div>
-
-            <div class="contenedor-columnas">
-                <div class="lista-titulos" id="areaTitulo">
-                </div>
-                <div class="contenido-mensaje" id="areaContenido">
+            
+            <div class="actions-bar">
+                <a href="../EnviarMensaje/enviar_m.html" class="btn primary-btn">
+                    <i class="fas fa-paper-plane"></i> Nuevo Mensaje
+                </a>
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Buscar mensajes...">
+                    </div>
+                    <select class="filter-select">
+                        <option value="all">Todos los mensajes</option>
+                        <option value="recent">Más recientes</option>
+                        <option value="unread">No leídos</option>
+                    </select>
                 </div>
             </div>
-        </section>
+            
+            <div class="messages-container">
+                <div class="messages-list" id="areaTitulo">
+                    <!-- Los mensajes se cargarán dinámicamente desde JS -->
+                </div>
+                
+                <div class="message-content" id="areaContenido">
+                    <div class="empty-state">
+                        <i class="fas fa-comment-dots"></i>
+                        <h3>Selecciona un mensaje</h3>
+                        <p>Haz clic en un mensaje de la lista para ver su contenido</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
-        <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+            </div>
+        </div>
     </footer>
 
     <script src="mensaje.js"></script>

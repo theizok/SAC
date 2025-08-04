@@ -167,9 +167,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-
-
-
+    const logoutBtn = document.getElementById("logout");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", e => {
+            e.preventDefault();
+            if (confirm("¿Estás seguro de cerrar sesión?")) {
+                sessionStorage.clear();
+                window.location.href = "../../InicioNoAuth/Inicio_no.html";
+            }
+        });
+    }
 
 });
 
@@ -219,8 +226,3 @@ async function obtenerDatosPerfil(url, id) {
     }
 
 }
-
-
-
-
-

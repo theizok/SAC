@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes - Aplicativo Residencial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="mensaje.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="../Inicio/Index.html" class="logo-container">
+                <img src="../Inicio/image.png" alt="Logo" class="logo">
+            </a>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="../Inicio/Index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="mensaje.html" class="active"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="../Pago/pago.html"><i class="fas fa-credit-card"></i> Pagos</a></li>
+                    <li><a href="../Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    <li><a href="../TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                    <li><a href="../Perfil/perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="messages-section">
+            <div class="container">
+                <div class="messages-header">
+                    <h1 class="section-title"><i class="fas fa-paper-plane"></i> Mensajes Enviados</h1>
+                    <a href="../EnviarMensaje/enviar_m.html" class="btn primary">
+                        <i class="fas fa-plus"></i> Nuevo Mensaje
+                    </a>
+                </div>
+                
+                <div class="messages-container">
+                    <div class="messages-list" id="areaTitulo">
+                        <!-- Lista de mensajes se cargará aquí -->
+                    </div>
+                    
+                    <div class="message-content" id="areaContenido">
+                        <div class="empty-state">
+                            <i class="fas fa-envelope-open-text"></i>
+                            <p>Selecciona un mensaje para ver su contenido</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="mensaje.js"></script>
+</body>
+</html>

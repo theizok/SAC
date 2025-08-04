@@ -67,7 +67,7 @@ public class PropietarioController {
         try
         {
             propietarioService.eliminarPropietarioPorId(id);
-            return ResponseEntity.ok(Map.of("message", "Cuenta eLiminada correctamente"));
+            return ResponseEntity.ok(Map.of("message", "Cuenta Eliminada correctamente"));
 
         } catch (Exception ex)
         {
@@ -102,7 +102,7 @@ public class PropietarioController {
     //Vista de inicio
     @GetMapping("/dashboard")
     public RedirectView dashboard() {
-        return new RedirectView("/Inicio/Index.html");
+        return new RedirectView("/ArchivosUsuarios/Inicio/Index.html");
     }
 
 

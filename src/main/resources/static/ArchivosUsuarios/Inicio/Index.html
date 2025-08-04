@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - SAC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="Inicio.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="Index.html" class="logo-container">
+                <img src="image.png" alt="Logo SAC" class="logo">
+            </a>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="Index.html" class="active"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="../Mensaje/mensaje.html"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="../Pago/pago.html"><i class="fas fa-credit-card"></i> Pagos</a></li>
+                    <li><a href="../Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    <li><a href="../TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                    <li><a href="../Perfil/perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>¡Bienvenido a SAC!</h1>
+                <p class="subtitle">Sistema de Administración Condominal</p>
+                <p>Nos complace tenerte aquí. Explora todas las opciones que ofrecemos para tu comodidad.</p>
+                <div class="cta-buttons">
+                    <a href="../Pago/pago.html" class="btn primary"><i class="fas fa-credit-card"></i> Realizar Pago</a>
+                    <a href="../Mensaje/mensaje.html" class="btn secondary"><i class="fas fa-comments"></i> Enviar Mensaje</a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="gallery">
+            <div class="gallery-container">
+                <div class="gallery-item">
+                    <img src="3.jpg" alt="Áreas comunes del conjunto residencial">
+                    <div class="gallery-caption">Áreas Comunes</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="3.jpg" alt="Seguridad del conjunto">
+                    <div class="gallery-caption">Seguridad 24/7</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="3.jpg" alt="Espacios verdes">
+                    <div class="gallery-caption">Espacios Verdes</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="features">
+            <h2 class="section-title">Soluciones a tu alcance</h2>
+            <p class="section-subtitle">Todo lo que necesitas para la administración de tu condominio</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Administración Eficiente</h3>
+                    <p>Observa fácilmente todos los aspectos de la administración de tu conjunto residencial. Con nuestra plataforma, la administración siempre estará disponible para ti.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <h3>Quejas y Sugerencias</h3>
+                    <p>Envía tus quejas o sugerencias en cualquier momento y recibe respuestas rápidas y efectivas. No más demoras ni preocupaciones.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3>Pagos Puntuales</h3>
+                    <p>Realiza tus pagos desde la comodidad de tu hogar y mantén un registro claro de todas tus transacciones. Evita retrasos y penalizaciones.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="inicio.js"></script>
+</body>
+</html>

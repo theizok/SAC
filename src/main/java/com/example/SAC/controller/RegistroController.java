@@ -18,8 +18,6 @@ public class RegistroController {
     ResidenteService residenteService;
 
     @Autowired
-    PropietarioController propietarioController;
-    @Autowired
     private PropietarioService propietarioService;
     @Autowired
     private AdministradorService administradorService;

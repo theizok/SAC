@@ -3,54 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrar Pagos - Aplicativo Residencial</title>
+    <title>Administrar Pagos - SAC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="admin_pagos.css">
 </head>
 <body>
     <header>
-        <div class="logo-container">
-            <img src="../Inicio/image.png" alt="Logo">
+        <div class="header-container">
+            <a href="../Inicio/Index.html" class="logo-container">
+                <img src="../Inicio/image.png" alt="Logo SAC" class="logo">
+            </a>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </label>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="../Inicio/Index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="../Mensaje/mensaje.html"><i class="fas fa-comments"></i> Mensajes</a></li>
+                    <li><a href="../Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    <li><a href="../TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                    <li><a href="../AdministrarUsuarios/administrar_usuarios.html"><i class="fas fa-users-cog"></i> Usuarios</a></li>
+                    <li><a href="admin_pagos.html" class="active"><i class="fas fa-cash-register"></i> Admin Pagos</a></li>
+                    <li><a href="../Perfil/perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+                </ul>
+            </nav>
         </div>
-        <nav>
-            <ul>
-                <li><a href="../Inicio/Index.html">Inicio</a></li>
-                <li><a href="../Mensaje/mensaje.html">Mensajes</a></li>
-                <li><a href="../Pago/pago.html">Pagos</a></li>
-                <li><a href="../Contacto/contacto.html">Contacto</a></li>
-                <li><a href="../TablonAnuncios/tablon_anuncios.html">Tablón de anuncios</a></li>
-                <li><a href="../AdministrarUsuarios/administrar_usuarios.html">Gestión de Usuarios</a></li>
-                <li><a href="admin_pagos.html" class="active">Administrar Pagos</a></li>
-                <li><a href="../Perfil/perfil.html">Perfil</a></li>
-            </ul>
-        </nav>
     </header>
 
     <main>
         <div class="container">
-            <h1>Administrar Pagos</h1>
+            <div class="page-header">
+                <h1><i class="fas fa-cash-register"></i> Administrar Pagos</h1>
+                <p class="page-description">Visualiza y gestiona todos los pagos realizados en el sistema</p>
+            </div>
             
-            <div class="filtros">
-                <div class="filtro">
-                    <label for="filtro-tipo">Filtrar por tipo:</label>
-                    <select id="filtro-tipo">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="filtro-tipo"><i class="fas fa-filter"></i> Filtrar por tipo:</label>
+                    <select id="filtro-tipo" class="form-select">
                         <option value="todos">Todos los pagos</option>
                         <option value="administracion">Pagos de Administración</option>
                         <option value="reserva">Reservas de Áreas Comunes</option>
                     </select>
                 </div>
-                <button id="btn-exportar" class="btn">Exportar a Excel</button>
+                <button id="btn-exportar" class="btn export-btn">
+                    <i class="fas fa-file-excel"></i> Exportar a Excel
+                </button>
             </div>
 
-            <div class="tabla-container">
-                <table id="tabla-pagos">
+            <div class="table-responsive">
+                <table id="tabla-pagos" class="data-table">
                     <thead>
                         <tr>
-                            <th>Fecha</th>
-                            <th>Usuario</th>
-                            <th>Tipo</th>
-                            <th>Detalle</th>
-                            <th>Monto</th>
-                            <th>Estado</th>
+                            <th><i class="fas fa-calendar"></i> Fecha</th>
+                            <th><i class="fas fa-user"></i> Usuario</th>
+                            <th><i class="fas fa-tag"></i> Tipo</th>
+                            <th><i class="fas fa-info-circle"></i> Detalle</th>
+                            <th><i class="fas fa-money-bill-wave"></i> Monto</th>
+                            <th><i class="fas fa-check-circle"></i> Estado</th>
                         </tr>
                     </thead>
                     <tbody id="pagos-body">
@@ -62,7 +75,11 @@
     </main>
 
     <footer>
-        <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+            </div>
+        </div>
     </footer>
 
     <script src="admin_pagos.js"></script>
