@@ -34,10 +34,8 @@ public class AdministradorController {
 
     @Autowired
     private UsuarioDTOService usuarioDTOService;
-
     @Autowired
     private AdministradorService administradorService;
-
     @Autowired
     private MensajeService mensajeService;
     @Autowired
@@ -269,7 +267,6 @@ public class AdministradorController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
     }
-
 
 }
 
