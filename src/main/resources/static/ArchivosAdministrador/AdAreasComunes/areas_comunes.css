@@ -1,0 +1,292 @@
+:root {
+    --primary-color: #002B45;
+    --secondary-color: #008080;
+    --accent-color: #007373;
+    --light-color: #f0f8ff;
+    --text-color: #333;
+    --text-light: #777;
+    --white: #fff;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: #f9f9f9;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 70px;
+    width: auto;
+}
+
+/* ocultar en desktop */
+.menu-toggle,
+.menu-button {
+    display: none;
+}
+
+/* navegación desktop */
+.main-nav {
+    display: flex;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+}
+
+.nav-list a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.nav-list a:hover,
+.nav-list a.active {
+    color: #4fc3f7;
+}
+
+.nav-list a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #4fc3f7;
+    transition: var(--transition);
+}
+
+.nav-list a:hover::after,
+.nav-list a.active::after {
+    width: 100%;
+}
+
+/* contenedor principal */
+main {
+    flex: 1;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+}
+
+/* Secciones */
+.form-section,
+.list-section {
+    background: var(--white);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+
+/* Formulario */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+form label {
+    font-weight: 500;
+}
+
+form input,
+form textarea {
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 0.95rem;
+}
+
+form textarea {
+    resize: none;
+    min-height: 80px;
+}
+
+/* Botón principal */
+.btn.primary {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+}
+
+.btn.primary:hover {
+    background-color: transparent;
+    color: var(--secondary-color);
+}
+
+/* Tabla de áreas */
+.areas-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.areas-table th,
+.areas-table td {
+    border: 1px solid #ddd;
+    padding: 0.8rem;
+    text-align: left;
+}
+
+.areas-table th {
+    background-color: var(--secondary-color);
+    color: var(--white);
+}
+
+.areas-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Botones de acción */
+.btn-edit,
+.btn-delete {
+    border: none;
+    padding: 0.5rem 0.8rem;
+    border-radius: 5px;
+    cursor: pointer;
+    color: var(--white);
+}
+
+.btn-edit {
+    background-color: #4fc3f7;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+}
+
+.btn-edit:hover {
+    background-color: #0095c2;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+
+/* Footer */
+footer {
+    background-color: #001a2c;
+    color: var(--white);
+    margin-top: auto;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .menu-button {
+        display: block;
+        background: none;
+        border: none;
+        color: var(--white);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+
+    .main-nav {
+        position: fixed;
+        top: 90px;
+        left: -100%;
+        width: 80%;
+        height: calc(100vh - 90px);
+        background-color: var(--primary-color);
+        flex-direction: column;
+        padding: 2rem;
+        transition: var(--transition);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu-toggle:checked ~ .main-nav { left: 0; }
+
+    .nav-list { flex-direction: column; gap: 1.5rem; }
+
+    .areas-table th,
+    .areas-table td { font-size: 0.85rem; padding: 0.5rem; }
+}
+
+@media (max-width: 480px) {
+    .logo { height: 60px; }
+}

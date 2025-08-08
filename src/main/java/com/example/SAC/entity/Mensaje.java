@@ -25,5 +25,4 @@ public class Mensaje {
         @OneToOne
         @JoinColumn(name = "idcuenta")
         private Cuenta cuenta;
-
 }

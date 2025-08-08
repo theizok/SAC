@@ -23,7 +23,6 @@ body {
     background-color: #f9f9f9;
 }
 
-/* Header Styles */
 header {
     background-color: var(--primary-color);
     color: var(--white);
@@ -92,7 +91,7 @@ header {
     transition: var(--transition);
 }
 
-.nav-list a:hover, 
+.nav-list a:hover,
 .nav-list a.active {
     color: #4fc3f7;
 }
@@ -113,7 +112,6 @@ header {
     width: 100%;
 }
 
-/* Hero Section */
 .hero {
     background: linear-gradient(rgba(0, 43, 69, 0.8), rgba(0, 43, 69, 0.8)), url('3.jpg') center/cover no-repeat;
     color: var(--white);
@@ -177,7 +175,6 @@ header {
     color: var(--primary-color);
 }
 
-/* Gallery Section */
 .gallery {
     padding: 3rem 1rem;
     background-color: var(--white);
@@ -226,7 +223,6 @@ header {
     font-weight: 600;
 }
 
-/* Features Section */
 .features {
     padding: 4rem 1rem;
     background-color: var(--light-color);
@@ -297,7 +293,6 @@ header {
     margin-bottom: 1rem;
 }
 
-/* Footer */
 footer {
     background-color: #001a2c;
     color: var(--white);
@@ -315,12 +310,11 @@ footer {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .menu-button {
         display: block;
     }
-    
+
     .main-nav {
         position: fixed;
         top: 90px;
@@ -333,35 +327,35 @@ footer {
         transition: var(--transition);
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     }
-    
+
     .menu-toggle:checked ~ .main-nav {
         left: 0;
     }
-    
+
     .nav-list {
         flex-direction: column;
         gap: 1.5rem;
     }
-    
+
     .hero h1 {
         font-size: 2rem;
     }
-    
+
     .subtitle {
         font-size: 1rem;
     }
-    
+
     .cta-buttons {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .btn {
         width: 100%;
         max-width: 250px;
         justify-content: center;
     }
-    
+
     .gallery-item {
         min-width: 100%;
     }
@@ -371,19 +365,19 @@ footer {
     .logo {
         height: 60px;
     }
-    
+
     .hero {
         padding: 3rem 1rem;
     }
-    
+
     .hero h1 {
         font-size: 1.8rem;
     }
-    
+
     .section-title {
         font-size: 1.5rem;
     }
-    
+
     .feature-card {
         padding: 1.5rem;
     }

@@ -27,6 +27,7 @@ public class UsuarioDTOService {
                     residente.getNombre(),
                     residente.getCorreo(),
                     residente.getDocumento(),
+                    residente.getTelefono(),
                     "Residente"
             ));
         });
@@ -37,6 +38,7 @@ public class UsuarioDTOService {
                     propietario.getNombre(),
                     propietario.getCorreo(),
                     propietario.getDocumento(),
+                    propietario.getTelefonoPropietario(),
                     "Propietario"
             ));
         });
@@ -47,7 +49,7 @@ public class UsuarioDTOService {
                     ,administrador.getNombreAdministrador()
                     ,administrador.getCorreo()
                     ,administrador.getDocumento()
-                    ,"Administrador"
+                    , administrador.getTelefono(), "Administrador"
             ));
         });
 
