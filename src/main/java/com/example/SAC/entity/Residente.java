@@ -11,7 +11,7 @@ public class Residente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idresidente")
-    private int idresidente;
+    private Long idresidente;
     @Column(name="nombre")
     private String nombre;
     @Column(name="edad")
@@ -59,7 +59,7 @@ public class Residente {
         return contraseña;
     }
 
-    public int getIdresidente() {
+    public Long getIdresidente() {
         return idresidente;
     }
 

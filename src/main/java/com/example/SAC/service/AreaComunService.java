@@ -30,12 +30,13 @@ public class AreaComunService {
     }
 
     public AreaComun actualizarAreaComun(AreaComun areaActualizada, long id){
-        return areaComunRepository.findById(id).map( areaComun -> {
-            areaComun.setArea(areaActualizada.getArea());
-            areaComun.setPrecio(areaActualizada.getPrecio());
-            return areaComunRepository.save(areaComun);
-        } ).orElseThrow(() -> new RuntimeException("No se encontro el área comun"));
-    }
+            return areaComunRepository.findById(id).map( areaComun -> {
+                areaComun.setArea(areaActualizada.getArea());
+                areaComun.setPrecio(areaActualizada.getPrecio());
+                return areaComunRepository.save(areaComun);
+            } ).orElseThrow(() -> new RuntimeException("No se encontro el área comun"));
+        }
 
 }
+
 
