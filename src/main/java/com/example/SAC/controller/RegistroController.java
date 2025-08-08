@@ -3,9 +3,7 @@ package com.example.SAC.controller;
 import com.example.SAC.entity.Administrador;
 import com.example.SAC.entity.Propietario;
 import com.example.SAC.entity.Residente;
-import com.example.SAC.repository.ResidenteRepository;
 import com.example.SAC.service.AdministradorService;
-import com.example.SAC.service.EmailService;
 import com.example.SAC.service.PropietarioService;
 import com.example.SAC.service.ResidenteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +19,6 @@ public class RegistroController {
     private PropietarioService propietarioService;
     @Autowired
     private AdministradorService administradorService;
-    @Autowired
-    private EmailService emailService;
 
     //Registrar residente
     @PostMapping("/residente")

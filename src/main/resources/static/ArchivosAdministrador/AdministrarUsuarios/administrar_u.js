@@ -35,6 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 tablaUsuarios.appendChild(fila);
             });
 
+
+            //Eliminar usuarios
+            document.addEventListener("click", (e) => {
+
+            })
+
+
             // =============================================
             // Lógica visual para los botones (nueva)
             // =============================================

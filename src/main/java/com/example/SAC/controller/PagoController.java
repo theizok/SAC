@@ -1,8 +1,10 @@
 package com.example.SAC.controller;
 
 import com.example.SAC.entity.Pago;
+import com.example.SAC.entity.Reserva;
 import com.example.SAC.repository.PagoRepository;
 import com.example.SAC.service.PagoService;
+import com.example.SAC.service.ReservaService;
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
@@ -32,11 +34,57 @@ public class PagoController {
     private PagoRepository pagoRepository;
     @Autowired
     private PagoService pagoService;
+    @Autowired
+    private ReservaService reservaService;
 
     @PostMapping("/mercado-pago")
     public ResponseEntity<?> crearPreferencia(@RequestBody Pago pago) throws MPException, MPApiException {
         pago.setEstadoPago("PENDENTE");
         pagoRepository.save(pago);
+
+        MercadoPagoConfig.setAccessToken("TEST-6124805663082328-040417-a023ca85ac047fbfca3fc9fb2316df41-2045469211");
+
+        PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
+                .success("http://localhost:8080/")
+                .pending("http://localhost:8080/")
+                .failure("http://localhost:8080/")
+                .build();
+
+        PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
+                .id(String.valueOf(pago.getIdPago()))
+                .title(pago.getCategoria())
+                .description(pago.getDescripcion())
+                .quantity(1)
+                .categoryId(pago.getCategoria())
+                .currencyId("COP")
+                .unitPrice(BigDecimal.valueOf(pago.getValor()))
+                .build();
+
+        List<PreferenceItemRequest> items = new ArrayList<>();
+        items.add(itemRequest);
+
+        PreferenceRequest preferenceRequest = PreferenceRequest.builder()
+                .items(items)
+                .backUrls(backUrls)
+                .externalReference(String.valueOf(pago.getIdPago()))
+                .build();
+
+
+        PreferenceClient client = new PreferenceClient();
+        Preference preference = client.create(preferenceRequest);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("init_point", preference.getSandboxInitPoint());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/mercado-pago/area-comun")
+    public ResponseEntity<?> crearPreferenciaAreaComun(@RequestBody Pago pago, @RequestBody Reserva reserva) throws MPException, MPApiException {
+        pago.setEstadoPago("PENDENTE");
+        pagoRepository.save(pago);
+
+
 
         MercadoPagoConfig.setAccessToken("TEST-6124805663082328-040417-a023ca85ac047fbfca3fc9fb2316df41-2045469211");
 

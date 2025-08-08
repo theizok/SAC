@@ -38,6 +38,8 @@ public class AdministradorController {
     private AdministradorService administradorService;
     @Autowired
     private MensajeService mensajeService;
+    @Autowired
+    private AreaComunService areaComunService;
 
 
     //Mensajes
@@ -210,7 +212,6 @@ public class AdministradorController {
     }
 
     //Cambiar Contraseña por id
-    //Cambiar contraseña
     @PutMapping("/cambiarContraseña")
     public ResponseEntity<?> cambiarContraseña(@RequestBody PasswordRequest request) {
         try {
@@ -220,5 +221,40 @@ public class AdministradorController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
     }
+
+
+    //Acciones sobre áreas comunes. (Área Comun)
+
+    //Añadir área común.
+    @PostMapping("/añadirAreaComun")
+    public ResponseEntity<?> agregarAreaComun(@RequestBody AreaComun areaComun){
+        try {
+            areaComunService.agregarAreaComun(areaComun);
+            return ResponseEntity.ok(Map.of("message", "Área comun agregada correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    //Eliminar área común.
+    public ResponseEntity<?> eliminarAreaComun(@RequestParam long id){
+        try {
+            areaComunService.eliminarAreaComunporId(id);
+            return ResponseEntity.ok(Map.of("message", "Área comun eliminada correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    //Actualizar área comun.
+    public ResponseEntity<?> actualizarAreaComun(@RequestParam long id, @RequestBody AreaComun areaComun){
+        try {
+            areaComunService.actualizarAreaComun(areaComun, id);
+            return ResponseEntity.ok(Map.of("message", "Área común actualizada correctamente"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+
 
 }
