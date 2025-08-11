@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
 @RestController
 @RequestMapping("/api/administrador")
 public class AdministradorController {
@@ -34,176 +33,171 @@ public class AdministradorController {
 
     @Autowired
     private UsuarioDTOService usuarioDTOService;
+
     @Autowired
     private AdministradorService administradorService;
+
+    @Autowired
+    AreaComunService areaComunService;
+
     @Autowired
     private MensajeService mensajeService;
 
+    // ---------------- Mensajes ----------------
 
-    //Mensajes
-
-    //Obtener mensajes
+    // Obtener todos los mensajes (admin)
     @GetMapping("/obtenerMensajes")
     public List<Mensaje> getMensajes() {
         return mensajeService.findAllMensajes();
     }
 
-    //Usuarios General
+    // Eliminar mensaje (admin)
+    @DeleteMapping("/eliminarMensaje")
+    public ResponseEntity<?> eliminarMensaje(@RequestParam long id) {
+        try {
+            mensajeService.deleteMensaje(id);
+            return ResponseEntity.ok(Map.of("message", "Mensaje eliminado correctamente"));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
 
-    //Obtener todos los usuarios
+    // DTO simple para recibir la respuesta
+    public static class ResponderMensajeDTO {
+        public long idMensaje;
+        public String respuesta;
+        public Long idCuentaRespondido; // opcional
+    }
+
+    // Responder mensaje (admin)
+    @PostMapping("/responderMensaje")
+    public ResponseEntity<?> responderMensaje(@RequestBody ResponderMensajeDTO dto) {
+        try {
+            Mensaje actualizado = mensajeService.responderMensaje(dto.idMensaje, dto.respuesta, dto.idCuentaRespondido);
+            return ResponseEntity.ok(actualizado);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
+
+    // ---------------- Usuarios / Residente / Propietario / Apartamento / Publicaciones / Admin restante ----------------
+
+    // Usuarios General
     @GetMapping("/obtenerUsuarios")
     public List<UsuarioDTO> obtenerUsuarios(){
         return usuarioDTOService.obtenerUsuarios();
     }
 
-    //Residente
-
-    //Obtener todos los residentes
+    // Residente
     @GetMapping("/obtenerResidentes")
     public List<Residente> getResidentes() {
         return residenteService.obtenerTodos();
     }
 
-    //Obtener residente por nombre
     @GetMapping("/obtenerResidenteByNombre")
     public Residente getResidenteByNombre(String nombre) {
         return residenteService.obtenerResidentePorNombre(nombre);
     }
 
-    //Agregar residente
     @PostMapping("/agregarResidente")
     public Residente addResidente(@RequestBody Residente residente) {
         return residenteService.crearResidente(residente);
     }
 
-    //Actualizar cuenta residente
     @PutMapping("/modificarResidente")
     public Residente updateResidente(@RequestParam Long id, @RequestBody Residente residente ) {
         return residenteService.actualizarResidente(id, residente);
     }
 
-    //Eliminar cuenta residente
     @DeleteMapping("/eliminarResidente")
-            public ResponseEntity<?> eliminarResidente(@RequestParam String document)
-    {
-        try
-        {
+    public ResponseEntity<?> eliminarResidente(@RequestParam String document) {
+        try {
             residenteService.eliminarResidente(document);
             return ResponseEntity.ok().build();
-
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
         }
     }
 
-
-    //Propietario
-
-    //Agregar propietario
+    // Propietario
     @PostMapping("/agregarPropietario")
     public Propietario addPropietario(@RequestBody Propietario propietario) {
         return propietarioService.agregarPropietario(propietario);
     }
 
-    //Editar datos propietario
     @PutMapping("/modificarPropietario")
     public Propietario updatePropietario(@RequestParam long id ,@RequestBody Propietario propietario) {
         return propietarioService.actualizarPropietario(id ,propietario);
     }
 
-    //Obtener todos los propietarios
     @GetMapping ("/obtenerPropietarios")
     public List<Propietario> getPropietario() {
         return propietarioService.obtenerTodos();
     }
 
-    //Obtener propietario por nombre
     @GetMapping("/obtenerPropietariopByNombre")
     public Propietario obtenerPropietarioPorNombre(String nombre) {
         return propietarioService.obtenerPropietarioPorNombre(nombre);
     }
 
-    //Eliminar cuenta propietario
     @DeleteMapping("/eliminarPropietario")
-    public ResponseEntity<?> eliminarPropietario(@RequestParam String document)
-    {
-        try
-        {
+    public ResponseEntity<?> eliminarPropietario(@RequestParam String document) {
+        try {
             propietarioService.eliminarPropietariobyDocumento(document);
             return ResponseEntity.ok(Map.of("message", "Cuenta eliminada correctamente"));
-        } catch(Exception ex)
-        {
+        } catch(Exception ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
         }
     }
 
-
-
-    //Apartamento
-
-    //Obtener apartamentos
+    // Apartamento
     @GetMapping("/obtenerApartamentos")
     public List<Apartamento> getApartamentos() {
         return apartamentoService.obtenerApartamentos();
     }
 
-    //Agregar apartamentos
     @PostMapping("/agregarApartamento")
     public Apartamento addApartamento(@RequestBody Apartamento apartamento) {
         return apartamentoService.agregarApartamento(apartamento);
     }
 
-    //Editar apartamentos
     @PutMapping("/actualizarApartamento")
     public Apartamento updateApartamento(@RequestBody Apartamento apartamento) {
         return apartamentoService.editarApartamento(apartamento);
     }
 
-    //Publicaciones
-
-    //Obtener todas las publicaciones
+    // Publicaciones
     @GetMapping("/ObtenerPublicacionesAdministrador")
     public List<PublicacionDTO> getPublicacion() {
         return publicacionService.obtenerPublicacionesAdministrador();
     }
 
-
-    //ELiminar publicaciones
     @DeleteMapping("/eliminarPublicacion")
     public void eliminarPublicacion(@RequestParam long id) {
         publicacionService.eliminarPublicacion(id);
     }
 
-    //Crear Publicacion
     @PostMapping("/crearPublicacion")
     public Publicacion agregarPublicacion(@RequestBody Publicacion publicacion){
         return publicacionService.crearPublicacion(publicacion);
     }
 
-
-    //Administrador
-
-    //Agregar admin
+    // Administrador
     @PostMapping("agregarAdministrador")
     public Administrador agregarAdministrador(@RequestBody Administrador administrador){
         return administradorService.agregarAdministrador(administrador);
     }
 
-    //Vistas del administrador
     @GetMapping("/dashboard")
     public RedirectView dashboard(){
         return new RedirectView("/ArchivosAdministrador/Inicio/Index.html");
     }
 
-
-    //Obtener administrador por id
     @GetMapping("obtenerPorId")
     public Optional<Administrador> obtenerPorId(Long id) {
         return administradorService.obtenerAdministradorPorId(id);
     }
 
-    //Se <actualiza admin
     @PutMapping("/actualizar")
     public Administrador actualizarAdministrador(@RequestParam long id, @RequestBody Administrador administrador) {
         return administradorService.actualizarAdministrador(id, administrador);
@@ -215,6 +209,39 @@ public class AdministradorController {
             administradorService.cambiarContraseña(request.getIdUsuario(), request.getPasswordActual(), request.getPasswordNueva());
             return ResponseEntity.ok(Map.of("message", "Contraseña actualizada correctamente"));
         } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    //Acciones sobre áreas comunes. (Área Comun)
+
+    //Añadir área común.
+    @PostMapping("/añadirAreaComun")
+    public ResponseEntity<?> agregarAreaComun(@RequestBody AreaComun areaComun){
+        try {
+            areaComunService.agregarAreaComun(areaComun);
+            return ResponseEntity.ok(Map.of("message", "Área comun agregada correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    //Eliminar área común.
+    public ResponseEntity<?> eliminarAreaComun(@RequestParam long id){
+        try {
+            areaComunService.eliminarAreaComunporId(id);
+            return ResponseEntity.ok(Map.of("message", "Área comun eliminada correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    //Actualizar área comun.
+    public ResponseEntity<?> actualizarAreaComun(@RequestParam long id, @RequestBody AreaComun areaComun){
+        try {
+            areaComunService.actualizarAreaComun(areaComun, id);
+            return ResponseEntity.ok(Map.of("message", "Área común actualizada correctamente"));
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
     }
