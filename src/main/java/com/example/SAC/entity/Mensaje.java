@@ -2,25 +2,33 @@
 package com.example.SAC.entity;
 
 import java.time.LocalDateTime;
+import java.sql.Date;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Generated;
+import lombok.NoArgsConstructor;
+import org.hibernate.grammars.hql.HqlParser;
 
 @Data
 @Entity
-@Table(name="mensaje")
+@Table(name = "mensaje")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Mensaje {
+
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name="idmensaje")
+        @Column(name = "idmensaje")
         private long idMensaje;
 
-        @Column(name="asunto")
+        @Column(name = "asunto")
         private String Asunto;
 
-        @Column(name="contenido")
+        @Column(name = "contenido")
         private String Contenido;
 
-        @Column(name="fecha")
+        @Column(name = "fecha")
         private LocalDateTime fecha;
 
         @OneToOne

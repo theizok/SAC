@@ -87,7 +87,7 @@ public class PropietarioService {
     }
 
     //Obtener propietario por nombre
-    public Propietario obtenerPropietarioPorNombre(String nombre) {
+    public Optional<Propietario> obtenerPropietarioPorNombre(String nombre) {
         return propietarioRepository.findByNombre(nombre);
     }
 
