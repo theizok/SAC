@@ -88,7 +88,8 @@ public class AdministradorController {
         return usuarioDTOService.obtenerUsuarios();
     }
 
-    // Residente
+    // Residente endpoints (CRUD por id)
+
     @GetMapping("/obtenerResidentes")
     public List<Residente> getResidentes() {
         return residenteService.obtenerTodos();
@@ -119,7 +120,50 @@ public class AdministradorController {
         }
     }
 
-    // Propietario
+    // --- Nuevos endpoints por id para que el frontend funcione (GET / PUT / DELETE) ---
+
+    // Obtener residente por id (para precargar modal) — usa getters existentes en la entidad
+    @GetMapping("/obtenerResidenteById")
+    public ResponseEntity<?> obtenerResidenteById(@RequestParam Long id) {
+        Optional<Residente> r = residenteService.obtenerPorId(id);
+        if (r.isPresent()) {
+            Residente residente = r.get();
+            return ResponseEntity.ok(Map.of(
+                    "id", residente.getIdresidente(),          // getter existente
+                    "nombre", residente.getNombre(),
+                    "documento", residente.getDocumento(),
+                    "correo", residente.getCorreo(),
+                    "telefono", residente.getTelefono(),
+                    "tipoUsuario", "Residente"
+            ));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Residente no encontrado"));
+        }
+    }
+
+    // Actualizar residente por id (consumible desde tu JS)
+    @PutMapping("/modificarResidenteById")
+    public ResponseEntity<?> modificarResidenteById(@RequestParam Long id, @RequestBody Residente residente) {
+        try {
+            Residente actualizado = residenteService.actualizarResidente(id, residente);
+            return ResponseEntity.ok(actualizado);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
+
+    // Eliminar residente por id (consumible desde tu JS)
+    @DeleteMapping("/eliminarResidenteById")
+    public ResponseEntity<?> eliminarResidenteById(@RequestParam Long id) {
+        try {
+            residenteService.eliminarResidentePorId(id);
+            return ResponseEntity.ok(Map.of("message", "Residente eliminado correctamente"));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
+
+    // Propietario endpoints (mantener los existentes)
     @PostMapping("/agregarPropietario")
     public Propietario addPropietario(@RequestBody Propietario propietario) {
         return propietarioService.agregarPropietario(propietario);
@@ -146,6 +190,58 @@ public class AdministradorController {
             propietarioService.eliminarPropietariobyDocumento(document);
             return ResponseEntity.ok(Map.of("message", "Cuenta eliminada correctamente"));
         } catch(Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
+
+    // --- Nuevos endpoints por id para propietarios (GET / PUT / DELETE) ---
+
+    @GetMapping("/obtenerPropietarioById")
+    public ResponseEntity<?> obtenerPropietarioById(@RequestParam Long id) {
+        Optional<Propietario> p = propietarioService.obtenerPorId(id);
+        if (p.isPresent()) {
+            Propietario propietario = p.get();
+            return ResponseEntity.ok(Map.of(
+                    "id", propietario.getIdPropietario(),               // getter existente (Lombok)
+                    "nombre", propietario.getNombre(),
+                    "documento", propietario.getDocumento(),
+                    "correo", propietario.getCorreo(),
+                    "telefono", propietario.getTelefonoPropietario(),  // getter existente
+                    "tipoUsuario", "Propietario"
+            ));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Propietario no encontrado"));
+        }
+    }
+
+    // Actualizar propietario por id (recepciona un JSON genérico y mapea campos)
+    @PutMapping("/modificarPropietarioById")
+    public ResponseEntity<?> modificarPropietarioById(@RequestParam Long id, @RequestBody Map<String, Object> payload) {
+        try {
+            Propietario nuevosDatos = new Propietario();
+            // Mapeo defensivo: aceptamos "telefono" o "telefonoPropietario"
+            String telefono = null;
+            if (payload.get("telefono") != null) telefono = payload.get("telefono").toString();
+            else if (payload.get("telefonoPropietario") != null) telefono = payload.get("telefonoPropietario").toString();
+
+            nuevosDatos.setNombre(payload.getOrDefault("nombre", "").toString());
+            nuevosDatos.setDocumento(payload.getOrDefault("documento", "").toString());
+            nuevosDatos.setCorreo(payload.getOrDefault("correo", "").toString());
+            nuevosDatos.setTelefonoPropietario(telefono);
+
+            Propietario actualizado = propietarioService.actualizarPropietario(id, nuevosDatos);
+            return ResponseEntity.ok(actualizado);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/eliminarPropietarioById")
+    public ResponseEntity<?> eliminarPropietarioById(@RequestParam Long id) {
+        try {
+            propietarioService.eliminarPropietarioPorId(id);
+            return ResponseEntity.ok(Map.of("message", "Propietario eliminado correctamente"));
+        } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
         }
     }
