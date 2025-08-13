@@ -86,8 +86,9 @@ CREATE TABLE `areacomun` (
   `idareacomun` bigint(11) NOT NULL AUTO_INCREMENT,
   `area` varchar(40) DEFAULT NULL,
   `precio` float DEFAULT NULL,
+  `descripcion` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idareacomun`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,6 +97,7 @@ CREATE TABLE `areacomun` (
 
 LOCK TABLES `areacomun` WRITE;
 /*!40000 ALTER TABLE `areacomun` DISABLE KEYS */;
+INSERT INTO `areacomun` VALUES (1,'Lugar de panico',20000,'Es una sala del panico para Isaac'),(2,'Gimnasio',35000,'Es un Gimnasio');
 /*!40000 ALTER TABLE `areacomun` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,7 +112,7 @@ CREATE TABLE `cuenta` (
   `idcuenta` bigint(11) NOT NULL AUTO_INCREMENT,
   `tipo_cuenta` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`idcuenta`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -119,7 +121,7 @@ CREATE TABLE `cuenta` (
 
 LOCK TABLES `cuenta` WRITE;
 /*!40000 ALTER TABLE `cuenta` DISABLE KEYS */;
-INSERT INTO `cuenta` VALUES (1,NULL),(2,'Residente'),(3,'Propietario'),(4,'Propietario'),(5,'Propietario'),(6,'Propietario'),(7,'Residente'),(8,'Administrador'),(9,'Residente'),(10,'Residente'),(11,'Residente'),(12,'Propietario'),(13,'Propietario');
+INSERT INTO `cuenta` VALUES (1,NULL),(2,'Residente'),(3,'Propietario'),(4,'Propietario'),(5,'Propietario'),(6,'Propietario'),(7,'Residente'),(8,'Administrador'),(9,'Residente'),(10,'Residente'),(11,'Residente'),(12,'Propietario'),(13,'Propietario'),(14,'Residente'),(15,'Residente'),(16,'Residente'),(17,'Residente'),(18,'Residente'),(19,'Residente');
 /*!40000 ALTER TABLE `cuenta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -144,7 +146,7 @@ CREATE TABLE `mensaje` (
   KEY `fk_mensaje_respondido` (`idcuenta_respondido`),
   CONSTRAINT `fk_mensaje_cuenta` FOREIGN KEY (`idcuenta`) REFERENCES `cuenta` (`idcuenta`),
   CONSTRAINT `fk_mensaje_respondido` FOREIGN KEY (`idcuenta_respondido`) REFERENCES `cuenta` (`idcuenta`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +155,7 @@ CREATE TABLE `mensaje` (
 
 LOCK TABLES `mensaje` WRITE;
 /*!40000 ALTER TABLE `mensaje` DISABLE KEYS */;
-INSERT INTO `mensaje` VALUES (6,'Segundo mensaje de prueba enviado desde el front','Mensaje Frontend','2025-04-04 01:25:00',NULL,NULL,NULL,NULL),(7,'Segundo mensaje de prueba.','Mensaje Frontend','2025-04-04 01:28:00',2,NULL,NULL,NULL),(9,'Contenido de prueba post perdida','Mensaje Post perdida','2025-04-04 04:21:00',2,NULL,NULL,NULL),(10,'Hola mundo','Mensaje prueba','2025-04-09 12:51:00',2,NULL,NULL,NULL),(11,'Residente felipe','Residente Felipe','2025-04-09 12:53:00',11,NULL,NULL,NULL),(12,'Hola mi nombre es Sergio','Necesito que me respondas este mensaje','2025-08-11 13:45:00',13,'Te estoy respondiendo Sergio','2025-08-11 13:46:33',NULL),(13,'Mensaje Numero 2','Respuesta 2','2025-08-11 15:11:00',13,NULL,NULL,NULL),(14,'HESOYAM','PERRA','2025-08-11 16:23:00',13,'NOSE','2025-08-11 16:24:39',8);
+INSERT INTO `mensaje` VALUES (6,'Segundo mensaje de prueba enviado desde el front','Mensaje Frontend','2025-04-04 01:25:00',NULL,NULL,NULL,NULL),(7,'Segundo mensaje de prueba.','Mensaje Frontend','2025-04-04 01:28:00',2,NULL,NULL,NULL),(9,'Contenido de prueba post perdida','Mensaje Post perdida','2025-04-04 04:21:00',2,NULL,NULL,NULL),(10,'Hola mundo','Mensaje prueba','2025-04-09 12:51:00',2,NULL,NULL,NULL),(11,'Residente felipe','Residente Felipe','2025-04-09 12:53:00',11,NULL,NULL,NULL),(12,'Hola mi nombre es Sergio','Necesito que me respondas este mensaje','2025-08-11 13:45:00',13,'Te estoy respondiendo Sergio','2025-08-11 13:46:33',NULL),(13,'Mensaje Numero 2','Respuesta 2','2025-08-11 15:11:00',13,NULL,NULL,NULL),(14,'HESOYAM','PERRA','2025-08-11 16:23:00',13,'NOSE','2025-08-11 16:24:39',8),(16,'Mateo porque te fuiste','Mateo vuelve','2025-08-11 16:50:00',19,'NO','2025-08-11 16:51:18',8),(17,'Estoy mandando un mensaje para ver si aun funciona la respuesta','Respondeme Bien','2025-08-11 19:47:00',19,'Te respondo','2025-08-11 19:48:05',8);
 /*!40000 ALTER TABLE `mensaje` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,7 +175,7 @@ CREATE TABLE `pago` (
   `estado_pago` varchar(20) NOT NULL,
   `fecha_pago` datetime DEFAULT NULL,
   PRIMARY KEY (`idpago`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,7 +184,7 @@ CREATE TABLE `pago` (
 
 LOCK TABLES `pago` WRITE;
 /*!40000 ALTER TABLE `pago` DISABLE KEYS */;
-INSERT INTO `pago` VALUES (1,100000,NULL,NULL,NULL,'',NULL),(3,100000,NULL,NULL,NULL,'',NULL),(6,200000,2,'Pago administracion mes: abril','Administración','PENDENTE',NULL),(7,200000,2,'Pago administracion mes: enero','Administración','PENDENTE',NULL),(8,200000,2,'Pago administracion mes: marzo','Administración','PENDENTE',NULL),(9,200000,2,'Pago administracion mes: febrero','Administración','PENDENTE',NULL),(10,200000,2,'Pago administracion mes: noviembre','Administración','PENDENTE',NULL),(11,200000,2,'Pago administracion mes: noviembre','Administración','PENDENTE',NULL),(12,200000,2,'Pago administracion mes: enero','Administración','PENDENTE',NULL),(13,200000,2,'Pago administracion mes: mayo','Administración','PENDENTE',NULL),(14,200000,2,'Pago administracion mes: mayo','Administración','PENDENTE',NULL);
+INSERT INTO `pago` VALUES (1,100000,NULL,NULL,NULL,'',NULL),(3,100000,NULL,NULL,NULL,'',NULL),(6,200000,2,'Pago administracion mes: abril','Administración','PENDENTE',NULL),(7,200000,2,'Pago administracion mes: enero','Administración','PENDENTE',NULL),(8,200000,2,'Pago administracion mes: marzo','Administración','PENDENTE',NULL),(9,200000,2,'Pago administracion mes: febrero','Administración','PENDENTE',NULL),(10,200000,2,'Pago administracion mes: noviembre','Administración','PENDENTE',NULL),(11,200000,2,'Pago administracion mes: noviembre','Administración','PENDENTE',NULL),(12,200000,2,'Pago administracion mes: enero','Administración','PENDENTE',NULL),(13,200000,2,'Pago administracion mes: mayo','Administración','PENDENTE',NULL),(14,200000,2,'Pago administracion mes: mayo','Administración','PENDENTE',NULL),(15,42000,2,'Reserva de Gimnasio — Es un Gimnasio - 20/08/2025 - tarde','Reserva','PENDENTE',NULL),(16,28000,2,'Reserva de Lugar de panico — Es una sala del panico para Isaac - 20/08/2025 - noche','Reserva','PENDENTE',NULL),(17,24000,2,'Reserva de Lugar de panico — Es una sala del panico para Isaac - 19/08/2025 - tarde','Reserva','PENDENTE',NULL),(18,20000,2,'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-20 - manana','Reserva','PENDIENTE',NULL),(19,20000,2,'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-20 - manana','Reserva','PENDIENTE',NULL);
 /*!40000 ALTER TABLE `pago` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -214,7 +216,6 @@ CREATE TABLE `propietario` (
 
 LOCK TABLES `propietario` WRITE;
 /*!40000 ALTER TABLE `propietario` DISABLE KEYS */;
-INSERT INTO `propietario` VALUES (5,'Papaleta Aleta','1234567890',NULL,'papaleta@gmail.com','$2a$10$fwa6Tfz4BJWXZATv2VbsjuzZjHq8vk.cVs//s5SqYxPFEVRFyMy1e','3012229858',12),(6,'Serginio','23213123',NULL,'sergiolento12@gmail.com','$2a$10$L4RrvDjdy/IsUBK6Mop1O.DEME1m/KMbYcUDiYDZgmXvn.Z2GnKdW','1231231231',13);
 /*!40000 ALTER TABLE `propietario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -290,7 +291,7 @@ DROP TABLE IF EXISTS `reserva`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reserva` (
-  `idreserva` bigint(11) NOT NULL,
+  `idreserva` bigint(20) NOT NULL AUTO_INCREMENT,
   `tiempo` varchar(255) DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   `idareacomun` bigint(11) DEFAULT NULL,
@@ -300,7 +301,7 @@ CREATE TABLE `reserva` (
   KEY `residente_idresidente_reserva` (`idresidente`),
   CONSTRAINT `areacomun_idareacomun_reserva` FOREIGN KEY (`idareacomun`) REFERENCES `areacomun` (`idareacomun`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `residente_idresidente_reserva` FOREIGN KEY (`idresidente`) REFERENCES `residente` (`idresidente`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -309,6 +310,7 @@ CREATE TABLE `reserva` (
 
 LOCK TABLES `reserva` WRITE;
 /*!40000 ALTER TABLE `reserva` DISABLE KEYS */;
+INSERT INTO `reserva` VALUES (3,'manana','2025-08-20 09:00:00',1,8),(4,'manana','2025-08-20 09:00:00',1,8);
 /*!40000 ALTER TABLE `reserva` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -332,7 +334,7 @@ CREATE TABLE `residente` (
   PRIMARY KEY (`idresidente`),
   KEY `cuenta_idcuenta_residente` (`idcuenta`),
   CONSTRAINT `cuenta_idcuenta_residente` FOREIGN KEY (`idcuenta`) REFERENCES `cuenta` (`idcuenta`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -341,7 +343,7 @@ CREATE TABLE `residente` (
 
 LOCK TABLES `residente` WRITE;
 /*!40000 ALTER TABLE `residente` DISABLE KEYS */;
-INSERT INTO `residente` VALUES (8,'Isaac Ramirez',19,'12333213',2,'login@gmail.com','$2a$10$XCrsgdwFkOX.quqWPrQuH.mN.p/0lqxSjwy4U2VeojUCt4zSpjkpa','777777',NULL);
+INSERT INTO `residente` VALUES (8,'Isaac Ramirez',19,'12333213',2,'login@gmail.com','$2a$10$XCrsgdwFkOX.quqWPrQuH.mN.p/0lqxSjwy4U2VeojUCt4zSpjkpa','777777',NULL),(16,'AlejandriaA',0,'31312311',19,'Alejandria15@gmail.com','$2a$10$X1luCHQmD.HP73Pr/SUJiOM9VlynzBLFRGyTIGRpWPiHpfKQJWl72','1231231232',NULL);
 /*!40000 ALTER TABLE `residente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -383,4 +385,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-11 16:31:29
+-- Dump completed on 2025-08-13 16:27:14
