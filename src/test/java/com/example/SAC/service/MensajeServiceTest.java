@@ -32,9 +32,10 @@ public class MensajeServiceTest {
     public void testEncontrarTodosLosMensajes() {
         // Arrange
         Cuenta cuenta = new Cuenta(1L, "Residente");
+        Cuenta cuentaRespondido = new Cuenta(2L, "Administrador");
 
         //Simular repositorio de mensajes (Busqueda de todos los mensajes)
-        when(mensajeRepository.findAll()).thenReturn(java.util.List.of(new Mensaje(1L, "AEZAKMI", "hesoyam", LocalDateTime.of(2024, 10, 27, 15, 30, 0), (cuenta) )));
+        when(mensajeRepository.findAll()).thenReturn(java.util.List.of(new Mensaje(1L, "AEZAKMI", "hesoyam", LocalDateTime.of(2024, 10, 27, 15, 30, 0), (cuenta), null, null, (cuentaRespondido) )));
 
         // Act
         List<Mensaje> mensajes = mensajeRepository.findAll();
@@ -53,9 +54,12 @@ public class MensajeServiceTest {
         Long id = 1L;
         Cuenta cuenta = new Cuenta(1L, "Residente");
         cuenta.setIdCuenta(id);
+        Cuenta cuentaRespondido = new Cuenta(2L, "Administrador");
+
+
 
         //Simular repositorio de mensajes (Busqueda de todos los mensajes)
-        when(mensajeRepository.encontrarMensajesporidCuentaResidentes(id)).thenReturn(java.util.List.of(new Mensaje(1L, "AEZAKMI", "hesoyam", LocalDateTime.of(2024, 10, 27, 15, 30, 0), (cuenta) )));
+        when(mensajeRepository.encontrarMensajesporidCuentaResidentes(id)).thenReturn(java.util.List.of(new Mensaje(1L, "AEZAKMI", "hesoyam", LocalDateTime.of(2024, 10, 27, 15, 30, 0), (cuenta) , null, null, (cuentaRespondido) )));
 
         // Act
         List<Mensaje> mensajes = mensajeRepository.encontrarMensajesporidCuentaResidentes(id);
@@ -76,9 +80,12 @@ public class MensajeServiceTest {
         Long id = 1L;
         Cuenta cuenta = new Cuenta(1L, "Propietario");
         cuenta.setIdCuenta(id);
+        Cuenta cuentaRespondido = new Cuenta(2L, "Administrador");
+
+
 
         //Simular repositorio de mensajes (Busqueda de todos los mensajes)
-        when(mensajeRepository.encontrarMensajesporidCuentaPropietario(id)).thenReturn(java.util.List.of(new Mensaje(1L, "AEZAKMI", "hesoyam", LocalDateTime.of(2024, 10, 27, 15, 30, 0), (cuenta) )));
+        when(mensajeRepository.encontrarMensajesporidCuentaPropietario(id)).thenReturn(java.util.List.of(new Mensaje(1L, "AEZAKMI", "hesoyam", LocalDateTime.of(2024, 10, 27, 15, 30, 0), (cuenta), null , null, (cuentaRespondido) )));
 
         // Act
         List<Mensaje> mensajes = mensajeRepository.encontrarMensajesporidCuentaPropietario(id);
