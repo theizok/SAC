@@ -39,7 +39,7 @@ public class PagoController {
 
     @PostMapping("/mercado-pago")
     public ResponseEntity<?> crearPreferencia(@RequestBody Pago pago) throws MPException, MPApiException {
-        pago.setEstadoPago("PENDENTE");
+        pago.setEstadoPago("PENDIENTE");
         pagoRepository.save(pago);
 
         MercadoPagoConfig.setAccessToken("TEST-6124805663082328-040417-a023ca85ac047fbfca3fc9fb2316df41-2045469211");
@@ -79,12 +79,13 @@ public class PagoController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/mercado-pago/area-comun")
+    @PostMapping("/mercado-pago/reserva")
     public ResponseEntity<?> crearPreferenciaAreaComun(@RequestBody Pago pago, @RequestBody Reserva reserva) throws MPException, MPApiException {
         pago.setEstadoPago("PENDENTE");
         pagoRepository.save(pago);
 
-
+        //Se agrega la reserva a la base de datos.
+        reservaService.agregarReserva(reserva);
 
         MercadoPagoConfig.setAccessToken("TEST-6124805663082328-040417-a023ca85ac047fbfca3fc9fb2316df41-2045469211");
 
