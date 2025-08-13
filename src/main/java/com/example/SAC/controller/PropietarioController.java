@@ -1,14 +1,8 @@
 package com.example.SAC.controller;
 
 import com.example.SAC.dto.PasswordRequest;
-import com.example.SAC.entity.Apartamento;
-import com.example.SAC.entity.Mensaje;
-import com.example.SAC.entity.Propietario;
-import com.example.SAC.entity.Publicacion;
-import com.example.SAC.service.ApartamentoService;
-import com.example.SAC.service.MensajeService;
-import com.example.SAC.service.PropietarioService;
-import com.example.SAC.service.PublicacionService;
+import com.example.SAC.entity.*;
+import com.example.SAC.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +30,8 @@ public class PropietarioController {
     private PropietarioService propietarioService;
     @Autowired
     private MensajeService mensajeService;
+    @Autowired
+    private AreaComunService areaComunService;
 
 
     //Obtener propietario por id
@@ -97,6 +93,12 @@ public class PropietarioController {
     @GetMapping("/obtenerMensajes")
     public List<Mensaje> obtenerMensajes(@RequestParam long idCuenta) {
         return mensajeService.findMensajeByIdCuentaPropietario(idCuenta);
+    }
+
+    // Obtener todas las áreas comunes
+    @GetMapping("/obtenerAreasComunes")
+    public List<AreaComun> obtenerAreasComunes() {
+        return areaComunService.obtenerAreaComunes();
     }
 
     //Vista de inicio

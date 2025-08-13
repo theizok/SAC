@@ -33,9 +33,11 @@ public class AreaComunService {
         return areaComunRepository.findById(id).map( areaComun -> {
             areaComun.setArea(areaActualizada.getArea());
             areaComun.setPrecio(areaActualizada.getPrecio());
+            areaComun.setDescripcion(areaActualizada.getDescripcion());
             return areaComunRepository.save(areaComun);
         } ).orElseThrow(() -> new RuntimeException("No se encontro el área comun"));
     }
+
 
 }
 

@@ -20,4 +20,7 @@ public class AreaComun {
     private String area;
     @Column(name="precio")
     private float precio;
+    @Column(name="descripcion")
+    private String descripcion;
+
 }

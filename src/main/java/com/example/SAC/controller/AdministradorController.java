@@ -225,6 +225,20 @@ public class AdministradorController {
 
     //Acciones sobre áreas comunes. (Área Comun)
 
+    // Listar todas las áreas comunes
+    @GetMapping("/obtenerAreas")
+    public List<AreaComun> obtenerAreas() {
+        return areaComunService.obtenerAreaComunes();
+    }
+
+    // Obtener un área por id
+    @GetMapping("/obtenerAreaComun")
+    public ResponseEntity<?> obtenerAreaComun(@RequestParam long id) {
+        AreaComun area = areaComunService.obtenerAreaComunPorId(id);
+        if (area == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Área no encontrada"));
+        return ResponseEntity.ok(area);
+    }
+
     //Añadir área común.
     @PostMapping("/añadirAreaComun")
     public ResponseEntity<?> agregarAreaComun(@RequestBody AreaComun areaComun){
@@ -237,6 +251,7 @@ public class AdministradorController {
     }
 
     //Eliminar área común.
+    @DeleteMapping("/eliminarAreaComun")
     public ResponseEntity<?> eliminarAreaComun(@RequestParam long id){
         try {
             areaComunService.eliminarAreaComunporId(id);
@@ -247,6 +262,7 @@ public class AdministradorController {
     }
 
     //Actualizar área comun.
+    @PutMapping("/actualizarAreaComun")
     public ResponseEntity<?> actualizarAreaComun(@RequestParam long id, @RequestBody AreaComun areaComun){
         try {
             areaComunService.actualizarAreaComun(areaComun, id);
