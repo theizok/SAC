@@ -75,5 +75,5 @@
         alert('Usuario agregado correctamente');
 
         // Redirigir a la página de gestión de usuarios
-        window.location.href = 'administrar_usuarios.html';
+        window.location.href = '../AdministrarUsuarios/administrar_usuarios.html';
     });

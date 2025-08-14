@@ -98,7 +98,7 @@ header {
     font-size: 0.9rem;
 }
 
-.nav-list a:hover, 
+.nav-list a:hover,
 .nav-list a.active {
     color: #4fc3f7;
 }
@@ -285,7 +285,7 @@ footer {
     .menu-button {
         display: block;
     }
-    
+
     .main-nav {
         position: fixed;
         top: 90px;
@@ -298,20 +298,20 @@ footer {
         transition: var(--transition);
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     }
-    
+
     .menu-toggle:checked ~ .main-nav {
         left: 0;
     }
-    
+
     .nav-list {
         flex-direction: column;
         gap: 1.5rem;
     }
-    
+
     .container {
         padding: 1.5rem;
     }
-    
+
     .form-grid {
         grid-template-columns: 1fr;
     }
@@ -321,15 +321,15 @@ footer {
     .logo {
         height: 60px;
     }
-    
+
     .page-header h1 {
         font-size: 1.5rem;
     }
-    
+
     .form-actions {
         justify-content: center;
     }
-    
+
     .btn {
         width: 100%;
         justify-content: center;

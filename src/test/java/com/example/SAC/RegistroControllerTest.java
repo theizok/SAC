@@ -3,7 +3,6 @@ package com.example.SAC;
 import com.example.SAC.controller.RegistroController;
 import com.example.SAC.entity.Residente;
 import com.example.SAC.service.AdministradorService;
-import com.example.SAC.service.EmailService;
 import com.example.SAC.service.PropietarioService;
 import com.example.SAC.service.ResidenteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,8 +34,6 @@ public class RegistroControllerTest {
     @MockBean
     private AdministradorService administradorService; // Agregado
 
-    @MockBean
-    private EmailService emailService; // Agregado
 
     @Test
     public void testRegistrarResidente() throws Exception {

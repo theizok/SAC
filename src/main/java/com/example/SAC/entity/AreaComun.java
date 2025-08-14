@@ -2,11 +2,15 @@ package com.example.SAC.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name="areacomun")
+@AllArgsConstructor
+@NoArgsConstructor
 public class AreaComun {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,4 +20,7 @@ public class AreaComun {
     private String area;
     @Column(name="precio")
     private float precio;
+    @Column(name="descripcion")
+    private String descripcion;
+
 }

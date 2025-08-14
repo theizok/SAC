@@ -31,11 +31,4 @@ public class PublicacionDTO {
     }
 
 
-
-    public Long getIdPublicacion() { return idpublicacion; }
-    public void setIdPublicacion(Long idpublicacion) { this.idpublicacion = idpublicacion; }
-
-    public Long getIdCuenta() { return idcuenta; }
-    public void setIdCuenta(Long idcuenta) { this.idcuenta = idcuenta; }
-
 }

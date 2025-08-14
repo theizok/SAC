@@ -1,9 +1,11 @@
 package com.example.SAC.controller;
 
 import com.example.SAC.dto.PasswordRequest;
+import com.example.SAC.entity.AreaComun;
 import com.example.SAC.entity.Mensaje;
 import com.example.SAC.entity.Publicacion;
 import com.example.SAC.entity.Residente;
+import com.example.SAC.service.AreaComunService;
 import com.example.SAC.service.MensajeService;
 import com.example.SAC.service.PublicacionService;
 import com.example.SAC.service.ResidenteService;
@@ -29,6 +31,9 @@ public class ResidenteController {
     private PublicacionService publicacionService;
     @Autowired
     private MensajeService mensajeService;
+
+    @Autowired
+    private AreaComunService areaComunService;
 
     //Obtener residente por id
     @GetMapping("/obtenerPorId")
@@ -86,6 +91,12 @@ public class ResidenteController {
     //Encontrar mensajes de residente especifico
     @GetMapping("/obtenerMensajes") public List<Mensaje> obtenerMensajesPorIdCuentaResidente(@RequestParam long idCuenta ){
         return mensajeService.findMensajeByIdCuentaResidente(idCuenta);
+    }
+
+    // Obtener todas las áreas comunes
+    @GetMapping("/obtenerAreasComunes")
+    public List<AreaComun> obtenerAreasComunes() {
+        return areaComunService.obtenerAreaComunes();
     }
 
     //Vistas

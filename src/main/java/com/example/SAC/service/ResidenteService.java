@@ -1,7 +1,6 @@
 package com.example.SAC.service;
 
 import com.example.SAC.entity.Cuenta;
-import com.example.SAC.entity.Propietario;
 import com.example.SAC.entity.Residente;
 import com.example.SAC.repository.CuentaRepository;
 import com.example.SAC.repository.ResidenteRepository;
@@ -91,8 +90,6 @@ public class ResidenteService {
         return residenteRepository.getByNombre(nombre);
     }
 
-    //Obtener residente por id para obtener datos para actualizar
-    public Residente actualizarResidente(Residente residente) {return residenteRepository.save(residente);}
 
     //Eliminar residente por id
     public void eliminarResidentePorId(long Id) {

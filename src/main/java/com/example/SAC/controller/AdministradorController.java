@@ -38,6 +38,8 @@ public class AdministradorController {
     private AdministradorService administradorService;
     @Autowired
     private MensajeService mensajeService;
+    @Autowired
+    private AreaComunService areaComunService;
 
 
     //Mensajes
@@ -120,7 +122,7 @@ public class AdministradorController {
 
     //Obtener propietario por nombre
     @GetMapping("/obtenerPropietariopByNombre")
-    public Propietario obtenerPropietarioPorNombre(String nombre) {
+    public Optional<Propietario> obtenerPropietarioPorNombre(String nombre) {
         return propietarioService.obtenerPropietarioPorNombre(nombre);
     }
 
@@ -210,7 +212,6 @@ public class AdministradorController {
     }
 
     //Cambiar Contraseña por id
-    //Cambiar contraseña
     @PutMapping("/cambiarContraseña")
     public ResponseEntity<?> cambiarContraseña(@RequestBody PasswordRequest request) {
         try {
@@ -220,5 +221,56 @@ public class AdministradorController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
     }
+
+
+    //Acciones sobre áreas comunes. (Área Comun)
+
+    // Listar todas las áreas comunes
+    @GetMapping("/obtenerAreas")
+    public List<AreaComun> obtenerAreas() {
+        return areaComunService.obtenerAreaComunes();
+    }
+
+    // Obtener un área por id
+    @GetMapping("/obtenerAreaComun")
+    public ResponseEntity<?> obtenerAreaComun(@RequestParam long id) {
+        AreaComun area = areaComunService.obtenerAreaComunPorId(id);
+        if (area == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Área no encontrada"));
+        return ResponseEntity.ok(area);
+    }
+
+    //Añadir área común.
+    @PostMapping("/añadirAreaComun")
+    public ResponseEntity<?> agregarAreaComun(@RequestBody AreaComun areaComun){
+        try {
+            areaComunService.agregarAreaComun(areaComun);
+            return ResponseEntity.ok(Map.of("message", "Área comun agregada correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    //Eliminar área común.
+    @DeleteMapping("/eliminarAreaComun")
+    public ResponseEntity<?> eliminarAreaComun(@RequestParam long id){
+        try {
+            areaComunService.eliminarAreaComunporId(id);
+            return ResponseEntity.ok(Map.of("message", "Área comun eliminada correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    //Actualizar área comun.
+    @PutMapping("/actualizarAreaComun")
+    public ResponseEntity<?> actualizarAreaComun(@RequestParam long id, @RequestBody AreaComun areaComun){
+        try {
+            areaComunService.actualizarAreaComun(areaComun, id);
+            return ResponseEntity.ok(Map.of("message", "Área común actualizada correctamente"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+
 
 }

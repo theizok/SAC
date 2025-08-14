@@ -27,7 +27,6 @@ body {
     flex-direction: column;
 }
 
-/* Header Styles */
 header {
     background-color: var(--primary-color);
     color: var(--white);
@@ -57,7 +56,6 @@ header {
     width: auto;
 }
 
-/* Navigation */
 .menu-toggle {
     display: none;
 }
@@ -97,7 +95,7 @@ header {
     font-size: 0.9rem;
 }
 
-.nav-list a:hover, 
+.nav-list a:hover,
 .nav-list a.active {
     color: #4fc3f7;
 }
@@ -118,7 +116,6 @@ header {
     width: 100%;
 }
 
-/* Contact Section */
 .contact-section {
     padding: 4rem 1rem;
     background: linear-gradient(rgba(0, 43, 69, 0.9), rgba(0, 43, 69, 0.9)), url('../Inicio/3.jpg') center/cover no-repeat;
@@ -218,7 +215,6 @@ header {
     justify-content: center;
 }
 
-/* Buttons */
 .btn {
     padding: 0.7rem 1.2rem;
     border-radius: 5px;
@@ -265,7 +261,6 @@ header {
     border-color: var(--emergency-color);
 }
 
-/* Quick Links Section */
 .quick-links {
     padding: 3rem 1rem;
     background-color: var(--white);
@@ -311,7 +306,6 @@ header {
     color: var(--white);
 }
 
-/* Footer */
 footer {
     background-color: #001a2c;
     color: var(--white);
@@ -351,12 +345,11 @@ footer {
     font-size: 0.9rem;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .menu-button {
         display: block;
     }
-    
+
     .main-nav {
         position: fixed;
         top: 90px;
@@ -369,28 +362,28 @@ footer {
         transition: var(--transition);
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     }
-    
+
     .menu-toggle:checked ~ .main-nav {
         left: 0;
     }
-    
+
     .nav-list {
         flex-direction: column;
         gap: 1.5rem;
     }
-    
+
     .section-title {
         font-size: 1.8rem;
     }
-    
+
     .section-subtitle {
         font-size: 1rem;
     }
-    
+
     .contact-actions {
         flex-direction: column;
     }
-    
+
     .btn {
         width: 100%;
         justify-content: center;
@@ -401,15 +394,15 @@ footer {
     .logo {
         height: 60px;
     }
-    
+
     .section-title {
         font-size: 1.6rem;
     }
-    
+
     .contact-card {
         padding: 1.5rem;
     }
-    
+
     .links-container {
         grid-template-columns: 1fr;
     }
