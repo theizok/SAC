@@ -27,7 +27,7 @@ public class AreaComunServiceTest {
     @Test
     public void testAgregarAreaComun(){
         //Arrange
-        AreaComun areaComun = new AreaComun(1L, "Salon Social", 777);
+        AreaComun areaComun = new AreaComun(1L, "Salon Social", 777, "EJEMPLO AEZAKMI");
 
         //Simular Repositorio
         when(areaComunRepository.save(areaComun)).thenReturn(areaComun);
@@ -45,8 +45,8 @@ public class AreaComunServiceTest {
     @Test
     public void testObtenerAreasComunes() {
         // Arrange
-        AreaComun areaComun = new AreaComun(1L, "Salon Social", 777);
-        AreaComun areaComun2 = new AreaComun(2L, "Cancha Aux", 888);
+        AreaComun areaComun = new AreaComun(1L, "Salon Social", 777, "No se 1");
+        AreaComun areaComun2 = new AreaComun(2L, "Cancha Aux", 888, "No se 2");
 
         // Simular repositorio
         when(areaComunRepository.findAll()).thenReturn(java.util.List.of(areaComun, areaComun2));
@@ -81,8 +81,8 @@ public class AreaComunServiceTest {
     @Test
     public void testActualizarAreaComun() {
         // Arrange
-        AreaComun areaComunAntigua = new AreaComun(1L, "Salon Social", 777);
-        AreaComun areaComunNueva = new AreaComun(1L, "Cancha Aux", 888);
+        AreaComun areaComunAntigua = new AreaComun(1L, "Salon Social", 777, "No seee");
+        AreaComun areaComunNueva = new AreaComun(1L, "Cancha Aux", 888, "I dont know");
         Long id = 1L;
 
         // Simular busqueda de area común
