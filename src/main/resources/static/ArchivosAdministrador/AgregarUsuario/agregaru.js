@@ -1,79 +1,78 @@
- const formAgregarUsuario = document.getElementById('form-agregar-usuario');
+document.addEventListener("DOMContentLoaded", () => {
+    const formAgregarUsuario = document.getElementById('form-agregar-usuario');
+    if (!formAgregarUsuario) {
+        console.error("No se encontró el formulario #form-agregar-usuario");
+        return;
+    }
 
     formAgregarUsuario.addEventListener('submit', async function (e) {
         e.preventDefault();
 
-        const nombre = document.getElementById('nombre').value;
-        const documento = document.getElementById('documento').value;
-        const correo = document.getElementById('correo').value;
-        const celular = document.getElementById('celular').value;
-        const rol = document.getElementById('rol').value;
-        const contrasena = document.getElementById('contrasena').value;
+        const nombre = document.getElementById('nombre')?.value.trim() || "";
+        const documento = document.getElementById('documento')?.value.trim() || "";
+        const correo = document.getElementById('correo')?.value.trim() || "";
+        const celular = document.getElementById('celular')?.value.trim() || "";
+        const rol = (document.getElementById('rol')?.value || "").trim().toLowerCase();
+        const contrasena = document.getElementById('contrasena')?.value || "";
 
-        let usuario = {};
-        let apiUrl="";
+        let usuarioPayload = null;
+        let apiUrl = "";
 
-       if(rol==="residente"){
-
-           apiUrl = "http://localhost:8080/api/administrador/agregarResidente";
-
-           usuario = JSON.stringify({
-               nombre:nombre,
-               documento:documento,
-               correo:correo, // Usar "correo" en lugar de "email" para consistencia
-               telefono:celular,
-               contraseña: contrasena // Cambiar "contrasena" a "password" para consistencia
-           });
-
-       }else if (rol === "propietario"){
-           apiUrl = "http://localhost:8080/api/administrador/agregarPropietario";
-
-           usuario  = JSON.stringify({
-               nombre:nombre,
-               documentoPropietario:documento,
-               correo:correo,
-               contraseña:contrasena,
-               telefonoPropietario:celular
-           })
-       } else if(rol === "administrador"){
-               usuario  = JSON.stringify({
-                   nombreAdministrador:nombre,
-                   documento:documento,
-                   correo:correo,
-                   contraseña:contrasena,
-                   telefono:celular
-               })
-           }
-       else{
-           Console.log("Tipo de usuario no valido")
-       }
-
+        if (rol === "residente") {
+            apiUrl = "http://localhost:8080/api/administrador/agregarResidente";
+            usuarioPayload = {
+                nombre: nombre,
+                documento: documento,
+                correo: correo,
+                telefono: celular,
+                "contraseña": contrasena
+            };
+        } else if (rol === "propietario") {
+            apiUrl = "http://localhost:8080/api/administrador/agregarPropietario";
+            // IMPORTANTE: enviar los campos que la entidad Propietario espera
+            usuarioPayload = {
+                nombre: nombre,
+                documento: documento,
+                correo: correo,
+                telefonoPropietario: celular,
+                "contraseña": contrasena
+            };
+        } else if (rol === "administrador") {
+            apiUrl = "http://localhost:8080/api/administrador/agregarAdministrador";
+            usuarioPayload = {
+                nombre: nombre,
+                documento: documento,
+                correo: correo,
+                telefono: celular,
+                "contraseña": contrasena
+            };
+        } else {
+            console.log("Tipo de usuario no válido:", rol);
+            alert("Selecciona un rol válido antes de continuar.");
+            return;
+        }
 
         try {
             const response = await fetch(apiUrl, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: usuario
-            })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(usuarioPayload),
+                credentials: 'include'
+            });
 
-            if(!response.ok){
-                throw new Error("Error al crear el nuevo usuario")
-            }
-            else if (response.ok){
-                alert("Usuario creado de manera correcta")
-                window.location.href="/ArchivosAdministrador/AdministrarUsuarios/administrar_usuarios.html"
+            if (!response.ok) {
+                const text = await response.text().catch(()=>null);
+                console.error("Error al crear usuario:", response.status, text);
+                alert("Error al crear el usuario. Revisa la consola para más detalles.");
+                return;
             }
 
-
-        } catch (e) {
-
+            alert("Usuario creado de manera correcta");
+            // Redirigir a la pantalla de administrar usuarios (una sola vez)
+            window.location.href = "/ArchivosAdministrador/AdministrarUsuarios/administrar_usuarios.html";
+        } catch (err) {
+            console.error("Excepción al crear usuario:", err);
+            alert("Error al crear el usuario. Revisa la consola.");
         }
-
-
-        alert('Usuario agregado correctamente');
-
-        // Redirigir a la página de gestión de usuarios
-        window.location.href = '../AdministrarUsuarios/administrar_usuarios.html';
     });
+});
