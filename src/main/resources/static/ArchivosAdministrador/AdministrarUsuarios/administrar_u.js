@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 1) Cargar todos los usuarios (residentes + propietarios)
     async function obtenerUsuarios() {
         try {
-            const res = await fetch("http://localhost:8080/api/administrador/obtenerUsuarios");
+            const res = await fetch("/api/administrador/obtenerUsuarios");
             if (!res.ok) throw new Error("Error al obtener usuarios");
             const data = await res.json();
             const tabla = document.getElementById("users-table");
@@ -53,10 +53,10 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 let res;
                 if (currentEditTipo === "Propietario") {
-                    res = await fetch(`http://localhost:8080/api/administrador/obtenerPropietarioById?id=${currentEditId}`);
+                    res = await fetch(`https://sac-253068519041.us-central1.run.app/api/administrador/obtenerPropietarioById?id=${currentEditId}`);
                 } else {
                     // Por defecto tratamos como residente
-                    res = await fetch(`http://localhost:8080/api/administrador/obtenerResidenteById?id=${currentEditId}`);
+                    res = await fetch(`https://sac-253068519041.us-central1.run.app/api/administrador/obtenerResidenteById?id=${currentEditId}`);
                 }
 
                 if (!res.ok) {
