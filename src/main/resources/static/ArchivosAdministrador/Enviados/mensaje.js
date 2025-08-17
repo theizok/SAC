@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const mensajes = document.getElementById("sent-mensajes")
 
     try {
-        const response = await fetch("http:localhost:8080/api/administrador/obtenerMensajes", {
+        const response = await fetch("/api/administrador/obtenerMensajes", {
             method:"GET"
         }  )
 

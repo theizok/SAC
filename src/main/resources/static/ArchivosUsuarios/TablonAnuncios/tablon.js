@@ -8,16 +8,16 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         switch (filtro) {
             case "administrador":
-                apiUrlBase = "http://localhost:8080/api/tablon/publicacionesAdministrador";
+                apiUrlBase = "/api/tablon/publicacionesAdministrador";
                 break;
             case "residentes":
-                apiUrlBase = "http://localhost:8080/api/tablon/publicacionesResidentes";
+                apiUrlBase = "/api/tablon/publicacionesResidentes";
                 break;
             case "propietarios":
-                apiUrlBase = "http://localhost:8080/api/tablon/publicacionesPropietarios";
+                apiUrlBase = "/api/tablon/publicacionesPropietarios";
                 break;
             default:
-                apiUrlBase = "http://localhost:8080/api/tablon/publicacionesAll";
+                apiUrlBase = "/api/tablon/publicacionesAll";
         }
 
         try {
