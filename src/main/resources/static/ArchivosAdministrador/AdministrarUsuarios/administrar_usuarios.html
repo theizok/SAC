@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Gestión de Usuarios - Aplicativo Residencial</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="administrar_usuarios.css">
@@ -71,11 +71,11 @@
     </div>
 </footer>
 
-<!-- Modal de Edición -->
-<div id="modal-editar" class="modal">
+<!-- Modal de Edición (rol en solo lectura) -->
+<div id="modal-editar" class="modal" aria-hidden="true" role="dialog" aria-labelledby="titulo-modal-editar">
     <div class="modal-content">
-        <span class="cerrar">&times;</span>
-        <h2><i class="fas fa-user-edit"></i> Editar Usuario</h2>
+        <span class="cerrar" role="button" aria-label="Cerrar">&times;</span>
+        <h2 id="titulo-modal-editar"><i class="fas fa-user-edit"></i> Editar Usuario</h2>
         <form id="form-editar-usuario">
             <div class="form-group">
                 <label for="editar-nombre"><i class="fas fa-user"></i> Nombre</label>
@@ -97,14 +97,12 @@
                 <input type="text" id="editar-celular" placeholder="Número de celular" required>
             </div>
 
+            <!-- Mostrar rol como solo lectura (ya no se puede cambiar) -->
             <div class="form-group">
-                <label for="editar-rol"><i class="fas fa-user-tag"></i> Rol</label>
-                <select id="editar-rol" required>
-                    <option value="">Seleccione un rol</option>
-                    <option value="Administrador">Administrador</option>
-                    <option value="Residente">Residente</option>
-                    <option value="Visitante">Visitante</option>
-                </select>
+                <label><i class="fas fa-user-tag"></i> Rol</label>
+                <p id="mostrar-rol" style="padding:0.6rem;border:1px solid var(--gray-medium);border-radius:5px;background:#fafafa;margin-top:0.4rem;">
+                    <!-- Se llenará desde JS -->
+                </p>
             </div>
 
             <button type="submit" class="btn primary">

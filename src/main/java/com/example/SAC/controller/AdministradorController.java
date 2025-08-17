@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
 @RestController
 @RequestMapping("/api/administrador")
 public class AdministradorController {
@@ -78,15 +77,15 @@ public class AdministradorController {
         return residenteService.crearResidente(residente);
     }
 
-    //Actualizar cuenta residente
+    //Actualizar cuenta residente (ya existente)
     @PutMapping("/modificarResidente")
     public Residente updateResidente(@RequestParam Long id, @RequestBody Residente residente ) {
         return residenteService.actualizarResidente(id, residente);
     }
 
-    //Eliminar cuenta residente
+    //Eliminar cuenta residente (por documento) (ya existente)
     @DeleteMapping("/eliminarResidente")
-            public ResponseEntity<?> eliminarResidente(@RequestParam String document)
+    public ResponseEntity<?> eliminarResidente(@RequestParam String document)
     {
         try
         {
@@ -108,7 +107,7 @@ public class AdministradorController {
         return propietarioService.agregarPropietario(propietario);
     }
 
-    //Editar datos propietario
+    //Editar datos propietario (ya existente)
     @PutMapping("/modificarPropietario")
     public Propietario updatePropietario(@RequestParam long id ,@RequestBody Propietario propietario) {
         return propietarioService.actualizarPropietario(id ,propietario);
@@ -126,7 +125,7 @@ public class AdministradorController {
         return propietarioService.obtenerPropietarioPorNombre(nombre);
     }
 
-    //Eliminar cuenta propietario
+    //Eliminar cuenta propietario (por documento) (ya existente)
     @DeleteMapping("/eliminarPropietario")
     public ResponseEntity<?> eliminarPropietario(@RequestParam String document)
     {
@@ -136,6 +135,70 @@ public class AdministradorController {
             return ResponseEntity.ok(Map.of("message", "Cuenta eliminada correctamente"));
         } catch(Exception ex)
         {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
+
+    // Obtener propietario por id (para admin)
+    @GetMapping("/obtenerPropietarioById")
+    public ResponseEntity<?> obtenerPropietarioByIdParaAdmin(@RequestParam long id) {
+        Optional<Propietario> opt = propietarioService.obtenerPorId(id);
+        if (opt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Propietario no encontrado"));
+        }
+        return ResponseEntity.ok(opt.get());
+    }
+
+    // Obtener residente por id (para admin)
+    @GetMapping("/obtenerResidenteById")
+    public ResponseEntity<?> obtenerResidenteByIdParaAdmin(@RequestParam long id) {
+        Optional<Residente> opt = residenteService.obtenerPorId(id);
+        if (opt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Residente no encontrado"));
+        }
+        return ResponseEntity.ok(opt.get());
+    }
+
+    // Alternativa/alias PUT para modificar propietario usando /api/administrador/modificarPropietarioById?id=...
+    @PutMapping("/modificarPropietarioById")
+    public ResponseEntity<?> modificarPropietarioById(@RequestParam long id, @RequestBody Propietario propietario) {
+        try {
+            Propietario actualizado = propietarioService.actualizarPropietario(id, propietario);
+            return ResponseEntity.ok(actualizado);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
+
+    // Alternativa/alias PUT para modificar residente usando /api/administrador/modificarResidenteById?id=...
+    @PutMapping("/modificarResidenteById")
+    public ResponseEntity<?> modificarResidenteById(@RequestParam long id, @RequestBody Residente residente) {
+        try {
+            Residente actualizado = residenteService.actualizarResidente(id, residente);
+            return ResponseEntity.ok(actualizado);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
+
+    // Eliminar propietario por id (para admin)
+    @DeleteMapping("/eliminarPropietarioById")
+    public ResponseEntity<?> eliminarPropietarioById(@RequestParam long id) {
+        try {
+            propietarioService.eliminarPropietarioPorId(id);
+            return ResponseEntity.ok(Map.of("message", "Propietario eliminado correctamente"));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
+
+    // Eliminar residente por id (para admin)
+    @DeleteMapping("/eliminarResidenteById")
+    public ResponseEntity<?> eliminarResidenteById(@RequestParam long id) {
+        try {
+            residenteService.eliminarResidentePorId(id);
+            return ResponseEntity.ok(Map.of("message", "Residente eliminado correctamente"));
+        } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
         }
     }
@@ -271,6 +334,5 @@ public class AdministradorController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
     }
-
 
 }
