@@ -33,11 +33,11 @@ document.getElementById('registro-form').addEventListener('submit', async functi
 
     switch(rolMinuscula) {
         case("residente"):
-            apiUrl = "http://localhost:8080/api/register/residente";
+            apiUrl = "/api/register/residente";
             nuevoUsuario = residente;
             break;
         case("propietario"):
-            apiUrl="http://localhost:8080/api/register/propietario";
+            apiUrl="api/register/propietario";
             nuevoUsuario = propietario;
             break;
         default:

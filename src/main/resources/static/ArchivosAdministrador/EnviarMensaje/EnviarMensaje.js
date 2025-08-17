@@ -16,10 +16,10 @@ const fechaISO = `${anio}-${mes}-${dia}T${hora}:${minutos}:00`; // Formato ISO 8
 
 switch(rol){
     case("residente"):
-        apiUrl="http://localhost:8080/api/residente/enviarMensaje";
+        apiUrl="/api/residente/enviarMensaje";
         break;
     case("propietario"):
-        apiUrl="http://localhost:8080/api/propietario/enviarMensaje";
+        apiUrl="/api/propietario/enviarMensaje";
         break;
     default:
 }

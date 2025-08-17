@@ -35,15 +35,15 @@ document.addEventListener("DOMContentLoaded", () => {
     let DELETE_URL = "";
 
     if (rol === "residente") {
-        API_URL    = "http://localhost:8080/api/residente/obtenerPorId";
-        UPDATE_URL = "http://localhost:8080/api/residente/actualizar";
-        CHANGE_URL = "http://localhost:8080/api/residente/cambiarContraseña";
-        DELETE_URL = "http://localhost:8080/api/residente/eliminar";
+        API_URL    = "/api/residente/obtenerPorId";
+        UPDATE_URL = "/api/residente/actualizar";
+        CHANGE_URL = "/api/residente/cambiarContraseña";
+        DELETE_URL = "/api/residente/eliminar";
     } else if (rol === "propietario") {
-        API_URL    = "http://localhost:8080/api/propietario/ObtenerPropietarioById";
-        UPDATE_URL = "http://localhost:8080/api/propietario/actualizar";
-        CHANGE_URL = "http://localhost:8080/api/propietario/cambiarContraseña";
-        DELETE_URL = "http://localhost:8080/api/propietario/eliminarCuenta";
+        API_URL    = "/api/propietario/ObtenerPropietarioById";
+        UPDATE_URL = "/api/propietario/actualizar";
+        CHANGE_URL = "/api/propietario/cambiarContraseña";
+        DELETE_URL = "/api/propietario/eliminarCuenta";
     } else {
         console.error("Tipo de usuario no válido:", userType);
         return;

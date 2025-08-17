@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function obtenerUsuarios() {
         try {
-            const res = await fetch("http://localhost:8080/api/administrador/obtenerUsuarios", { credentials: 'include' });
+            const res = await fetch("/api/administrador/obtenerUsuarios", { credentials: 'include' });
             if (!res.ok) throw new Error("Error al obtener usuarios: " + res.status);
             const data = await res.json();
 
@@ -60,11 +60,11 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 let usuario = null;
                 if (String(currentEditTipo).toLowerCase().includes("propietario")) {
-                    const r = await fetch(`http://localhost:8080/api/administrador/obtenerPropietarioById?id=${currentEditId}`, { credentials: 'include' });
+                    const r = await fetch(`/api/administrador/obtenerPropietarioById?id=${currentEditId}`, { credentials: 'include' });
                     if (!r.ok) throw new Error("No se encontró propietario");
                     usuario = await r.json();
                 } else {
-                    const r = await fetch(`http://localhost:8080/api/administrador/obtenerResidenteById?id=${currentEditId}`, { credentials: 'include' });
+                    const r = await fetch(`/api/administrador/obtenerResidenteById?id=${currentEditId}`, { credentials: 'include' });
                     if (!r.ok) throw new Error("No se encontró residente");
                     usuario = await r.json();
                 }
@@ -116,9 +116,9 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             let url;
             if (String(currentEditTipo).toLowerCase().includes("propietario")) {
-                url = `http://localhost:8080/api/administrador/modificarPropietarioById?id=${currentEditId}`;
+                url = `/api/administrador/modificarPropietarioById?id=${currentEditId}`;
             } else {
-                url = `http://localhost:8080/api/administrador/modificarResidenteById?id=${currentEditId}`;
+                url = `/api/administrador/modificarResidenteById?id=${currentEditId}`;
             }
 
             const res = await fetch(url, {
@@ -172,9 +172,9 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 let url;
                 if (String(tipo).toLowerCase().includes("propietario")) {
-                    url = `http://localhost:8080/api/administrador/eliminarPropietarioById?id=${id}`;
+                    url = `/api/administrador/eliminarPropietarioById?id=${id}`;
                 } else {
-                    url = `http://localhost:8080/api/administrador/eliminarResidenteById?id=${id}`;
+                    url = `/api/administrador/eliminarResidenteById?id=${id}`;
                 }
 
                 const res = await fetch(url, { method: "DELETE", credentials: 'include' });
@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnAgregar = document.getElementById("btn-agregar-usuario");
     if (btnAgregar) {
         btnAgregar.addEventListener("click", () => {
-            window.location.href = "http://localhost:8080/ArchivosAdministrador/AgregarUsuario/agregar_usuario.html";
+            window.location.href = "/ArchivosAdministrador/AgregarUsuario/agregar_usuario.html";
         });
     }
 

@@ -9,16 +9,16 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         switch (filtro) {
             case "administrador":
-                apiUrlBase = "http://localhost:8080/api/tablon/publicacionesAdministrador";
+                apiUrlBase = "/api/tablon/publicacionesAdministrador";
                 break;
             case "residentes":
-                apiUrlBase = "http://localhost:8080/api/tablon/publicacionesResidentes";
+                apiUrlBase = "/api/tablon/publicacionesResidentes";
                 break;
             case "propietarios":
-                apiUrlBase = "http://localhost:8080/api/tablon/publicacionesPropietarios";
+                apiUrlBase = "/api/tablon/publicacionesPropietarios";
                 break;
             default:
-                apiUrlBase = "http://localhost:8080/api/tablon/publicacionesAll";
+                apiUrlBase = "/api/tablon/publicacionesAll";
         }
 
         try {
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                     try {
                         console.log("ID a eliminar:", publicacion.idpublicacion);
-                        const response = await fetch(`http://localhost:8080/api/administrador/eliminarPublicacion?id=${publicacion.idPublicacion}`, {
+                        const response = await fetch(`/api/administrador/eliminarPublicacion?id=${publicacion.idPublicacion}`, {
                             method: "DELETE",
                             headers: {
                                 "Content-Type": "application/json"

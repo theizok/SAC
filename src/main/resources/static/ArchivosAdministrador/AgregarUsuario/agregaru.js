@@ -15,11 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const rol = (document.getElementById('rol')?.value || "").trim().toLowerCase();
         const contrasena = document.getElementById('contrasena')?.value || "";
 
+
         let usuarioPayload = null;
-        let apiUrl = "";
+        let apiUrl="";
 
         if (rol === "residente") {
-            apiUrl = "http://localhost:8080/api/administrador/agregarResidente";
+            apiUrl = "/api/administrador/agregarResidente";
             usuarioPayload = {
                 nombre: nombre,
                 documento: documento,
@@ -28,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "contraseña": contrasena
             };
         } else if (rol === "propietario") {
-            apiUrl = "http://localhost:8080/api/administrador/agregarPropietario";
+            apiUrl = "/api/administrador/agregarPropietario";
             // IMPORTANTE: enviar los campos que la entidad Propietario espera
             usuarioPayload = {
                 nombre: nombre,
@@ -38,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "contraseña": contrasena
             };
         } else if (rol === "administrador") {
-            apiUrl = "http://localhost:8080/api/administrador/agregarAdministrador";
+            apiUrl = "/api/administrador/agregarAdministrador";
             usuarioPayload = {
                 nombre: nombre,
                 documento: documento,

@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         try {
-            const respuesta = await fetch("http://localhost:8080/api/tablon/crearPublicacion",{
+            const respuesta = await fetch("/api/tablon/crearPublicacion",{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

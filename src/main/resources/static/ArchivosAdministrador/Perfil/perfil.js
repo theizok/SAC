@@ -35,9 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let CHANGE_URL = "";
 
     if (rol === "administrador") {
-        API_URL = "http://localhost:8080/api/administrador/obtenerPorId";
-        UPDATE_URL = "http://localhost:8080/api/administrador/actualizar";
-        CHANGE_URL = "http://localhost:8080/api/administrador/cambiarContraseña";
+        API_URL = "/api/administrador/obtenerPorId";
+        UPDATE_URL = "/api/administrador/actualizar";
+        CHANGE_URL = "/api/administrador/cambiarContraseña";
     }
     else {
         console.error("Tipo de usuario no válido");
