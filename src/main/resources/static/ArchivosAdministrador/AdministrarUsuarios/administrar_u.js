@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function obtenerUsuarios() {
         try {
-            const res = await fetch("http://localhost:8080/api/administrador/obtenerUsuarios", { credentials: 'include' });
-            if (!res.ok) throw new Error("Error al obtener usuarios: " + res.status);
+            const res = await fetch("/api/administrador/obtenerUsuarios");
+            if (!res.ok) throw new Error("Error al obtener usuarios");
             const data = await res.json();
 
             const tabla = document.getElementById("users-table");
@@ -60,11 +60,11 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 let usuario = null;
                 if (String(currentEditTipo).toLowerCase().includes("propietario")) {
-                    const r = await fetch(`http://localhost:8080/api/administrador/obtenerPropietarioById?id=${currentEditId}`, { credentials: 'include' });
+                    const r = await fetch(`/api/administrador/obtenerPropietarioById?id=${currentEditId}`, { credentials: 'include' });
                     if (!r.ok) throw new Error("No se encontró propietario");
                     usuario = await r.json();
                 } else {
-                    const r = await fetch(`http://localhost:8080/api/administrador/obtenerResidenteById?id=${currentEditId}`, { credentials: 'include' });
+                    const r = await fetch(`/api/administrador/obtenerResidenteById?id=${currentEditId}`, { credentials: 'include' });
                     if (!r.ok) throw new Error("No se encontró residente");
                     usuario = await r.json();
                 }

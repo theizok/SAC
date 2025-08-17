@@ -12,7 +12,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     });
 
     try {
-        const respuesta = await fetch("http://localhost:8080/api/auth/login", {
+        const respuesta = await fetch("https://sac-253068519041.us-central1.run.app/api/auth/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -37,11 +37,11 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
         //Redireccion segun rol
         if (role === "ADMINISTRADOR") {
-            window.location.href = "http://localhost:8080/api/administrador/dashboard";
+            window.location.href = "https://sac-253068519041.us-central1.run.app/api/administrador/dashboard";
         }else if (role === "RESIDENTE") {
-            window.location.href = "http://localhost:8080/api/residente/dashboard"
+            window.location.href = "https://sac-253068519041.us-central1.run.app/api/residente/dashboard"
         }else if (role === "PROPIETARIO") {
-            window.location.href = "http://localhost:8080/api/propietario/dashboard"
+            window.location.href = "https://sac-253068519041.us-central1.run.app/api/propietario/dashboard"
         } else {
             window.location.href="/";
         }
