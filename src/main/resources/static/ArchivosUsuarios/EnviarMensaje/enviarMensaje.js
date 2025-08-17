@@ -6,10 +6,10 @@ let apiUrl = "";
 
 switch (rol) {
     case "residente":
-        apiUrl = "http://localhost:8080/api/residente/enviarMensaje";
+        apiUrl = "/api/residente/enviarMensaje";
         break;
     case "propietario":
-        apiUrl = "http://localhost:8080/api/propietario/enviarMensaje";
+        apiUrl = "/api/propietario/enviarMensaje";
         break;
     default:
         console.error("Rol de usuario desconocido:", rol);

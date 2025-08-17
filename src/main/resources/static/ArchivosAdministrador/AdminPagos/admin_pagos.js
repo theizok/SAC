@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pagosBody.innerHTML = '';
 
         try {
-            const response = await fetch("http://localhost:8080/api/pago/obtenerPagos");
+            const response = await fetch("/api/pago/obtenerPagos");
             if (!response.ok) {
                 throw new Error("Error al obtener los pagos");
             }

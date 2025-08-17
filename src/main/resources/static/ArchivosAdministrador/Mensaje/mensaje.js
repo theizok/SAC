@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ---------- fetch y render (base) ----------
     async function fetchMensajes() {
         try {
-            const response = await fetch("http://localhost:8080/api/administrador/obtenerMensajes");
+            const response = await fetch("/api/administrador/obtenerMensajes");
             if (!response.ok) throw new Error("Error al obtener todos los mensajes");
             const data = await response.json();
             allMessages = Array.isArray(data) ? data : [];
@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const idToDelete = ev.currentTarget.dataset.id;
                 if (!confirm("¿Seguro que quieres eliminar este mensaje? Esta acción no se puede deshacer.")) return;
                 try {
-                    const resp = await fetch(`http://localhost:8080/api/administrador/eliminarMensaje?id=${idToDelete}`, { method: "DELETE" });
+                    const resp = await fetch(`/api/administrador/eliminarMensaje?id=${idToDelete}`, { method: "DELETE" });
                     if (!resp.ok) { const err = await resp.json().catch(()=>({message:'Error'})); throw new Error(err.message || 'Error al eliminar'); }
                     document.querySelector(`.message-item[data-id="${idToDelete}"]`)?.remove();
                     document.getElementById(`mensaje-${idToDelete}`)?.remove();
@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
             const body = { idMensaje: Number(currentReplyMessageId), respuesta: texto, idCuentaRespondido: adminId };
-            const resp = await fetch("http://localhost:8080/api/administrador/responderMensaje", {
+            const resp = await fetch("/api/administrador/responderMensaje", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)

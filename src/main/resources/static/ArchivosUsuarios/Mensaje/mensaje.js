@@ -6,10 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let apiUrl = "";
     switch (rol) {
         case "residente":
-            apiUrl = "http://localhost:8080/api/residente/obtenerMensajes";
+            apiUrl = "/api/residente/obtenerMensajes";
             break;
         case "propietario":
-            apiUrl = "http://localhost:8080/api/propietario/obtenerMensajes";
+            apiUrl = "/api/propietario/obtenerMensajes";
             break;
         default:
             console.warn("Rol no reconocido:", userType);
