@@ -1,4 +1,3 @@
-// pago.js (no envía idResidente; backend asigna idResidente desde SecurityContext)
 document.addEventListener('DOMContentLoaded', async () => {
     const ENDPOINTS = [
         '/api/residente/obtenerAreasComunes',
@@ -114,12 +113,48 @@ document.addEventListener('DOMContentLoaded', async () => {
         montoReserva.value = monto > 0 ? monto.toLocaleString('es-CO') : '';
     }
 
+    // Nueva función: cargar tarifa de Administración
+    async function cargarTarifaAdministracion() {
+        const inputMontoAdmin = document.getElementById('monto-admin');
+        if (!inputMontoAdmin) return;
+
+        try {
+            // usar ruta relativa para que funcione en prod si el proxy lo maneja
+            const res = await fetch('/api/tarifa', { method: 'GET' });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const json = await res.json();
+
+            // Normalizar respuesta a array
+            let arr = Array.isArray(json) ? json : (Array.isArray(json.data) ? json.data : (Array.isArray(json.tarifas) ? json.tarifas : []));
+            if (!arr.length && typeof json === 'object') {
+                const maybe = Object.values(json).find(v => Array.isArray(v));
+                if (maybe) arr = maybe;
+            }
+
+            const tarifaAdmin = arr.find(t => (t.categoria || t.nombre || t.tipo) === 'Administración') ||
+                arr.find(t => String(t.categoria || t.nombre || t.tipo).toLowerCase().includes('admin')) ||
+                arr.find(t => String(t.id).toLowerCase().includes('admin'));
+
+            if (tarifaAdmin) {
+                const valor = tarifaAdmin.valor ?? tarifaAdmin.precio ?? tarifaAdmin.monto ?? 0;
+                if (typeof valor === 'number') inputMontoAdmin.value = valor.toLocaleString('es-CO');
+                else inputMontoAdmin.value = String(valor);
+            } else {
+                console.warn('No se encontró tarifa de Administración en /api/tarifa');
+            }
+        } catch (err) {
+            console.error('Error al cargar tarifa administración:', err);
+        }
+    }
+
     if (tipoPago) {
         tipoPago.addEventListener('change', async function () {
             if (camposAdmin) camposAdmin.style.display = 'none';
             if (camposReserva) camposReserva.style.display = 'none';
             if (this.value === 'administracion') {
                 if (camposAdmin) camposAdmin.style.display = 'block';
+                // Cargar tarifa de administración al mostrar los campos
+                cargarTarifaAdministracion();
             } else if (this.value === 'reserva') {
                 if (camposReserva) camposReserva.style.display = 'block';
                 if (areasCache.length === 0) {
@@ -149,8 +184,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (tipoPagoValue === 'administracion') {
                 const mesPago = document.getElementById('mes-pago')?.value;
-                const montoAdmin = document.getElementById('monto-admin')?.value;
-                pago.valor = parseFloat(montoAdmin) || 0;
+                const montoAdminStr = document.getElementById('monto-admin')?.value;
+                // usar parseLocaleNumber para aceptar formatos locales
+                pago.valor = parseLocaleNumber(montoAdminStr);
                 pago.descripcion = `Pago administración mes: ${mesPago}`;
                 pago.categoria = 'Administración';
             } else if (tipoPagoValue === 'reserva') {
@@ -258,6 +294,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (err) {
             if (areaComun) { areaComun.innerHTML = '<option value="">Error cargando áreas</option>'; areaComun.disabled = true; }
         }
+
+        // Cargar tarifa de administración al iniciar (si el input existe)
+        // esto garantiza que el monto de administración esté visible sin interactuar
+        cargarTarifaAdministracion();
+
         if (tipoPago && tipoPago.value === 'reserva') { if (camposReserva) camposReserva.style.display = 'block'; actualizarMontoReserva(); }
         cargarHistorialPagos();
     })();
