@@ -27,4 +27,8 @@ public class PagoService {
     public List<Pago> obtenerPagos() {
         return pagoRepository.findAll();
     }
+
+    public List<Pago> obtenerPagosPorCuenta(Long idCuenta) {
+        return pagoRepository.findByCuenta_IdCuenta(idCuenta);
+    }
 }
