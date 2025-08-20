@@ -32,7 +32,7 @@ public class SecurityConfig {
         return httpSecurity
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.POST,"api/register/propietario","api/register/administrador", "api/register/residente", "api/pago/webhook").permitAll();
+                    auth.requestMatchers(HttpMethod.POST,"/api/register/propietario","/api/register/administrador", "/api/register/residente", "/api/pago/webhook").permitAll();
                     auth.requestMatchers("/noAuth/**", "/Login/**","/Login/1.jpg", "/InicioNoAuth/**","/", "/noAuth/Register","/Registro/**","/favicon.ico").permitAll();
                     auth.requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll();
                     auth.requestMatchers("/api/residente/**").hasAuthority("RESIDENTE");
