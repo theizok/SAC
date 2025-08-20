@@ -37,17 +37,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                // remover active
                 tabBtns.forEach(b => b.classList.remove('active'));
                 tabContents.forEach(c => c.classList.remove('active'));
 
-                // activar
                 btn.classList.add('active');
                 const tabName = btn.dataset.tab;
                 const content = document.getElementById(tabName);
                 if (content) content.classList.add('active');
 
-                // si abrimos historial, forzar recarga
                 if (tabName === 'historial-pagos') {
                     if (typeof cargarHistorialDesdeBackend === 'function') {
                         cargarHistorialDesdeBackend();
@@ -374,7 +371,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const data = await response.json();
                 const init = data.init_point;
-                // recargar el historial desde backend para que aparezca el pago creado (si fue guardado)
                 await cargarHistorialDesdeBackend();
 
                 if (init) {
@@ -395,7 +391,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Inicialización
     (async function init() {
-        initTabs(); // <-- registrar listeners de pestañas primero
+        initTabs();
 
         try {
             const areas = await fetchAreasConFallback();
@@ -409,7 +405,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (tipoPago && tipoPago.value === 'reserva') { if (camposReserva) camposReserva.style.display = 'block'; actualizarMontoReserva(); }
 
-        // cargar historial inicial (si la pestaña historial no está activa, esto aún deja la tabla lista si el usuario la abre)
         await cargarHistorialDesdeBackend();
     })();
 
@@ -423,19 +418,4 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else if (this.value === 'reserva') {
                 if (camposReserva) camposReserva.style.display = 'block';
                 if (areasCache.length === 0) {
-                    try {
-                        const fetched = await fetchAreasConFallback();
-                        poblarAreas(fetched);
-                    } catch (err) {
-                        areaComun.innerHTML = '<option value="">Error cargando áreas</option>';
-                        areaComun.disabled = true;
-                    }
-                }
-                actualizarMontoReserva();
-            }
-        });
-    }
 
-    if (areaComun) areaComun.addEventListener('change', actualizarMontoReserva);
-    if (horaReserva) horaReserva.addEventListener('change', actualizarMontoReserva);
-});
