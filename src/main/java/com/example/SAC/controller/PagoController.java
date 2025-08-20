@@ -273,31 +273,49 @@ public class PagoController {
 
     // ----------------- Webhook -----------------
     @PostMapping("/webhook")
-    public ResponseEntity<?> recibirWebhook(@RequestParam Map<String, String> params) throws MPException, MPApiException {
-        String topic = params.get("topic");
-        String id = params.get("id");
+    public ResponseEntity<?> recibirWebhook(
+            @RequestParam(required = false) Map<String, String> queryParams,
+            @RequestBody(required = false) Map<String, Object> body) {
 
-        if ("payment".equals(topic)) {
-            try {
+        try {
+            String topic = null;
+            String id = null;
+
+
+            if (queryParams != null) {
+                topic = queryParams.get("topic");
+                id = queryParams.get("id");
+            }
+
+
+            if ((id == null || topic == null) && body != null) {
+                if (body.get("type") != null) topic = String.valueOf(body.get("type"));
+                if (body.get("data") instanceof Map) {
+                    Map<?, ?> data = (Map<?, ?>) body.get("data");
+                    Object idObj = data.get("id");
+                    if (idObj != null) id = String.valueOf(idObj);
+                }
+            }
+
+            if ("payment".equalsIgnoreCase(topic) && id != null) {
                 PaymentClient client = new PaymentClient();
-
-                // Aquí se obtiene el pago real desde Mercado Pago
                 Payment payment = client.get(Long.parseLong(id));
 
                 String estado = payment.getStatus(); // approved, pending, etc.
                 Long externalReference = Long.parseLong(payment.getExternalReference());
 
-                // Aquí actualizas el pago en tu base de datos
+
                 pagoService.actualizarEstadoPago(externalReference, estado);
 
                 return ResponseEntity.ok("Webhook procesado correctamente");
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Error procesando webhook: " + e.getMessage());
             }
-        }
 
-        return ResponseEntity.badRequest().body("Evento no soportado");
+            return ResponseEntity.badRequest().body("Evento no soportado o incompleto");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error procesando webhook: " + e.getMessage());
+        }
     }
 
     // ----------------- Obtener pagos (filtrado por cuenta del usuario autenticado) -----------------
