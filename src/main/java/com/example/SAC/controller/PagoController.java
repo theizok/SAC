@@ -231,9 +231,9 @@ public class PagoController {
             MercadoPagoConfig.setAccessToken("TEST-6124805663082328-040417-a023ca85ac047fbfca3fc9fb2316df41-2045469211");
 
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success("http://localhost:8080/")
-                    .pending("http://localhost:8080/")
-                    .failure("http://localhost:8080/")
+                    .success("https://sac-253068519041.us-central1.run.app/")
+                    .pending("https://sac-253068519041.us-central1.run.app/")
+                    .failure("https://sac-253068519041.us-central1.run.app/")
                     .build();
 
             PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
