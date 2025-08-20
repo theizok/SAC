@@ -2,6 +2,7 @@ package com.example.SAC.controller;
 
 import com.example.SAC.dto.PasswordRequest;
 import com.example.SAC.dto.PublicacionDTO;
+import com.example.SAC.dto.ResponderMensajeDTO;
 import com.example.SAC.dto.UsuarioDTO;
 import com.example.SAC.entity.*;
 import com.example.SAC.service.*;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Map;
@@ -47,6 +49,32 @@ public class AdministradorController {
     @GetMapping("/obtenerMensajes")
     public List<Mensaje> getMensajes() {
         return mensajeService.findAllMensajes();
+    }
+
+    //Responder Mensajes
+    @PostMapping("/responderMensaje")
+    public ResponseEntity<?> responderMensaje(@Valid @RequestBody ResponderMensajeDTO request) {
+        try {
+            Mensaje actualizado = mensajeService.responderMensaje(
+                    request.getIdMensaje(),
+                    request.getRespuesta(),
+                    request.getIdCuentaRespondido()
+            );
+            return ResponseEntity.ok(actualizado);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
+
+    //Eliminar Mensajes
+    @DeleteMapping("/eliminarMensaje")
+    public ResponseEntity<?> eliminarMensaje(@RequestParam long id) {
+        try {
+            mensajeService.deleteMensaje(id);
+            return ResponseEntity.ok(Map.of("message", "Mensaje eliminado correctamente"));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
     }
 
     //Usuarios General

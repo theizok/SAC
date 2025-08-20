@@ -1,4 +1,5 @@
-// pago.js (no envía idResidente; backend asigna idResidente desde SecurityContext)
+// pago.js (sin localStorage, preparado para recibir PagoDTO desde backend)
+// Reemplaza completamente tu archivo pago.js por este
 document.addEventListener('DOMContentLoaded', async () => {
     const ENDPOINTS = [
         '/api/residente/obtenerAreasComunes',
@@ -14,10 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const horaReserva = document.getElementById('hora-reserva');
     const montoReserva = document.getElementById('monto-reserva');
     const continuarPagoBtn = document.getElementById('continuar-pago');
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
     const historialBody = document.getElementById('historial-body');
-    const areasList = document.getElementById('areas-list');
 
     let areasCache = [];
     const idCuenta = sessionStorage.getItem('idCuenta');
@@ -27,11 +25,46 @@ document.addEventListener('DOMContentLoaded', async () => {
         fechaReserva.min = hoy.toISOString().split('T')[0];
     }
 
+    // ------------------ TAB SWITCHING ------------------
+    function initTabs() {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        if (!tabBtns || !tabBtns.length) {
+            console.warn('initTabs: no se encontraron botones de pestaña (.tab-btn).');
+            return;
+        }
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // remover active
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+
+                // activar
+                btn.classList.add('active');
+                const tabName = btn.dataset.tab;
+                const content = document.getElementById(tabName);
+                if (content) content.classList.add('active');
+
+                // si abrimos historial, forzar recarga
+                if (tabName === 'historial-pagos') {
+                    if (typeof cargarHistorialDesdeBackend === 'function') {
+                        cargarHistorialDesdeBackend();
+                    } else {
+                        console.warn('cargarHistorialDesdeBackend no definida');
+                    }
+                }
+            });
+        });
+    }
+
+    // ---------- fetch de areas con fallback ----------
     async function fetchAreasConFallback() {
         let lastError = null;
         for (const path of ENDPOINTS) {
             try {
-                const res = await fetch(path);
+                const res = await fetch(path, { credentials: 'include' });
                 if (!res.ok) { lastError = new Error(`HTTP ${res.status} en ${path}`); continue; }
                 const json = await res.json();
                 let data = json;
@@ -39,8 +72,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (Array.isArray(json.data)) data = json.data;
                     else if (Array.isArray(json.areas)) data = json.areas;
                     else {
-                        const maybeArr = Object.values(json).find(v => Array.isArray(v));
-                        data = maybeArr || [];
+                        const maybe = Object.values(json).find(v => Array.isArray(v));
+                        data = maybe || [];
                     }
                 }
                 return data;
@@ -61,7 +94,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             opt.textContent = 'No hay áreas registradas';
             areaComun.appendChild(opt);
             areaComun.disabled = true;
-            if (areasList) areasList.innerHTML = '<p>No hay áreas registradas.</p>';
             return;
         }
         const placeholder = document.createElement('option');
@@ -83,6 +115,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         areaComun.disabled = false;
     }
 
+    // ---------- utilidades ----------
     function parseLocaleNumber(str) {
         if (str == null) return 0;
         const cleaned = String(str).replace(/\./g, '').replace(/,/g, '.').replace(/[^\d.-]/g, '');
@@ -90,6 +123,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         return isNaN(n) ? 0 : n;
     }
 
+    function formatCurrency(value) {
+        try {
+            const n = Number(value) || 0;
+            return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(n);
+        } catch (e) { return String(value); }
+    }
+
+    function formatDate(val) {
+        if (!val) return '';
+        try {
+            const d = (typeof val === 'number' || /^\d+$/.test(String(val))) ? new Date(Number(val)) : new Date(val);
+            if (isNaN(d.getTime())) return String(val);
+            return d.toLocaleString('es-CO', { year: 'numeric', month: 'short', day: '2-digit' });
+        } catch (e) { return String(val); }
+    }
+
+    function escapeHtml(text) {
+        if (text == null) return '';
+        return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    // ---------- monto reserva ----------
     function actualizarMontoReserva() {
         if (!areaComun || !montoReserva || !horaReserva) return;
         const selectedId = areaComun.value;
@@ -114,31 +174,139 @@ document.addEventListener('DOMContentLoaded', async () => {
         montoReserva.value = monto > 0 ? monto.toLocaleString('es-CO') : '';
     }
 
-    if (tipoPago) {
-        tipoPago.addEventListener('change', async function () {
-            if (camposAdmin) camposAdmin.style.display = 'none';
-            if (camposReserva) camposReserva.style.display = 'none';
-            if (this.value === 'administracion') {
-                if (camposAdmin) camposAdmin.style.display = 'block';
-            } else if (this.value === 'reserva') {
-                if (camposReserva) camposReserva.style.display = 'block';
-                if (areasCache.length === 0) {
-                    try {
-                        const fetched = await fetchAreasConFallback();
-                        poblarAreas(fetched);
-                    } catch (err) {
-                        areaComun.innerHTML = '<option value="">Error cargando áreas</option>';
-                        areaComun.disabled = true;
-                    }
-                }
-                actualizarMontoReserva();
+    // ---------- tarifa administración ----------
+    async function cargarTarifaAdministracion() {
+        const inputMontoAdmin = document.getElementById('monto-admin');
+        if (!inputMontoAdmin) return;
+
+        try {
+            const res = await fetch('/api/tarifa', { method: 'GET', credentials: 'include' });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const json = await res.json();
+
+            let arr = Array.isArray(json) ? json : (Array.isArray(json.data) ? json.data : (Array.isArray(json.tarifas) ? json.tarifas : []));
+            if (!arr.length && typeof json === 'object') {
+                const maybe = Object.values(json).find(v => Array.isArray(v));
+                if (maybe) arr = maybe;
             }
+
+            const tarifaAdmin = arr.find(t => (t.categoria || t.nombre || t.tipo) === 'Administración') ||
+                arr.find(t => String(t.categoria || t.nombre || t.tipo).toLowerCase().includes('admin')) ||
+                arr.find(t => String(t.id).toLowerCase().includes('admin'));
+
+            if (tarifaAdmin) {
+                const valor = tarifaAdmin.valor ?? tarifaAdmin.precio ?? tarifaAdmin.monto ?? 0;
+                if (typeof valor === 'number') inputMontoAdmin.value = valor.toLocaleString('es-CO');
+                else inputMontoAdmin.value = String(valor);
+            } else {
+                console.warn('No se encontró tarifa de Administración en /api/tarifa');
+            }
+        } catch (err) {
+            console.error('Error al cargar tarifa administración:', err);
+        }
+    }
+
+    // ---------- Historial (siempre desde backend, espera PagoDTO) ----------
+    async function cargarHistorialDesdeBackend() {
+        if (!historialBody) {
+            console.warn('cargarHistorialDesdeBackend: historialBody no encontrado');
+            return;
+        }
+        console.log('Cargando historial desde backend...');
+        try {
+            const res = await fetch('/api/pago/obtenerPagos', {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' },
+                credentials: 'include'
+            });
+            console.log('Respuesta /api/pago/obtenerPagos status:', res.status);
+            if (!res.ok) {
+                const txt = await res.text().catch(()=>null);
+                console.warn('Error cargando pagos:', res.status, txt);
+                historialBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No se pudo cargar el historial</td></tr>';
+                return;
+            }
+
+            const json = await res.json();
+            console.log('Payload recibido (preview):', JSON.stringify(json).slice(0,500));
+            let arr = Array.isArray(json) ? json : (Array.isArray(json.data) ? json.data : (Array.isArray(json.pagos) ? json.pagos : []));
+            if (!arr.length && typeof json === 'object') {
+                const maybe = Object.values(json).find(v => Array.isArray(v));
+                if (maybe) arr = maybe;
+            }
+
+            renderPagos(arr, document.getElementById('filtro-tipo')?.value ?? 'todos');
+        } catch (err) {
+            console.error('Error en fetch historial:', err);
+            historialBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No se pudo cargar el historial</td></tr>';
+        }
+    }
+
+    function normalizarPagoDTO(p) {
+        const id = p.idPago ?? p.id ?? p.paymentId ?? p.id_pago ?? null;
+        const valor = Number(p.valor ?? p.monto ?? p.amount ?? 0) || 0;
+        const estado = p.estadoPago ?? p.estado ?? p.status ?? '';
+        const descripcion = p.descripcion ?? p.description ?? p.detalle ?? '';
+        const categoria = p.categoria ?? p.tipo ?? p.category ?? '';
+        const fecha = p.fecha ?? p.fechaPago ?? p.createdAt ?? p.date ?? null;
+        return { raw: p, id, valor, estado: String(estado), descripcion: String(descripcion), categoria: String(categoria), fecha };
+    }
+
+    function renderPagos(rawArray, filtro = 'todos') {
+        if (!historialBody) return;
+        historialBody.innerHTML = '';
+
+        const arr = Array.isArray(rawArray) ? rawArray : [];
+        const filtrados = (filtro && filtro !== 'todos')
+            ? arr.filter(p => {
+                const categoria = (p.categoria ?? p.tipo ?? p.category ?? '').toString().toLowerCase();
+                return categoria.includes(String(filtro).toLowerCase());
+            })
+            : arr;
+
+        if (!filtrados.length) {
+            const fila = document.createElement('tr');
+            fila.innerHTML = '<td colspan="5" style="text-align: center;">No hay pagos registrados</td>';
+            historialBody.appendChild(fila);
+            return;
+        }
+
+        filtrados.forEach(raw => {
+            const p = normalizarPagoDTO(raw);
+            const fila = document.createElement('tr');
+            fila.style.cursor = 'pointer';
+            fila.dataset.id = p.id ?? '';
+            fila.innerHTML = `<td>${formatDate(p.fecha)}</td>
+                              <td>${escapeHtml(p.categoria)}</td>
+                              <td>${escapeHtml(p.descripcion)}</td>
+                              <td>${formatCurrency(p.valor)}</td>
+                              <td>${escapeHtml(p.estado)}</td>`;
+            fila.addEventListener('click', () => mostrarDetallePago(p));
+            historialBody.appendChild(fila);
         });
     }
 
-    if (areaComun) areaComun.addEventListener('change', actualizarMontoReserva);
-    if (horaReserva) horaReserva.addEventListener('change', actualizarMontoReserva);
+    function mostrarDetallePago(p) {
+        const detalle = [
+            `ID: ${p.id ?? ''}`,
+            `Categoría: ${p.categoria || ''}`,
+            `Descripción: ${p.descripcion || ''}`,
+            `Valor: ${formatCurrency(p.valor)}`,
+            `Estado: ${p.estado || ''}`,
+            `Fecha: ${formatDate(p.fecha)}`
+        ].join('\n');
+        alert(detalle);
+    }
 
+    // conectar filtro
+    const filtroTipo = document.getElementById('filtro-tipo');
+    if (filtroTipo) {
+        filtroTipo.addEventListener('change', () => {
+            cargarHistorialDesdeBackend();
+        });
+    }
+
+    // ---------- Handler "Continuar con el pago" ----------
     if (continuarPagoBtn) {
         continuarPagoBtn.addEventListener('click', async () => {
             const tipoPagoValue = tipoPago ? tipoPago.value : null;
@@ -149,8 +317,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (tipoPagoValue === 'administracion') {
                 const mesPago = document.getElementById('mes-pago')?.value;
-                const montoAdmin = document.getElementById('monto-admin')?.value;
-                pago.valor = parseFloat(montoAdmin) || 0;
+                const montoAdminStr = document.getElementById('monto-admin')?.value;
+                pago.valor = parseLocaleNumber(montoAdminStr);
                 pago.descripcion = `Pago administración mes: ${mesPago}`;
                 pago.categoria = 'Administración';
             } else if (tipoPagoValue === 'reserva') {
@@ -158,7 +326,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (!areaComun?.value) { alert('Por favor, seleccione un área común'); return; }
 
                 const areaSeleccionada = areaComun.options[areaComun.selectedIndex]?.textContent ?? '';
-                const fechaSeleccionada = fechaReserva.value; // yyyy-mm-dd
+                const fechaSeleccionada = fechaReserva.value;
                 const horaSeleccionada = horaReserva?.value || '';
 
                 const montoReservaValue = montoReserva.value;
@@ -177,7 +345,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 const fechaISO = `${fechaSeleccionada}T${horaParaISO}`;
 
-                // No enviar idResidente; backend lo asignará desde la sesión autenticada
                 reserva = {
                     idAreaComun: Number(areaComun.value),
                     fechaReserva: fechaISO,
@@ -190,32 +357,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             continuarPagoBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
 
             try {
-                if (tipoPagoValue === 'reserva') {
-                    const payload = { pago: pago, reserva: reserva };
-                    console.log('Payload pago+reserva (antes de fetch):', payload);
+                let endpoint = (tipoPagoValue === 'reserva') ? '/api/pago/mercado-pago/reserva' : '/api/pago/mercado-pago';
+                let body = (tipoPagoValue === 'reserva') ? { pago: pago, reserva: reserva } : pago;
 
-                    const response = await fetch('/api/pago/mercado-pago/reserva', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(body)
+                });
 
-                    if (!response.ok) {
-                        const txt = await response.text();
-                        throw new Error(txt || `Error ${response.status}`);
-                    }
-                    const data = await response.json();
-                    if (data.init_point) { window.location.href = data.init_point; return; }
-                    alert('No se recibió una URL de pago válida');
+                if (!response.ok) {
+                    const txt = await response.text();
+                    throw new Error(txt || `Error ${response.status}`);
+                }
+
+                const data = await response.json();
+                const init = data.init_point;
+                // recargar el historial desde backend para que aparezca el pago creado (si fue guardado)
+                await cargarHistorialDesdeBackend();
+
+                if (init) {
+                    window.location.href = init;
+                    return;
                 } else {
-                    const response = await fetch('/api/pago/mercado-pago', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(pago)
-                    });
-                    if (!response.ok) { const txt = await response.text(); throw new Error(txt || `Error ${response.status}`); }
-                    const data = await response.json();
-                    if (data.init_point) { window.location.href = data.init_point; return; }
                     alert('No se recibió una URL de pago válida');
                 }
             } catch (err) {
@@ -228,29 +393,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // HISTORIAL (simplificado)
-    function cargarHistorialPagos() {
-        const historialPagos = JSON.parse(localStorage.getItem('historialPagos')) || [];
-        if (!historialBody) return;
-        historialBody.innerHTML = '';
-        if (historialPagos.length === 0) {
-            const fila = document.createElement('tr');
-            fila.innerHTML = '<td colspan="5" style="text-align: center;">No hay pagos registrados</td>';
-            historialBody.appendChild(fila);
-            return;
-        }
-        historialPagos.forEach(pago => {
-            const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${new Date(pago.fecha).toLocaleDateString('es-CO')}</td>
-                              <td>${pago.tipo}</td>
-                              <td>${pago.detalle}</td>
-                              <td>$${pago.monto.toLocaleString('es-CO')}</td>
-                              <td>${pago.estado}</td>`;
-            historialBody.appendChild(fila);
-        });
-    }
-
+    // Inicialización
     (async function init() {
+        initTabs(); // <-- registrar listeners de pestañas primero
+
         try {
             const areas = await fetchAreasConFallback();
             poblarAreas(areas);
@@ -258,7 +404,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (err) {
             if (areaComun) { areaComun.innerHTML = '<option value="">Error cargando áreas</option>'; areaComun.disabled = true; }
         }
+
+        cargarTarifaAdministracion();
+
         if (tipoPago && tipoPago.value === 'reserva') { if (camposReserva) camposReserva.style.display = 'block'; actualizarMontoReserva(); }
-        cargarHistorialPagos();
+
+        // cargar historial inicial (si la pestaña historial no está activa, esto aún deja la tabla lista si el usuario la abre)
+        await cargarHistorialDesdeBackend();
     })();
+
+    if (tipoPago) {
+        tipoPago.addEventListener('change', async function () {
+            if (camposAdmin) camposAdmin.style.display = 'none';
+            if (camposReserva) camposReserva.style.display = 'none';
+            if (this.value === 'administracion') {
+                if (camposAdmin) camposAdmin.style.display = 'block';
+                cargarTarifaAdministracion();
+            } else if (this.value === 'reserva') {
+                if (camposReserva) camposReserva.style.display = 'block';
+                if (areasCache.length === 0) {
+                    try {
+                        const fetched = await fetchAreasConFallback();
+                        poblarAreas(fetched);
+                    } catch (err) {
+                        areaComun.innerHTML = '<option value="">Error cargando áreas</option>';
+                        areaComun.disabled = true;
+                    }
+                }
+                actualizarMontoReserva();
+            }
+        });
+    }
+
+    if (areaComun) areaComun.addEventListener('change', actualizarMontoReserva);
+    if (horaReserva) horaReserva.addEventListener('change', actualizarMontoReserva);
 });
