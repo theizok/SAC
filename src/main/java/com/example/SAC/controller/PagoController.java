@@ -90,9 +90,9 @@ public class PagoController {
         MercadoPagoConfig.setAccessToken("TEST-6124805663082328-040417-a023ca85ac047fbfca3fc9fb2316df41-2045469211");
 
         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                .success("http://localhost:8080/")
-                .pending("http://localhost:8080/")
-                .failure("http://localhost:8080/")
+                .success("https://sac-253068519041.us-central1.run.app/ArchivosUsuarios/Pago/pago.html")
+                .pending("https://sac-253068519041.us-central1.run.app/ArchivosUsuarios/Pago/pago.html")
+                .failure("https://sac-253068519041.us-central1.run.app/ArchivosUsuarios/Pago/pago.html")
                 .build();
 
         PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
@@ -111,6 +111,7 @@ public class PagoController {
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(items)
                 .backUrls(backUrls)
+                .notificationUrl("https://sac-253068519041.us-central1.run.app/api/pago/webhook")
                 .externalReference(String.valueOf(pago.getIdPago()))
                 .build();
 
@@ -231,9 +232,9 @@ public class PagoController {
             MercadoPagoConfig.setAccessToken("TEST-6124805663082328-040417-a023ca85ac047fbfca3fc9fb2316df41-2045469211");
 
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success("https://sac-253068519041.us-central1.run.app/")
-                    .pending("https://sac-253068519041.us-central1.run.app/")
-                    .failure("https://sac-253068519041.us-central1.run.app/")
+                    .success("https://sac-253068519041.us-central1.run.app/ArchivosUsuarios/Pago/pago.html")
+                    .pending("https://sac-253068519041.us-central1.run.app/ArchivosUsuarios/Pago/pago.html")
+                    .failure("https://sac-253068519041.us-central1.run.app/ArchivosUsuarios/Pago/pago.html")
                     .build();
 
             PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
