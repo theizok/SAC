@@ -13,16 +13,20 @@ public class ReservaService {
     @Autowired
     ReservaRepository reservaRepository;
 
-    public Reserva agregarReserva(Reserva reserva){
+    public Reserva agregarReserva(Reserva reserva) {
+        // Validar que al menos uno de los campos esté presente
+        if (reserva.getIdResidente() == null && reserva.getIdPropietario() == null) {
+            throw new IllegalArgumentException("La reserva debe tener un residente o un propietario");
+        }
+
         return reservaRepository.save(reserva);
     }
 
-    public Optional<Reserva> obtenerReservaPorId(long id){
+    public Optional<Reserva> obtenerReservaPorId(long id) {
         return reservaRepository.findById(id);
     }
 
-    public void eliminarReserva(long id){
+    public void eliminarReserva(long id) {
         reservaRepository.deleteById(id);
     }
-
 }

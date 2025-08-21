@@ -1,5 +1,3 @@
-// pago.js (sin localStorage, preparado para recibir PagoDTO desde backend)
-// Reemplaza completamente tu archivo pago.js por este
 document.addEventListener('DOMContentLoaded', async () => {
     const ENDPOINTS = [
         '/api/residente/obtenerAreasComunes',
@@ -37,17 +35,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                // remover active
                 tabBtns.forEach(b => b.classList.remove('active'));
                 tabContents.forEach(c => c.classList.remove('active'));
-
-                // activar
                 btn.classList.add('active');
                 const tabName = btn.dataset.tab;
                 const content = document.getElementById(tabName);
                 if (content) content.classList.add('active');
 
-                // si abrimos historial, forzar recarga
                 if (tabName === 'historial-pagos') {
                     if (typeof cargarHistorialDesdeBackend === 'function') {
                         cargarHistorialDesdeBackend();
@@ -206,24 +200,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // ---------- Historial (siempre desde backend, espera PagoDTO) ----------
+    // ---------- Historial (CORREGIDO: ordenamiento y filtros) ----------
     async function cargarHistorialDesdeBackend() {
         if (!historialBody) {
             console.warn('cargarHistorialDesdeBackend: historialBody no encontrado');
             return;
         }
         console.log('Cargando historial desde backend...');
+
         try {
-            const res = await fetch('/api/pago/obtenerPagos', {
+            const url = '/api/pago/obtenerPagos';
+            console.log('Solicitando historial ->', url);
+
+            const res = await fetch(url, {
                 method: 'GET',
                 headers: { 'Accept': 'application/json' },
                 credentials: 'include'
             });
-            console.log('Respuesta /api/pago/obtenerPagos status:', res.status);
+
+            console.log('Respuesta /api/pago status:', res.status);
             if (!res.ok) {
                 const txt = await res.text().catch(()=>null);
                 console.warn('Error cargando pagos:', res.status, txt);
-                historialBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No se pudo cargar el historial</td></tr>';
+                if (res.status === 401 || res.status === 403) {
+                    historialBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No autorizado. Inicia sesión.</td></tr>';
+                } else {
+                    historialBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No se pudo cargar el historial</td></tr>';
+                }
                 return;
             }
 
@@ -252,17 +255,53 @@ document.addEventListener('DOMContentLoaded', async () => {
         return { raw: p, id, valor, estado: String(estado), descripcion: String(descripcion), categoria: String(categoria), fecha };
     }
 
+    // CORRECCIÓN 1: Función de filtrado mejorada para manejar acentos y mayúsculas
+    function matchesFilter(categoria, filtro) {
+        if (!filtro || filtro === 'todos') return true;
+
+        // Normalizar strings: quitar acentos, convertir a minúsculas
+        const normalizeString = (str) => {
+            return str.toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, ''); // Quita acentos
+        };
+
+        const categoriaNormalizada = normalizeString(categoria);
+        const filtroNormalizado = normalizeString(filtro);
+
+        // Verificar coincidencias
+        if (filtroNormalizado === 'administracion') {
+            return categoriaNormalizada.includes('administracion') ||
+                categoriaNormalizada.includes('admin');
+        }
+
+        if (filtroNormalizado === 'reserva') {
+            return categoriaNormalizada.includes('reserva') ||
+                categoriaNormalizada.includes('area');
+        }
+
+        return categoriaNormalizada.includes(filtroNormalizado);
+    }
+
+    // CORRECCIÓN 2: Renderizado con ordenamiento por fecha (más recientes primero)
     function renderPagos(rawArray, filtro = 'todos') {
         if (!historialBody) return;
         historialBody.innerHTML = '';
 
         const arr = Array.isArray(rawArray) ? rawArray : [];
-        const filtrados = (filtro && filtro !== 'todos')
-            ? arr.filter(p => {
-                const categoria = (p.categoria ?? p.tipo ?? p.category ?? '').toString().toLowerCase();
-                return categoria.includes(String(filtro).toLowerCase());
-            })
-            : arr;
+
+        // CORRECCIÓN 1: Filtrado mejorado
+        const filtrados = arr.filter(p => {
+            const categoria = (p.categoria ?? p.tipo ?? p.category ?? '').toString();
+            return matchesFilter(categoria, filtro);
+        });
+
+        // CORRECCIÓN 2: Ordenar por fecha descendente (más recientes primero)
+        filtrados.sort((a, b) => {
+            const fechaA = new Date(a.fecha ?? a.fechaPago ?? a.createdAt ?? 0);
+            const fechaB = new Date(b.fecha ?? b.fechaPago ?? b.createdAt ?? 0);
+            return fechaB - fechaA; // Orden descendente
+        });
 
         if (!filtrados.length) {
             const fila = document.createElement('tr');
@@ -276,14 +315,33 @@ document.addEventListener('DOMContentLoaded', async () => {
             const fila = document.createElement('tr');
             fila.style.cursor = 'pointer';
             fila.dataset.id = p.id ?? '';
+
+            // Aplicar clase de estado para el styling
+            const estadoClass = getEstadoClass(p.estado);
+
             fila.innerHTML = `<td>${formatDate(p.fecha)}</td>
                               <td>${escapeHtml(p.categoria)}</td>
                               <td>${escapeHtml(p.descripcion)}</td>
                               <td>${formatCurrency(p.valor)}</td>
-                              <td>${escapeHtml(p.estado)}</td>`;
+                              <td><span class="estado-pago ${estadoClass}">${escapeHtml(p.estado)}</span></td>`;
             fila.addEventListener('click', () => mostrarDetallePago(p));
             historialBody.appendChild(fila);
         });
+    }
+
+    // Función auxiliar para determinar la clase CSS del estado
+    function getEstadoClass(estado) {
+        const estadoLower = String(estado).toLowerCase();
+        if (estadoLower.includes('pagado') || estadoLower.includes('approved') || estadoLower.includes('completado')) {
+            return 'estado-pagado';
+        }
+        if (estadoLower.includes('pendiente') || estadoLower.includes('pending')) {
+            return 'estado-pendiente';
+        }
+        if (estadoLower.includes('cancelado') || estadoLower.includes('cancelled') || estadoLower.includes('rechazado')) {
+            return 'estado-cancelado';
+        }
+        return 'estado-pendiente'; // Default
     }
 
     function mostrarDetallePago(p) {
@@ -395,7 +453,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Inicialización
     (async function init() {
-        initTabs(); // <-- registrar listeners de pestañas primero
+        initTabs();
 
         try {
             const areas = await fetchAreasConFallback();
@@ -409,7 +467,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (tipoPago && tipoPago.value === 'reserva') { if (camposReserva) camposReserva.style.display = 'block'; actualizarMontoReserva(); }
 
-        // cargar historial inicial (si la pestaña historial no está activa, esto aún deja la tabla lista si el usuario la abre)
+        // cargar historial inicial
         await cargarHistorialDesdeBackend();
     })();
 
