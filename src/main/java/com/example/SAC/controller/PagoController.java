@@ -5,7 +5,6 @@ import com.example.SAC.dto.PagoReservaDTO;
 import com.example.SAC.entity.Pago;
 import com.example.SAC.entity.Reserva;
 import com.example.SAC.entity.Cuenta;
-import com.example.SAC.entity.Residente;
 import com.example.SAC.repository.PagoRepository;
 import com.example.SAC.repository.AreaComunRepository;
 import com.example.SAC.repository.ResidenteRepository;
@@ -27,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,37 +81,15 @@ public class PagoController {
         return pagos.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    // ----------------- Pago normal -----------------
-    @PostMapping("/mercado-pago")
-    public ResponseEntity<?> crearPreferencia(@RequestBody Pago pago) throws MPException, MPApiException {
-        // marcar como pendiente y guardar inmediatamente
-        pago.setEstadoPago("PENDIENTE");
-        if (pago.getFecha() == null) pago.setFecha(LocalDateTime.now());
-
-        // fallback cuenta desde principal si no viene
-        try {
-            if (pago.getCuenta() == null) {
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                if (auth != null && auth.getPrincipal() instanceof com.example.SAC.service.CustomUserDetails.CustomUserDetails) {
-                    long idCuentaFromPrincipal = ((com.example.SAC.service.CustomUserDetails.CustomUserDetails) auth.getPrincipal()).getIdCuenta();
-                    Cuenta cuenta = new Cuenta();
-                    cuenta.setIdCuenta(idCuentaFromPrincipal);
-                    pago.setCuenta(cuenta);
-                }
-            }
-        } catch (Exception e) {
-            logger.debug("No se pudo setear cuenta por fallback: {}", e.getMessage());
-        }
-
-        pagoRepository.save(pago);
-
-        // configurar Mercado Pago (mover token a properties/env en producción)
+    // ----------------- Helper: crear preferencia (hardcodeado como en la nube) -----------------
+    private Preference crearPreferenciaParaPago(Pago pago) throws MPException, MPApiException {
+        // Token hardcodeado (igual que en la nube)
         MercadoPagoConfig.setAccessToken("TEST-6124805663082328-040417-a023ca85ac047fbfca3fc9fb2316df41-2045469211");
 
         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                .success("http://localhost:8080/")
-                .pending("http://localhost:8080/")
-                .failure("http://localhost:8080/")
+                .success("https://sac-253068519041.us-central1.run.app/ArchivosUsuarios/Pago/pago.html")
+                .pending("https://sac-253068519041.us-central1.run.app/ArchivosUsuarios/Pago/pago.html")
+                .failure("https://sac-253068519041.us-central1.run.app/ArchivosUsuarios/Pago/pago.html")
                 .build();
 
         PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
@@ -132,11 +108,45 @@ public class PagoController {
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(items)
                 .backUrls(backUrls)
+                .notificationUrl("https://sac-253068519041.us-central1.run.app/api/pago/webhook")
                 .externalReference(String.valueOf(pago.getIdPago()))
                 .build();
 
         PreferenceClient client = new PreferenceClient();
-        Preference preference = client.create(preferenceRequest);
+        return client.create(preferenceRequest);
+    }
+
+    // ----------------- Pago normal -----------------
+    @PostMapping("/mercado-pago")
+    public ResponseEntity<?> crearPreferencia(@RequestBody Pago pago) throws MPException, MPApiException {
+        if (pago == null) return ResponseEntity.badRequest().body(Map.of("message", "Payload Pago vacío"));
+
+        pago.setEstadoPago("PENDIENTE");
+        if (pago.getFecha() == null) pago.setFecha(LocalDateTime.now());
+
+        // fallback cuenta desde principal si no viene
+        try {
+            if (pago.getCuenta() == null) {
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                if (auth != null && auth.getPrincipal() instanceof com.example.SAC.service.CustomUserDetails.CustomUserDetails) {
+                    long idCuentaFromPrincipal = ((com.example.SAC.service.CustomUserDetails.CustomUserDetails) auth.getPrincipal()).getIdCuenta();
+                    Cuenta cuenta = new Cuenta();
+                    cuenta.setIdCuenta(idCuentaFromPrincipal);
+                    pago.setCuenta(cuenta);
+                }
+            }
+        } catch (Exception e) {
+            logger.debug("No se pudo setear cuenta por fallback: {}", e.getMessage());
+        }
+
+        // validación mínima (Opción A: asumiendo valor es float primitivo)
+        if (pago.getValor() <= 0.0f) {
+            return ResponseEntity.badRequest().body(Map.of("message", "valor inválido"));
+        }
+
+        pagoRepository.save(pago);
+
+        Preference preference = crearPreferenciaParaPago(pago);
 
         Map<String, Object> response = new HashMap<>();
         response.put("init_point", preference.getSandboxInitPoint());
@@ -208,7 +218,10 @@ public class PagoController {
                 logger.debug("No se pudo setear cuenta por fallback (reserva): {}", e.getMessage());
             }
 
-            // Guardar pago
+            // Guardar pago (Opción A: asumiendo valor float primitivo)
+            if (pago.getValor() <= 0.0f) {
+                return ResponseEntity.badRequest().body(Map.of("message", "valor inválido en pago"));
+            }
             pagoRepository.save(pago);
 
             // Construir reserva robustamente
@@ -225,9 +238,15 @@ public class PagoController {
                             Method m = Reserva.class.getMethod("setIdAreaComun", int.class);
                             m.invoke(reserva, idAreaVal);
                         } catch (NoSuchMethodException nsme) {
-                            Field f = Reserva.class.getDeclaredField("idAreaComun");
-                            f.setAccessible(true);
-                            f.setInt(reserva, idAreaVal);
+                            // intentar con Integer
+                            try {
+                                Method m2 = Reserva.class.getMethod("setIdAreaComun", Integer.class);
+                                m2.invoke(reserva, idAreaVal);
+                            } catch (NoSuchMethodException nsme2) {
+                                Field f = Reserva.class.getDeclaredField("idAreaComun");
+                                f.setAccessible(true);
+                                f.setInt(reserva, idAreaVal);
+                            }
                         }
                     } catch (Exception e) {
                         logger.debug("No se pudo asignar idAreaComun desde payload: {}", e.getMessage());
@@ -282,7 +301,6 @@ public class PagoController {
                         com.example.SAC.service.CustomUserDetails.CustomUserDetails userDetails =
                                 (com.example.SAC.service.CustomUserDetails.CustomUserDetails) auth.getPrincipal();
 
-                        // Verificar el rol del usuario
                         boolean isResidente = userDetails.getAuthorities().stream()
                                 .anyMatch(a -> a.getAuthority().equals("RESIDENTE"));
                         boolean isPropietario = userDetails.getAuthorities().stream()
@@ -300,28 +318,6 @@ public class PagoController {
                 } catch (Exception ex) {
                     logger.error("Error al asignar ID de usuario a la reserva: {}", ex.getMessage());
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Error interno al crear reserva"));
-                }
-
-                // DEBUG antes de persistir
-                try {
-                    logger.debug("Reserva construida para persistir -> idAreaComun={}, fechaReserva={}, tiempoReserva={}, idResidente={}, idPropietario={}",
-                            (reserva.getIdAreaComun() != 0 ? reserva.getIdAreaComun() : "(no seteado)"),
-                            (reserva.getFechaReserva() != null ? reserva.getFechaReserva() : "(no seteado)"),
-                            (reserva.getTiempoReserva() != null ? reserva.getTiempoReserva() : "(no seteado)"),
-                            (reserva.getIdResidente() != 0 ? reserva.getIdResidente() : "(no seteado)"),
-                            (reserva.getIdPropietario() != null ? reserva.getIdPropietario() : "(no seteado)")
-                    );
-                } catch (Exception e) {
-                    logger.debug("No se pudo loggear getters de Reserva, intentando leer campos directos: {}", e.getMessage());
-                    try {
-                        Field fId = Reserva.class.getDeclaredField("idAreaComun"); fId.setAccessible(true);
-                        Field fF = Reserva.class.getDeclaredField("fechaReserva"); fF.setAccessible(true);
-                        Field fT = Reserva.class.getDeclaredField("tiempoReserva"); fT.setAccessible(true);
-                        Field fR = Reserva.class.getDeclaredField("idResidente"); fR.setAccessible(true);
-                        Field fP = Reserva.class.getDeclaredField("idPropietario"); fP.setAccessible(true);
-                        logger.debug("Reserva campos directos -> idAreaComun={}, fechaReserva={}, tiempoReserva={}, idResidente={}, idPropietario={}",
-                                fId.get(reserva), fF.get(reserva), fT.get(reserva), fR.get(reserva), fP.get(reserva));
-                    } catch (Exception ignored) {}
                 }
 
                 // VALIDACIÓN: idAreaComun debe estar presente y area existir
@@ -352,35 +348,7 @@ public class PagoController {
             }
 
             // Crear preferencia MercadoPago
-            MercadoPagoConfig.setAccessToken("TEST-6124805663082328-040417-a023ca85ac047fbfca3fc9fb2316df41-2045469211");
-
-            PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success("http://localhost:8080/")
-                    .pending("http://localhost:8080/")
-                    .failure("http://localhost:8080/")
-                    .build();
-
-            PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
-                    .id(String.valueOf(pago.getIdPago()))
-                    .title(pago.getCategoria())
-                    .description(pago.getDescripcion())
-                    .quantity(1)
-                    .categoryId(pago.getCategoria())
-                    .currencyId("COP")
-                    .unitPrice(BigDecimal.valueOf(pago.getValor()))
-                    .build();
-
-            List<PreferenceItemRequest> items = new ArrayList<>();
-            items.add(itemRequest);
-
-            PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-                    .items(items)
-                    .backUrls(backUrls)
-                    .externalReference(String.valueOf(pago.getIdPago()))
-                    .build();
-
-            PreferenceClient client = new PreferenceClient();
-            Preference preference = client.create(preferenceRequest);
+            Preference preference = crearPreferenciaParaPago(pago);
 
             Map<String, Object> response = new HashMap<>();
             response.put("init_point", preference.getSandboxInitPoint());
@@ -424,7 +392,10 @@ public class PagoController {
             logger.debug("No se pudo setear cuenta por fallback (DTO): {}", e.getMessage());
         }
 
-        // Guardar pago
+        // Guardar pago (Opción A: asumiendo valor primitivo float)
+        if (pago.getValor() <= 0.0f) {
+            return ResponseEntity.badRequest().body(Map.of("message", "valor inválido en pago"));
+        }
         pagoRepository.save(pago);
 
         // Preparar reserva (validaciones)
@@ -483,35 +454,7 @@ public class PagoController {
         }
 
         // Crear preferencia MercadoPago
-        MercadoPagoConfig.setAccessToken("TEST-6124805663082328-040417-a023ca85ac047fbfca3fc9fb2316df41-2045469211");
-
-        PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                .success("http://localhost:8080/")
-                .pending("http://localhost:8080/")
-                .failure("http://localhost:8080/")
-                .build();
-
-        PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
-                .id(String.valueOf(pago.getIdPago()))
-                .title(pago.getCategoria())
-                .description(pago.getDescripcion())
-                .quantity(1)
-                .categoryId(pago.getCategoria())
-                .currencyId("COP")
-                .unitPrice(BigDecimal.valueOf(pago.getValor()))
-                .build();
-
-        List<PreferenceItemRequest> items = new ArrayList<>();
-        items.add(itemRequest);
-
-        PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-                .items(items)
-                .backUrls(backUrls)
-                .externalReference(String.valueOf(pago.getIdPago()))
-                .build();
-
-        PreferenceClient client = new PreferenceClient();
-        Preference preference = client.create(preferenceRequest);
+        Preference preference = crearPreferenciaParaPago(pago);
 
         Map<String, Object> response = new HashMap<>();
         response.put("init_point", preference.getSandboxInitPoint());
@@ -521,28 +464,69 @@ public class PagoController {
 
     // ----------------- Webhook -----------------
     @PostMapping("/webhook")
-    public ResponseEntity<?> recibirWebhook(@RequestParam Map<String, String> params) throws MPException, MPApiException {
-        String topic = params.get("topic");
-        String id = params.get("id");
+    public ResponseEntity<String> recibirWebhook(
+            @RequestParam(required = false) Map<String, String> queryParams,
+            @RequestBody(required = false) Map<String, Object> body) {
 
-        if ("payment".equals(topic)) {
-            try {
-                PaymentClient client = new PaymentClient();
-                Payment payment = client.get(Long.parseLong(id));
+        try {
+            String topic = null;
+            String id = null;
 
-                String estado = payment.getStatus();
-                Long externalReference = Long.parseLong(payment.getExternalReference());
-
-                pagoService.actualizarEstadoPago(externalReference, estado);
-
-                return ResponseEntity.ok("Webhook procesado correctamente");
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Error procesando webhook: " + e.getMessage());
+            // 1. Intentar leer de queryParams
+            if (queryParams != null) {
+                topic = queryParams.get("topic");
+                id = queryParams.get("id");
             }
-        }
 
-        return ResponseEntity.badRequest().body("Evento no soportado");
+            // 2. Si no vino en query, intentar leer del body
+            if ((id == null || topic == null) && body != null) {
+                if (body.get("type") != null) {
+                    topic = String.valueOf(body.get("type"));
+                }
+                if (body.get("data") instanceof Map) {
+                    Map<?, ?> data = (Map<?, ?>) body.get("data");
+                    Object idObj = data.get("id");
+                    if (idObj != null) id = String.valueOf(idObj);
+                }
+            }
+
+            // 3. Validar que tenemos un payment válido
+            if ("payment".equalsIgnoreCase(topic) && id != null) {
+                try {
+                    PaymentClient client = new PaymentClient();
+                    Payment payment = client.get(Long.parseLong(id));
+
+                    if (payment != null) {
+                        String estado = payment.getStatus(); // approved, pending, etc.
+                        String externalReference = payment.getExternalReference();
+
+                        if (externalReference != null) {
+                            pagoService.actualizarEstadoPago(
+                                    Long.parseLong(externalReference),
+                                    estado
+                            );
+                            logger.debug("Pago actualizado -> ID: {} Estado: {}", id, estado);
+                        } else {
+                            logger.warn("Payment sin external_reference. ID: {}", id);
+                        }
+                    } else {
+                        logger.warn("No se encontró pago con ID {}", id);
+                    }
+                } catch (Exception e) {
+                    // No fallar la respuesta al webhook por errores internos
+                    logger.warn("Error obteniendo pago con id {}: {}", id, e.getMessage());
+                }
+            } else {
+                logger.debug("Webhook recibido sin 'payment' o sin id: body={}", body);
+            }
+
+            // SIEMPRE devolver 200 a Mercado Pago
+            return ResponseEntity.ok("Webhook recibido");
+
+        } catch (Exception e) {
+            logger.warn("Error general en webhook: {}", e.getMessage());
+            return ResponseEntity.ok("Webhook recibido con error interno");
+        }
     }
 
     // ----------------- Obtener pagos (filtrado por cuenta del usuario autenticado) -----------------
@@ -558,23 +542,14 @@ public class PagoController {
         logger.debug("AUTH principal toString: {}", principal);
         logger.debug("AUTH name: {}", auth.getName());
 
-        Long idCuenta = null;
-
-        try {
-            if (principal instanceof com.example.SAC.service.CustomUserDetails.CustomUserDetails) {
-                long idPrimitive = ((com.example.SAC.service.CustomUserDetails.CustomUserDetails) principal).getIdCuenta();
-                idCuenta = Long.valueOf(idPrimitive);
-            }
-        } catch (Exception e) {
-            logger.debug("Error extrayendo idCuenta desde CustomUserDetails: {}", e.getMessage());
-        }
-
-        if (idCuenta == null) {
+        Integer idCuentaInt = extractIdFromPrincipal(principal);
+        if (idCuentaInt == null) {
             logger.warn("obtenerPagos: no se pudo extraer idCuenta del principal. Clase={} principal={}",
                     principal != null ? principal.getClass().getName() : "null", principal);
             return ResponseEntity.ok(Collections.emptyList());
         }
 
+        Long idCuenta = idCuentaInt.longValue();
         List<Pago> pagos = pagoService.obtenerPagosPorCuenta(idCuenta);
 
         List<PagoDTO> dtos = toDTOList(pagos);
