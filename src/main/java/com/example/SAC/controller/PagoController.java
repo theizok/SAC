@@ -340,14 +340,6 @@ public class PagoController {
     }
 
 
-            return ResponseEntity.badRequest().body("Evento no soportado o incompleto");
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error procesando webhook: " + e.getMessage());
-        }
-    }
-
     // ----------------- Obtener pagos (filtrado por cuenta del usuario autenticado) -----------------
     @GetMapping("/obtenerPagos")
     public ResponseEntity<?> obtenerPagos() {
