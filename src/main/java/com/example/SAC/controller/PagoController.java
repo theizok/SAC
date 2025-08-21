@@ -273,7 +273,7 @@ public class PagoController {
 
     // ----------------- Webhook -----------------
     @PostMapping("/webhook")
-    public ResponseEntity<?> recibirWebhook(
+    public ResponseEntity<String> recibirWebhook(
             @RequestParam(required = false) Map<String, String> queryParams,
             @RequestBody(required = false) Map<String, Object> body) {
 
@@ -281,15 +281,17 @@ public class PagoController {
             String topic = null;
             String id = null;
 
-
+            // 1. Intentar leer de queryParams
             if (queryParams != null) {
                 topic = queryParams.get("topic");
                 id = queryParams.get("id");
             }
 
-
+            // 2. Si no vino en query, intentar leer del body
             if ((id == null || topic == null) && body != null) {
-                if (body.get("type") != null) topic = String.valueOf(body.get("type"));
+                if (body.get("type") != null) {
+                    topic = String.valueOf(body.get("type"));
+                }
                 if (body.get("data") instanceof Map) {
                     Map<?, ?> data = (Map<?, ?>) body.get("data");
                     Object idObj = data.get("id");
@@ -297,18 +299,46 @@ public class PagoController {
                 }
             }
 
+            // 3. Validar que tenemos un payment válido
             if ("payment".equalsIgnoreCase(topic) && id != null) {
-                PaymentClient client = new PaymentClient();
-                Payment payment = client.get(Long.parseLong(id));
+                try {
+                    PaymentClient client = new PaymentClient();
+                    Payment payment = client.get(Long.parseLong(id));
 
-                String estado = payment.getStatus(); // approved, pending, etc.
-                Long externalReference = Long.parseLong(payment.getExternalReference());
+                    if (payment != null) {
+                        String estado = payment.getStatus(); // approved, pending, etc.
+                        String externalReference = payment.getExternalReference();
 
-
-                pagoService.actualizarEstadoPago(externalReference, estado);
-
-                return ResponseEntity.ok("Webhook procesado correctamente");
+                        if (externalReference != null) {
+                            pagoService.actualizarEstadoPago(
+                                    Long.parseLong(externalReference),
+                                    estado
+                            );
+                            System.out.println("Pago actualizado -> ID: " + id + " Estado: " + estado);
+                        } else {
+                            System.out.println("⚠ Payment sin external_reference. ID: " + id);
+                        }
+                    } else {
+                        System.out.println("⚠ No se encontró pago con ID " + id);
+                    }
+                } catch (Exception e) {
+                    // Aquí NO lanzamos error hacia Mercado Pago
+                    System.out.println("⚠ Error obteniendo pago con id " + id + ": " + e.getMessage());
+                }
+            } else {
+                System.out.println("Webhook recibido sin 'payment' o sin id: " + body);
             }
+
+            // SIEMPRE devolver 200 a Mercado Pago
+            return ResponseEntity.ok("Webhook recibido");
+
+        } catch (Exception e) {
+            // Nunca responder 500 al webhook
+            System.out.println("⚠ Error general en webhook: " + e.getMessage());
+            return ResponseEntity.ok("Webhook recibido con error interno");
+        }
+    }
+
 
             return ResponseEntity.badRequest().body("Evento no soportado o incompleto");
 
