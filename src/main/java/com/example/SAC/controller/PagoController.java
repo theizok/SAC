@@ -501,6 +501,24 @@ public class PagoController {
                         String externalReference = payment.getExternalReference();
 
                         if (externalReference != null) {
+                            //Segun el estado del pago se cambia
+                            switch (estado) {
+                                case ("approved"):
+                                    estado = "APROBADO";
+                                    break;
+                                case ("pending"):
+                                    estado = "PENDIENTE";
+                                    break;
+                                case ("canceled"):
+                                    estado = "CANCELADO";
+                                    break;
+                                case ("in_process"):
+                                    estado = "EN_PROCESO";
+                                    break;
+                                default:
+                                    
+                            }
+
                             pagoService.actualizarEstadoPago(
                                     Long.parseLong(externalReference),
                                     estado
