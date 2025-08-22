@@ -24,6 +24,8 @@ public class Reserva {
     public LocalDateTime fechaReserva;
     @Column(name="idareacomun")
     public int idAreaComun;
-    @Column(name="idresidente")
-    public int idResidente;
+    @Column(name = "idresidente", nullable = true)
+    private Integer idResidente;
+    @Column(name = "idpropietario", nullable = true)
+    private Integer idPropietario;
 }

@@ -1,389 +1,608 @@
--- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
+-- phpMyAdmin SQL Dump
+-- version 5.2.2
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost    Database: sac2
--- ------------------------------------------------------
--- Server version	5.5.5-10.4.32-MariaDB
+-- Servidor: db
+-- Tiempo de generación: 21-08-2025 a las 03:39:31
+-- Versión del servidor: 8.0.43
+-- Versión de PHP: 8.2.27
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Table structure for table `administrador`
+-- Base de datos: `SAC2`
+--
+CREATE DATABASE IF NOT EXISTS `SAC2` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `SAC2`;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `administrador`
 --
 
-DROP TABLE IF EXISTS `administrador`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `administrador` (
-  `idadmnistrador` bigint(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(40) DEFAULT NULL,
-  `idcuenta` bigint(11) DEFAULT NULL,
-  `correo` varchar(100) DEFAULT NULL,
-  `contraseña` varchar(255) DEFAULT NULL,
-  `telefono` varchar(100) DEFAULT NULL,
-  `documento` varchar(15) DEFAULT NULL,
-  PRIMARY KEY (`idadmnistrador`),
-  KEY `cuenta_idcuenta_administrador` (`idcuenta`),
-  CONSTRAINT `cuenta_idcuenta_administrador` FOREIGN KEY (`idcuenta`) REFERENCES `cuenta` (`idcuenta`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `idadmnistrador` bigint NOT NULL,
+  `nombre` varchar(40) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `idcuenta` bigint DEFAULT NULL,
+  `correo` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `contraseña` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `telefono` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `documento` varchar(15) COLLATE utf8mb4_general_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `administrador`
+-- Volcado de datos para la tabla `administrador`
 --
 
-LOCK TABLES `administrador` WRITE;
-/*!40000 ALTER TABLE `administrador` DISABLE KEYS */;
-INSERT INTO `administrador` VALUES (4,'Administrador',8,'administrador@gmail.com','$2a$10$Kp4CfH3DgYfDBVIjJylc6.yyozj4Gk6Ptxs3W9eLPlfq3dcxLF5re','300235123',NULL);
-/*!40000 ALTER TABLE `administrador` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `administrador` (`idadmnistrador`, `nombre`, `idcuenta`, `correo`, `contraseña`, `telefono`, `documento`) VALUES
+(4, 'Administrador', 8, 'administrador@gmail.com', '$2a$10$Kp4CfH3DgYfDBVIjJylc6.yyozj4Gk6Ptxs3W9eLPlfq3dcxLF5re', '300235123', NULL);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `apartamento`
+-- Estructura de tabla para la tabla `apartamento`
 --
 
-DROP TABLE IF EXISTS `apartamento`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `apartamento` (
-  `idapartamento` bigint(11) NOT NULL AUTO_INCREMENT,
-  `numeroapartamento` bigint(11) DEFAULT NULL,
-  `idresidente` bigint(11) DEFAULT NULL,
-  `idpropietario` bigint(11) DEFAULT NULL,
-  PRIMARY KEY (`idapartamento`),
-  KEY `residente_idresidente_apartamento` (`idresidente`),
-  KEY `propietario_idpropietario_apartamento` (`idpropietario`),
-  CONSTRAINT `propietario_idpropietario_apartamento` FOREIGN KEY (`idpropietario`) REFERENCES `propietario` (`idpropietario`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `residente_idresidente_apartamento` FOREIGN KEY (`idresidente`) REFERENCES `residente` (`idresidente`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `idapartamento` bigint NOT NULL,
+  `numeroapartamento` bigint DEFAULT NULL,
+  `idresidente` bigint DEFAULT NULL,
+  `idpropietario` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `apartamento`
+-- Estructura de tabla para la tabla `areacomun`
 --
 
-LOCK TABLES `apartamento` WRITE;
-/*!40000 ALTER TABLE `apartamento` DISABLE KEYS */;
-/*!40000 ALTER TABLE `apartamento` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `areacomun`
---
-
-DROP TABLE IF EXISTS `areacomun`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `areacomun` (
-  `idareacomun` bigint(11) NOT NULL AUTO_INCREMENT,
-  `area` varchar(40) DEFAULT NULL,
+  `idareacomun` bigint NOT NULL,
+  `area` varchar(40) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `precio` float DEFAULT NULL,
-  `descripcion` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`idareacomun`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `descripcion` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `areacomun`
+-- Volcado de datos para la tabla `areacomun`
 --
 
-LOCK TABLES `areacomun` WRITE;
-/*!40000 ALTER TABLE `areacomun` DISABLE KEYS */;
-INSERT INTO `areacomun` VALUES (1,'Lugar de panico',20000,'Es una sala del panico para Isaac'),(2,'Gimnasio',35000,'Es un Gimnasio');
-/*!40000 ALTER TABLE `areacomun` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `areacomun` (`idareacomun`, `area`, `precio`, `descripcion`) VALUES
+(1, 'Lugar de panico', 20000, 'Es una sala del panico para Isaac'),
+(2, 'Gimnasio', 35000, 'Es un Gimnasio'),
+(3, 'Algo', 10000, 'Algo mas');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `cuenta`
+-- Estructura de tabla para la tabla `cuenta`
 --
 
-DROP TABLE IF EXISTS `cuenta`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cuenta` (
-  `idcuenta` bigint(11) NOT NULL AUTO_INCREMENT,
-  `tipo_cuenta` varchar(15) DEFAULT NULL,
-  PRIMARY KEY (`idcuenta`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `idcuenta` bigint NOT NULL,
+  `tipo_cuenta` varchar(15) COLLATE utf8mb4_general_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `cuenta`
+-- Volcado de datos para la tabla `cuenta`
 --
 
-LOCK TABLES `cuenta` WRITE;
-/*!40000 ALTER TABLE `cuenta` DISABLE KEYS */;
-INSERT INTO `cuenta` VALUES (1,NULL),(2,'Residente'),(3,'Propietario'),(4,'Propietario'),(5,'Propietario'),(6,'Propietario'),(7,'Residente'),(8,'Administrador'),(9,'Residente'),(10,'Residente'),(11,'Residente'),(12,'Propietario'),(13,'Propietario'),(14,'Residente'),(15,'Residente'),(16,'Residente'),(17,'Residente'),(18,'Residente'),(19,'Residente');
-/*!40000 ALTER TABLE `cuenta` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `cuenta` (`idcuenta`, `tipo_cuenta`) VALUES
+(1, NULL),
+(2, 'Residente'),
+(3, 'Propietario'),
+(4, 'Propietario'),
+(5, 'Propietario'),
+(6, 'Propietario'),
+(7, 'Residente'),
+(8, 'Administrador'),
+(9, 'Residente'),
+(10, 'Residente'),
+(11, 'Residente'),
+(12, 'Propietario'),
+(13, 'Propietario'),
+(14, 'Residente'),
+(15, 'Residente'),
+(16, 'Residente'),
+(17, 'Residente'),
+(18, 'Residente'),
+(19, 'Residente'),
+(20, 'Propietario'),
+(21, 'Propietario'),
+(22, 'Propietario'),
+(23, 'Propietario'),
+(24, 'Propietario'),
+(25, 'Propietario'),
+(26, 'Propietario'),
+(27, 'Propietario'),
+(28, 'Propietario'),
+(29, 'Residente'),
+(30, 'Propietario'),
+(31, 'Propietario'),
+(32, 'Propietario'),
+(33, 'Propietario'),
+(34, 'Propietario'),
+(35, 'Residente');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `mensaje`
+-- Estructura de tabla para la tabla `mensaje`
 --
 
-DROP TABLE IF EXISTS `mensaje`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mensaje` (
-  `idmensaje` bigint(11) NOT NULL AUTO_INCREMENT,
-  `contenido` varchar(250) DEFAULT NULL,
-  `asunto` varchar(70) DEFAULT NULL,
+  `idmensaje` bigint NOT NULL,
+  `contenido` varchar(250) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `asunto` varchar(70) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
-  `idcuenta` bigint(11) DEFAULT NULL,
-  `respuesta` text DEFAULT NULL,
+  `idcuenta` bigint DEFAULT NULL,
+  `respuesta` text COLLATE utf8mb4_general_ci,
   `fecha_respuesta` datetime DEFAULT NULL,
-  `idcuenta_respondido` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`idmensaje`),
-  KEY `fk_mensaje_cuenta` (`idcuenta`),
-  KEY `fk_mensaje_respondido` (`idcuenta_respondido`),
-  CONSTRAINT `fk_mensaje_cuenta` FOREIGN KEY (`idcuenta`) REFERENCES `cuenta` (`idcuenta`),
-  CONSTRAINT `fk_mensaje_respondido` FOREIGN KEY (`idcuenta_respondido`) REFERENCES `cuenta` (`idcuenta`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `idcuenta_respondido` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `mensaje`
+-- Volcado de datos para la tabla `mensaje`
 --
 
-LOCK TABLES `mensaje` WRITE;
-/*!40000 ALTER TABLE `mensaje` DISABLE KEYS */;
-INSERT INTO `mensaje` VALUES (6,'Segundo mensaje de prueba enviado desde el front','Mensaje Frontend','2025-04-04 01:25:00',NULL,NULL,NULL,NULL),(7,'Segundo mensaje de prueba.','Mensaje Frontend','2025-04-04 01:28:00',2,NULL,NULL,NULL),(9,'Contenido de prueba post perdida','Mensaje Post perdida','2025-04-04 04:21:00',2,NULL,NULL,NULL),(10,'Hola mundo','Mensaje prueba','2025-04-09 12:51:00',2,NULL,NULL,NULL),(11,'Residente felipe','Residente Felipe','2025-04-09 12:53:00',11,NULL,NULL,NULL),(12,'Hola mi nombre es Sergio','Necesito que me respondas este mensaje','2025-08-11 13:45:00',13,'Te estoy respondiendo Sergio','2025-08-11 13:46:33',NULL),(13,'Mensaje Numero 2','Respuesta 2','2025-08-11 15:11:00',13,NULL,NULL,NULL),(14,'HESOYAM','PERRA','2025-08-11 16:23:00',13,'NOSE','2025-08-11 16:24:39',8),(16,'Mateo porque te fuiste','Mateo vuelve','2025-08-11 16:50:00',19,'NO','2025-08-11 16:51:18',8),(17,'Estoy mandando un mensaje para ver si aun funciona la respuesta','Respondeme Bien','2025-08-11 19:47:00',19,'Te respondo','2025-08-11 19:48:05',8);
-/*!40000 ALTER TABLE `mensaje` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `mensaje` (`idmensaje`, `contenido`, `asunto`, `fecha`, `idcuenta`, `respuesta`, `fecha_respuesta`, `idcuenta_respondido`) VALUES
+(6, 'Segundo mensaje de prueba enviado desde el front', 'Mensaje Frontend', '2025-04-04 01:25:00', NULL, NULL, NULL, NULL),
+(7, 'Segundo mensaje de prueba.', 'Mensaje Frontend', '2025-04-04 01:28:00', 2, NULL, NULL, NULL),
+(9, 'Contenido de prueba post perdida', 'Mensaje Post perdida', '2025-04-04 04:21:00', 2, NULL, NULL, NULL),
+(10, 'Hola mundo', 'Mensaje prueba', '2025-04-09 12:51:00', 2, NULL, NULL, NULL),
+(11, 'Residente felipe', 'Residente Felipe', '2025-04-09 12:53:00', 11, NULL, NULL, NULL),
+(12, 'Hola mi nombre es Sergio', 'Necesito que me respondas este mensaje', '2025-08-11 13:45:00', 13, 'Te estoy respondiendo Sergio', '2025-08-11 13:46:33', NULL),
+(13, 'Mensaje Numero 2', 'Respuesta 2', '2025-08-11 15:11:00', 13, NULL, NULL, NULL),
+(14, 'HESOYAM', 'PERRA', '2025-08-11 16:23:00', 13, 'NOSE', '2025-08-11 16:24:39', 8),
+(16, 'Mateo porque te fuiste', 'Mateo vuelve', '2025-08-11 16:50:00', 19, 'NO', '2025-08-11 16:51:18', 8),
+(17, 'Estoy mandando un mensaje para ver si aun funciona la respuesta', 'Respondeme Bien', '2025-08-11 19:47:00', 19, 'Te respondo', '2025-08-11 19:48:05', 8);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `pago`
+-- Estructura de tabla para la tabla `pago`
 --
 
-DROP TABLE IF EXISTS `pago`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pago` (
-  `idpago` bigint(11) NOT NULL AUTO_INCREMENT,
+  `idpago` bigint NOT NULL,
   `valor` float DEFAULT NULL,
-  `idcuenta` bigint(11) DEFAULT NULL,
-  `descripcion` varchar(255) DEFAULT NULL,
-  `categoria` varchar(50) DEFAULT NULL,
-  `estado_pago` varchar(20) NOT NULL,
-  `fecha_pago` datetime DEFAULT NULL,
-  PRIMARY KEY (`idpago`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `idcuenta` bigint DEFAULT NULL,
+  `descripcion` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `categoria` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `estado_pago` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `fecha_pago` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `pago`
+-- Volcado de datos para la tabla `pago`
 --
 
-LOCK TABLES `pago` WRITE;
-/*!40000 ALTER TABLE `pago` DISABLE KEYS */;
-INSERT INTO `pago` VALUES (1,100000,NULL,NULL,NULL,'',NULL),(3,100000,NULL,NULL,NULL,'',NULL),(6,200000,2,'Pago administracion mes: abril','Administración','PENDENTE',NULL),(7,200000,2,'Pago administracion mes: enero','Administración','PENDENTE',NULL),(8,200000,2,'Pago administracion mes: marzo','Administración','PENDENTE',NULL),(9,200000,2,'Pago administracion mes: febrero','Administración','PENDENTE',NULL),(10,200000,2,'Pago administracion mes: noviembre','Administración','PENDENTE',NULL),(11,200000,2,'Pago administracion mes: noviembre','Administración','PENDENTE',NULL),(12,200000,2,'Pago administracion mes: enero','Administración','PENDENTE',NULL),(13,200000,2,'Pago administracion mes: mayo','Administración','PENDENTE',NULL),(14,200000,2,'Pago administracion mes: mayo','Administración','PENDENTE',NULL),(15,42000,2,'Reserva de Gimnasio — Es un Gimnasio - 20/08/2025 - tarde','Reserva','PENDENTE',NULL),(16,28000,2,'Reserva de Lugar de panico — Es una sala del panico para Isaac - 20/08/2025 - noche','Reserva','PENDENTE',NULL),(17,24000,2,'Reserva de Lugar de panico — Es una sala del panico para Isaac - 19/08/2025 - tarde','Reserva','PENDENTE',NULL),(18,20000,2,'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-20 - manana','Reserva','PENDIENTE',NULL),(19,20000,2,'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-20 - manana','Reserva','PENDIENTE',NULL);
-/*!40000 ALTER TABLE `pago` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `pago` (`idpago`, `valor`, `idcuenta`, `descripcion`, `categoria`, `estado_pago`, `fecha_pago`) VALUES
+(1, 100000, NULL, NULL, NULL, '', NULL),
+(3, 100000, NULL, NULL, NULL, '', NULL),
+(6, 200000, 2, 'Pago administracion mes: abril', 'Administración', 'PENDENTE', NULL),
+(7, 200000, 2, 'Pago administracion mes: enero', 'Administración', 'PENDENTE', NULL),
+(8, 200000, 2, 'Pago administracion mes: marzo', 'Administración', 'PENDENTE', NULL),
+(9, 200000, 2, 'Pago administracion mes: febrero', 'Administración', 'PENDENTE', NULL),
+(10, 200000, 2, 'Pago administracion mes: noviembre', 'Administración', 'PENDENTE', NULL),
+(11, 200000, 2, 'Pago administracion mes: noviembre', 'Administración', 'PENDENTE', NULL),
+(12, 200000, 2, 'Pago administracion mes: enero', 'Administración', 'PENDENTE', NULL),
+(13, 200000, 2, 'Pago administracion mes: mayo', 'Administración', 'PENDENTE', NULL),
+(14, 200000, 2, 'Pago administracion mes: mayo', 'Administración', 'PENDENTE', NULL),
+(15, 42000, 2, 'Reserva de Gimnasio — Es un Gimnasio - 20/08/2025 - tarde', 'Reserva', 'PENDENTE', NULL),
+(16, 28000, 2, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 20/08/2025 - noche', 'Reserva', 'PENDENTE', NULL),
+(17, 24000, 2, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 19/08/2025 - tarde', 'Reserva', 'PENDENTE', NULL),
+(18, 20000, 2, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-20 - manana', 'Reserva', 'PENDIENTE', NULL),
+(19, 20000, 2, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-20 - manana', 'Reserva', 'PENDIENTE', NULL),
+(20, 20000, 2, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-20 - manana', 'Reserva', 'PENDIENTE', NULL),
+(21, 200000, 2, 'Pago administración mes: enero', 'Administración', 'PENDIENTE', '2025-08-19 11:51:51'),
+(22, 24000, NULL, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-27 - tarde', 'Reserva', 'PENDIENTE', '2025-08-20 18:56:04'),
+(23, 20000, NULL, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-27 - manana', 'Reserva', 'PENDIENTE', '2025-08-20 18:56:17'),
+(24, 35000, 2, 'Reserva de Gimnasio — Es un Gimnasio - 2025-08-27 - manana', 'Reserva', 'PENDIENTE', '2025-08-20 19:09:31'),
+(25, 24000, 2, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-27 - tarde', 'Reserva', 'PENDIENTE', '2025-08-20 19:27:39'),
+(26, 10000, 2, 'Reserva de Algo — Algo mas - 2025-08-22 - manana', 'Reserva', 'PENDIENTE', '2025-08-20 19:32:22'),
+(27, 200000, 2, 'Pago administración mes: enero', 'Administración', 'PENDIENTE', '2025-08-20 19:34:06'),
+(28, 35000, 2, 'Reserva de Gimnasio — Es un Gimnasio - 2025-08-26 - manana', 'Reserva', 'PENDIENTE', '2025-08-20 19:34:21'),
+(29, 24000, 2, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-27 - tarde', 'Reserva', 'PENDIENTE', '2025-08-20 19:49:31'),
+(30, 20000, 2, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-22 - manana', 'Reserva', 'PENDIENTE', '2025-08-20 19:52:39'),
+(31, 200000, 2, 'Pago administración mes: enero', 'Administración', 'PENDIENTE', '2025-08-20 19:52:54'),
+(32, 200000, 34, 'Pago administración mes: enero', 'Administración', 'PENDIENTE', '2025-08-20 19:57:44'),
+(33, 28000, 34, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-28 - noche', 'Reserva', 'PENDIENTE', '2025-08-20 19:58:02'),
+(34, 10000, 2, 'Reserva de Algo — Algo mas - 2025-08-26 - manana', 'Reserva', 'PENDIENTE', '2025-08-20 19:59:01'),
+(35, 49000, 2, 'Reserva de Gimnasio — Es un Gimnasio - 2025-08-28 - noche', 'Reserva', 'PENDIENTE', '2025-08-20 20:15:44'),
+(36, 200000, 34, 'Pago administración mes: enero', 'Administración', 'PENDIENTE', '2025-08-20 20:16:27'),
+(37, 42000, 34, 'Reserva de Gimnasio — Es un Gimnasio - 2025-08-27 - tarde', 'Reserva', 'PENDIENTE', '2025-08-20 20:16:52'),
+(38, 42000, 34, 'Reserva de Gimnasio — Es un Gimnasio - 2025-08-26 - tarde', 'Reserva', 'PENDIENTE', '2025-08-20 20:21:54'),
+(39, 24000, 34, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-27 - tarde', 'Reserva', 'PENDIENTE', '2025-08-20 21:00:54'),
+(40, 42000, 34, 'Reserva de Gimnasio — Es un Gimnasio - 2025-08-27 - tarde', 'Reserva', 'PENDIENTE', '2025-08-20 21:03:09'),
+(41, 200000, 34, 'Pago administración mes: abril', 'Administración', 'PENDIENTE', '2025-08-20 21:08:26'),
+(42, 200000, 19, 'Pago administración mes: julio', 'Administración', 'PENDIENTE', '2025-08-20 21:09:13'),
+(43, 10000, 19, 'Reserva de Algo — Algo mas - 2025-08-31 - manana', 'Reserva', 'PENDIENTE', '2025-08-20 21:09:29'),
+(44, 28000, 34, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-09-24 - noche', 'Reserva', 'PENDIENTE', '2025-08-20 21:10:36'),
+(45, 49000, 34, 'Reserva de Gimnasio — Es un Gimnasio - 2025-10-29 - noche', 'Reserva', 'PENDIENTE', '2025-08-20 21:33:04'),
+(46, 20000, 2, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-27 - manana', 'Reserva', 'PENDIENTE', '2025-08-20 22:30:15'),
+(47, 20000, 34, 'Reserva de Lugar de panico — Es una sala del panico para Isaac - 2025-08-22 - manana', 'Reserva', 'PENDIENTE', '2025-08-20 22:30:48');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `propietario`
+-- Estructura de tabla para la tabla `propietario`
 --
 
-DROP TABLE IF EXISTS `propietario`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `propietario` (
-  `idpropietario` bigint(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(40) DEFAULT NULL,
-  `documento` varchar(20) DEFAULT NULL,
-  `idapartamento` bigint(11) DEFAULT NULL,
-  `correo` varchar(100) DEFAULT NULL,
-  `contraseña` varchar(255) DEFAULT NULL,
-  `telefono` varchar(10) DEFAULT NULL,
-  `idcuenta` bigint(11) DEFAULT NULL,
-  PRIMARY KEY (`idpropietario`),
-  KEY `apartamento_idapartamento_propietario` (`idapartamento`),
-  CONSTRAINT `apartamento_idapartamento_propietario` FOREIGN KEY (`idapartamento`) REFERENCES `apartamento` (`idapartamento`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `idpropietario` bigint NOT NULL,
+  `nombre` varchar(40) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `documento` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `idapartamento` bigint DEFAULT NULL,
+  `correo` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `contraseña` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `telefono` varchar(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `idcuenta` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `propietario`
+-- Volcado de datos para la tabla `propietario`
 --
 
-LOCK TABLES `propietario` WRITE;
-/*!40000 ALTER TABLE `propietario` DISABLE KEYS */;
-/*!40000 ALTER TABLE `propietario` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `propietario` (`idpropietario`, `nombre`, `documento`, `idapartamento`, `correo`, `contraseña`, `telefono`, `idcuenta`) VALUES
+(17, 'Mariano1', '1231231235', NULL, 'Marinillo22@gmail.com', '$2a$10$SUsKvEloKWv3lmzYoFKSjuKNtXHxX/xRZWFnGAhY7.Ei8Tf2XPWga', '543141355', 34);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `publicacion`
+-- Estructura de tabla para la tabla `publicacion`
 --
 
-DROP TABLE IF EXISTS `publicacion`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `publicacion` (
-  `idpublicacion` bigint(11) NOT NULL AUTO_INCREMENT,
+  `idpublicacion` bigint NOT NULL,
   `fecha` datetime DEFAULT NULL,
-  `contenido` varchar(270) DEFAULT NULL,
-  `titulo` varchar(50) DEFAULT NULL,
-  `idcuenta` bigint(11) DEFAULT NULL,
-  PRIMARY KEY (`idpublicacion`),
-  KEY `fk_publicacion_cuenta` (`idcuenta`),
-  CONSTRAINT `fk_publicacion_cuenta` FOREIGN KEY (`idcuenta`) REFERENCES `cuenta` (`idcuenta`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `contenido` varchar(270) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `titulo` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `idcuenta` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `publicacion`
+-- Volcado de datos para la tabla `publicacion`
 --
 
-LOCK TABLES `publicacion` WRITE;
-/*!40000 ALTER TABLE `publicacion` DISABLE KEYS */;
-INSERT INTO `publicacion` VALUES (12,'2025-04-01 23:05:00','Publicación creada desde el frontend por un Residente','Publicacion creada desde el frontend (Residente)',2),(14,'2025-04-09 00:05:00','Publicacion creada por el administrador','Admin Publication',8);
-/*!40000 ALTER TABLE `publicacion` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `publicacion` (`idpublicacion`, `fecha`, `contenido`, `titulo`, `idcuenta`) VALUES
+(12, '2025-04-01 23:05:00', 'Publicación creada desde el frontend por un Residente', 'Publicacion creada desde el frontend (Residente)', 2),
+(14, '2025-04-09 00:05:00', 'Publicacion creada por el administrador', 'Admin Publication', 8);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `registro`
+-- Estructura de tabla para la tabla `registro`
 --
 
-DROP TABLE IF EXISTS `registro`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `registro` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `idpago` bigint(20) DEFAULT NULL,
+  `id` bigint NOT NULL,
+  `idpago` bigint DEFAULT NULL,
   `valor` float DEFAULT NULL,
-  `idadministrador` bigint(20) DEFAULT NULL,
-  `idresidente` bigint(20) DEFAULT NULL,
-  `idmetododepago` bigint(20) DEFAULT NULL,
-  `idpropietario` bigint(20) DEFAULT NULL,
-  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
-  `usuario` varchar(100) DEFAULT NULL,
-  `detalle` text DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_registro_residente` (`idresidente`),
-  KEY `fk_registro_propietario` (`idpropietario`),
-  CONSTRAINT `fk_registro_propietario` FOREIGN KEY (`idpropietario`) REFERENCES `propietario` (`idpropietario`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `idadministrador` bigint DEFAULT NULL,
+  `idresidente` bigint DEFAULT NULL,
+  `idmetododepago` bigint DEFAULT NULL,
+  `idpropietario` bigint DEFAULT NULL,
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `usuario` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `detalle` text COLLATE utf8mb4_general_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `registro`
+-- Volcado de datos para la tabla `registro`
 --
 
-LOCK TABLES `registro` WRITE;
-/*!40000 ALTER TABLE `registro` DISABLE KEYS */;
-INSERT INTO `registro` VALUES (1,3,100000,NULL,2,NULL,NULL,'2025-03-28 18:41:44','root@localhost','Pago registrado con ID: 3');
-/*!40000 ALTER TABLE `registro` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `registro` (`id`, `idpago`, `valor`, `idadministrador`, `idresidente`, `idmetododepago`, `idpropietario`, `fecha`, `usuario`, `detalle`) VALUES
+(1, 3, 100000, NULL, 2, NULL, NULL, '2025-03-28 18:41:44', 'root@localhost', 'Pago registrado con ID: 3');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `reserva`
+-- Estructura de tabla para la tabla `reserva`
 --
 
-DROP TABLE IF EXISTS `reserva`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reserva` (
-  `idreserva` bigint(20) NOT NULL AUTO_INCREMENT,
-  `tiempo` varchar(255) DEFAULT NULL,
+  `idreserva` bigint NOT NULL,
+  `tiempo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
-  `idareacomun` bigint(11) DEFAULT NULL,
-  `idresidente` bigint(11) DEFAULT NULL,
-  PRIMARY KEY (`idreserva`),
-  KEY `areacomun_idareacomun_reserva` (`idareacomun`),
-  KEY `residente_idresidente_reserva` (`idresidente`),
-  CONSTRAINT `areacomun_idareacomun_reserva` FOREIGN KEY (`idareacomun`) REFERENCES `areacomun` (`idareacomun`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `residente_idresidente_reserva` FOREIGN KEY (`idresidente`) REFERENCES `residente` (`idresidente`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `idareacomun` bigint DEFAULT NULL,
+  `idresidente` bigint DEFAULT NULL,
+  `idpropietario` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `reserva`
+-- Volcado de datos para la tabla `reserva`
 --
 
-LOCK TABLES `reserva` WRITE;
-/*!40000 ALTER TABLE `reserva` DISABLE KEYS */;
-INSERT INTO `reserva` VALUES (3,'manana','2025-08-20 09:00:00',1,8),(4,'manana','2025-08-20 09:00:00',1,8);
-/*!40000 ALTER TABLE `reserva` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `reserva` (`idreserva`, `tiempo`, `fecha`, `idareacomun`, `idresidente`, `idpropietario`) VALUES
+(3, 'manana', '2025-08-20 09:00:00', 1, 8, NULL),
+(4, 'manana', '2025-08-20 09:00:00', 1, 8, NULL),
+(5, 'manana', '2025-08-20 09:00:00', 1, 8, NULL),
+(13, 'manana', '2025-08-22 09:00:00', 1, 8, NULL),
+(15, 'manana', '2025-08-26 09:00:00', 3, 8, NULL),
+(16, 'noche', '2025-08-28 19:00:00', 2, 8, NULL),
+(19, 'tarde', '2025-08-27 15:00:00', 1, NULL, 17),
+(20, 'tarde', '2025-08-27 15:00:00', 2, NULL, 17),
+(21, 'manana', '2025-08-31 09:00:00', 3, 16, NULL),
+(22, 'noche', '2025-09-24 19:00:00', 1, NULL, 17),
+(23, 'noche', '2025-10-29 19:00:00', 2, NULL, 17),
+(24, 'manana', '2025-08-27 09:00:00', 1, 8, NULL),
+(25, 'manana', '2025-08-22 09:00:00', 1, NULL, 17);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `residente`
+-- Estructura de tabla para la tabla `residente`
 --
 
-DROP TABLE IF EXISTS `residente`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `residente` (
-  `idresidente` bigint(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(40) DEFAULT NULL,
-  `edad` bigint(11) DEFAULT NULL,
-  `documento` varchar(20) DEFAULT NULL,
-  `idcuenta` bigint(11) DEFAULT NULL,
-  `correo` varchar(100) DEFAULT NULL,
-  `contraseña` varchar(255) DEFAULT NULL,
-  `telefono` varchar(10) DEFAULT NULL,
-  `id_apartamento` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`idresidente`),
-  KEY `cuenta_idcuenta_residente` (`idcuenta`),
-  CONSTRAINT `cuenta_idcuenta_residente` FOREIGN KEY (`idcuenta`) REFERENCES `cuenta` (`idcuenta`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `idresidente` bigint NOT NULL,
+  `nombre` varchar(40) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `edad` bigint DEFAULT NULL,
+  `documento` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `idcuenta` bigint DEFAULT NULL,
+  `correo` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `contraseña` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `telefono` varchar(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id_apartamento` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `residente`
+-- Volcado de datos para la tabla `residente`
 --
 
-LOCK TABLES `residente` WRITE;
-/*!40000 ALTER TABLE `residente` DISABLE KEYS */;
-INSERT INTO `residente` VALUES (8,'Isaac Ramirez',19,'12333213',2,'login@gmail.com','$2a$10$XCrsgdwFkOX.quqWPrQuH.mN.p/0lqxSjwy4U2VeojUCt4zSpjkpa','777777',NULL),(16,'AlejandriaA',0,'31312311',19,'Alejandria15@gmail.com','$2a$10$X1luCHQmD.HP73Pr/SUJiOM9VlynzBLFRGyTIGRpWPiHpfKQJWl72','1231231232',NULL);
-/*!40000 ALTER TABLE `residente` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `residente` (`idresidente`, `nombre`, `edad`, `documento`, `idcuenta`, `correo`, `contraseña`, `telefono`, `id_apartamento`) VALUES
+(8, 'Isaac Ramirez', 19, '12333213', 2, 'login@gmail.com', '$2a$10$XCrsgdwFkOX.quqWPrQuH.mN.p/0lqxSjwy4U2VeojUCt4zSpjkpa', '777777', NULL),
+(16, 'AlejandriaA', 0, '31312312', 19, 'Alejandria16@gmail.com', '$2a$10$X1luCHQmD.HP73Pr/SUJiOM9VlynzBLFRGyTIGRpWPiHpfKQJWl72', '1231231231', NULL);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `tarifa`
+-- Estructura de tabla para la tabla `tarifa`
 --
 
-DROP TABLE IF EXISTS `tarifa`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tarifa` (
-  `id_tarifa` bigint(11) NOT NULL AUTO_INCREMENT,
-  `categoria` varchar(50) DEFAULT NULL,
-  `valor` float DEFAULT NULL,
-  PRIMARY KEY (`id_tarifa`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `id_tarifa` bigint NOT NULL,
+  `categoria` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `valor` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tarifa`
+-- Volcado de datos para la tabla `tarifa`
 --
 
-LOCK TABLES `tarifa` WRITE;
-/*!40000 ALTER TABLE `tarifa` DISABLE KEYS */;
-INSERT INTO `tarifa` VALUES (2,'Administración',200000);
-/*!40000 ALTER TABLE `tarifa` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `tarifa` (`id_tarifa`, `categoria`, `valor`) VALUES
+(2, 'Administración', 200000);
 
 --
--- Dumping routines for database 'sac2'
+-- Índices para tablas volcadas
 --
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+--
+-- Indices de la tabla `administrador`
+--
+ALTER TABLE `administrador`
+  ADD PRIMARY KEY (`idadmnistrador`),
+  ADD KEY `cuenta_idcuenta_administrador` (`idcuenta`);
+
+--
+-- Indices de la tabla `apartamento`
+--
+ALTER TABLE `apartamento`
+  ADD PRIMARY KEY (`idapartamento`),
+  ADD KEY `residente_idresidente_apartamento` (`idresidente`),
+  ADD KEY `propietario_idpropietario_apartamento` (`idpropietario`);
+
+--
+-- Indices de la tabla `areacomun`
+--
+ALTER TABLE `areacomun`
+  ADD PRIMARY KEY (`idareacomun`);
+
+--
+-- Indices de la tabla `cuenta`
+--
+ALTER TABLE `cuenta`
+  ADD PRIMARY KEY (`idcuenta`);
+
+--
+-- Indices de la tabla `mensaje`
+--
+ALTER TABLE `mensaje`
+  ADD PRIMARY KEY (`idmensaje`),
+  ADD KEY `fk_mensaje_cuenta` (`idcuenta`),
+  ADD KEY `fk_mensaje_respondido` (`idcuenta_respondido`);
+
+--
+-- Indices de la tabla `pago`
+--
+ALTER TABLE `pago`
+  ADD PRIMARY KEY (`idpago`);
+
+--
+-- Indices de la tabla `propietario`
+--
+ALTER TABLE `propietario`
+  ADD PRIMARY KEY (`idpropietario`),
+  ADD KEY `apartamento_idapartamento_propietario` (`idapartamento`);
+
+--
+-- Indices de la tabla `publicacion`
+--
+ALTER TABLE `publicacion`
+  ADD PRIMARY KEY (`idpublicacion`),
+  ADD KEY `fk_publicacion_cuenta` (`idcuenta`);
+
+--
+-- Indices de la tabla `registro`
+--
+ALTER TABLE `registro`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_registro_residente` (`idresidente`),
+  ADD KEY `fk_registro_propietario` (`idpropietario`);
+
+--
+-- Indices de la tabla `reserva`
+--
+ALTER TABLE `reserva`
+  ADD PRIMARY KEY (`idreserva`),
+  ADD KEY `areacomun_idareacomun_reserva` (`idareacomun`),
+  ADD KEY `residente_idresidente_reserva` (`idresidente`);
+
+--
+-- Indices de la tabla `residente`
+--
+ALTER TABLE `residente`
+  ADD PRIMARY KEY (`idresidente`),
+  ADD KEY `cuenta_idcuenta_residente` (`idcuenta`);
+
+--
+-- Indices de la tabla `tarifa`
+--
+ALTER TABLE `tarifa`
+  ADD PRIMARY KEY (`id_tarifa`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `administrador`
+--
+ALTER TABLE `administrador`
+  MODIFY `idadmnistrador` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `apartamento`
+--
+ALTER TABLE `apartamento`
+  MODIFY `idapartamento` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `areacomun`
+--
+ALTER TABLE `areacomun`
+  MODIFY `idareacomun` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `cuenta`
+--
+ALTER TABLE `cuenta`
+  MODIFY `idcuenta` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
+-- AUTO_INCREMENT de la tabla `mensaje`
+--
+ALTER TABLE `mensaje`
+  MODIFY `idmensaje` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT de la tabla `pago`
+--
+ALTER TABLE `pago`
+  MODIFY `idpago` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+
+--
+-- AUTO_INCREMENT de la tabla `propietario`
+--
+ALTER TABLE `propietario`
+  MODIFY `idpropietario` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT de la tabla `publicacion`
+--
+ALTER TABLE `publicacion`
+  MODIFY `idpublicacion` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT de la tabla `registro`
+--
+ALTER TABLE `registro`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `reserva`
+--
+ALTER TABLE `reserva`
+  MODIFY `idreserva` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT de la tabla `residente`
+--
+ALTER TABLE `residente`
+  MODIFY `idresidente` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT de la tabla `tarifa`
+--
+ALTER TABLE `tarifa`
+  MODIFY `id_tarifa` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `administrador`
+--
+ALTER TABLE `administrador`
+  ADD CONSTRAINT `cuenta_idcuenta_administrador` FOREIGN KEY (`idcuenta`) REFERENCES `cuenta` (`idcuenta`);
+
+--
+-- Filtros para la tabla `apartamento`
+--
+ALTER TABLE `apartamento`
+  ADD CONSTRAINT `propietario_idpropietario_apartamento` FOREIGN KEY (`idpropietario`) REFERENCES `propietario` (`idpropietario`),
+  ADD CONSTRAINT `residente_idresidente_apartamento` FOREIGN KEY (`idresidente`) REFERENCES `residente` (`idresidente`);
+
+--
+-- Filtros para la tabla `mensaje`
+--
+ALTER TABLE `mensaje`
+  ADD CONSTRAINT `fk_mensaje_cuenta` FOREIGN KEY (`idcuenta`) REFERENCES `cuenta` (`idcuenta`),
+  ADD CONSTRAINT `fk_mensaje_respondido` FOREIGN KEY (`idcuenta_respondido`) REFERENCES `cuenta` (`idcuenta`);
+
+--
+-- Filtros para la tabla `propietario`
+--
+ALTER TABLE `propietario`
+  ADD CONSTRAINT `apartamento_idapartamento_propietario` FOREIGN KEY (`idapartamento`) REFERENCES `apartamento` (`idapartamento`);
+
+--
+-- Filtros para la tabla `publicacion`
+--
+ALTER TABLE `publicacion`
+  ADD CONSTRAINT `fk_publicacion_cuenta` FOREIGN KEY (`idcuenta`) REFERENCES `cuenta` (`idcuenta`);
+
+--
+-- Filtros para la tabla `registro`
+--
+ALTER TABLE `registro`
+  ADD CONSTRAINT `fk_registro_propietario` FOREIGN KEY (`idpropietario`) REFERENCES `propietario` (`idpropietario`);
+
+--
+-- Filtros para la tabla `reserva`
+--
+ALTER TABLE `reserva`
+  ADD CONSTRAINT `areacomun_idareacomun_reserva` FOREIGN KEY (`idareacomun`) REFERENCES `areacomun` (`idareacomun`),
+  ADD CONSTRAINT `residente_idresidente_reserva` FOREIGN KEY (`idresidente`) REFERENCES `residente` (`idresidente`);
+
+--
+-- Filtros para la tabla `residente`
+--
+ALTER TABLE `residente`
+  ADD CONSTRAINT `cuenta_idcuenta_residente` FOREIGN KEY (`idcuenta`) REFERENCES `cuenta` (`idcuenta`);
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2025-08-13 16:27:14
-
