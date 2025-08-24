@@ -14,7 +14,6 @@ public class ReservaService {
     ReservaRepository reservaRepository;
 
     public Reserva agregarReserva(Reserva reserva) {
-        // Validar que al menos uno de los campos esté presente
         if (reserva.getIdResidente() == null && reserva.getIdPropietario() == null) {
             throw new IllegalArgumentException("La reserva debe tener un residente o un propietario");
         }

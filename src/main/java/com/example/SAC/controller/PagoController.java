@@ -28,6 +28,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -180,7 +182,7 @@ public class PagoController {
             if (pago.getFecha() == null) pago.setFecha(LocalDateTime.now());
             pago.setEstadoPago("PENDIENTE");
 
-            // Mapear cuenta si viene
+            // Mapear cuenta si viene (igual que antes)
             try {
                 if (pagoMap.get("cuenta") instanceof Map) {
                     @SuppressWarnings("unchecked")
@@ -203,7 +205,7 @@ public class PagoController {
                 logger.debug("No se pudo mapear cuenta desde pagoMap: {}", e.getMessage());
             }
 
-            // Fallback: si pago.cuenta sigue null, obtener idCuenta desde principal autenticado
+            // Fallback cuenta desde principal si no viene (igual que antes)
             try {
                 if (pago.getCuenta() == null) {
                     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -218,141 +220,104 @@ public class PagoController {
                 logger.debug("No se pudo setear cuenta por fallback (reserva): {}", e.getMessage());
             }
 
-            // Guardar pago (Opción A: asumiendo valor float primitivo)
+            // Guardar pago (validación simple)
             if (pago.getValor() <= 0.0f) {
                 return ResponseEntity.badRequest().body(Map.of("message", "valor inválido en pago"));
             }
-            pagoRepository.save(pago);
 
-            // Construir reserva robustamente
-            Reserva reserva = new Reserva();
+            // Save pago primero
+            Pago pagoGuardado = pagoRepository.save(pago);
+
+            // --- Mapear Reserva usando ObjectMapper (más robusto que reflection) ---
+            ObjectMapper om = new ObjectMapper();
+            om.findAndRegisterModules(); // registra JavaTimeModule para LocalDateTime
+            om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+            Reserva reserva;
             try {
-                // idAreaComun (Number | String -> int)
-                Object idAreaObj = reservaMap.get("idAreaComun");
-                if (idAreaObj != null) {
-                    try {
-                        int idAreaVal;
-                        if (idAreaObj instanceof Number) idAreaVal = ((Number) idAreaObj).intValue();
-                        else idAreaVal = Integer.parseInt(String.valueOf(idAreaObj));
-                        try {
-                            Method m = Reserva.class.getMethod("setIdAreaComun", int.class);
-                            m.invoke(reserva, idAreaVal);
-                        } catch (NoSuchMethodException nsme) {
-                            // intentar con Integer
-                            try {
-                                Method m2 = Reserva.class.getMethod("setIdAreaComun", Integer.class);
-                                m2.invoke(reserva, idAreaVal);
-                            } catch (NoSuchMethodException nsme2) {
-                                Field f = Reserva.class.getDeclaredField("idAreaComun");
-                                f.setAccessible(true);
-                                f.setInt(reserva, idAreaVal);
-                            }
-                        }
-                    } catch (Exception e) {
-                        logger.debug("No se pudo asignar idAreaComun desde payload: {}", e.getMessage());
-                    }
-                }
-
-                // fechaReserva (espera ISO-8601 string)
-                Object fechaObj = reservaMap.get("fechaReserva");
-                if (fechaObj != null) {
-                    try {
-                        String s = String.valueOf(fechaObj);
-                        LocalDateTime fecha = LocalDateTime.parse(s);
-                        try {
-                            Method mf = Reserva.class.getMethod("setFechaReserva", LocalDateTime.class);
-                            mf.invoke(reserva, fecha);
-                        } catch (NoSuchMethodException nsme) {
-                            Field f = Reserva.class.getDeclaredField("fechaReserva");
-                            f.setAccessible(true);
-                            f.set(reserva, fecha);
-                        }
-                    } catch (DateTimeParseException dtpe) {
-                        logger.debug("No se pudo parsear fechaReserva (formato inválido): {}", fechaObj);
-                    } catch (Exception e) {
-                        logger.debug("No se pudo parsear/assignar fechaReserva '{}': {}", fechaObj, e.getMessage());
-                    }
-                }
-
-                // tiempoReserva
-                Object tiempoObj = reservaMap.get("tiempoReserva");
-                if (tiempoObj != null) {
-                    String tiempo = String.valueOf(tiempoObj);
-                    try {
-                        Method mt = Reserva.class.getMethod("setTiempoReserva", String.class);
-                        mt.invoke(reserva, tiempo);
-                    } catch (NoSuchMethodException nsme) {
-                        try {
-                            Field f = Reserva.class.getDeclaredField("tiempoReserva");
-                            f.setAccessible(true);
-                            f.set(reserva, tiempo);
-                        } catch (Exception e) {
-                            logger.debug("No se pudo asignar tiempoReserva: {}", e.getMessage());
-                        }
-                    } catch (Exception e) {
-                        logger.debug("Error asignando tiempoReserva por reflection: {}", e.getMessage());
-                    }
-                }
-
-                // Asignar idResidente o idPropietario según el rol del usuario autenticado
-                try {
-                    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                    if (auth != null && auth.getPrincipal() instanceof com.example.SAC.service.CustomUserDetails.CustomUserDetails) {
-                        com.example.SAC.service.CustomUserDetails.CustomUserDetails userDetails =
-                                (com.example.SAC.service.CustomUserDetails.CustomUserDetails) auth.getPrincipal();
-
-                        boolean isResidente = userDetails.getAuthorities().stream()
-                                .anyMatch(a -> a.getAuthority().equals("RESIDENTE"));
-                        boolean isPropietario = userDetails.getAuthorities().stream()
-                                .anyMatch(a -> a.getAuthority().equals("PROPIETARIO"));
-
-                        if (isResidente) {
-                            reserva.setIdResidente(userDetails.getId().intValue());
-                        } else if (isPropietario) {
-                            reserva.setIdPropietario(userDetails.getId().intValue());
-                        } else {
-                            logger.error("Usuario no tiene rol de RESIDENTE o PROPIETARIO");
-                            return ResponseEntity.badRequest().body(Map.of("message", "Usuario no autorizado para hacer reservas"));
-                        }
-                    }
-                } catch (Exception ex) {
-                    logger.error("Error al asignar ID de usuario a la reserva: {}", ex.getMessage());
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Error interno al crear reserva"));
-                }
-
-                // VALIDACIÓN: idAreaComun debe estar presente y area existir
-                int idAreaToCheck = reserva.getIdAreaComun();
-                if (idAreaToCheck <= 0) {
-                    return ResponseEntity.badRequest().body(Map.of("message", "idAreaComun no proporcionado o inválido"));
-                }
-                if (!areaComunRepository.existsById((long) idAreaToCheck)) {
-                    return ResponseEntity.badRequest().body(Map.of("message", "Área común no encontrada: " + idAreaToCheck));
-                }
-
-            } catch (ClassCastException cce) {
-                return ResponseEntity.badRequest().body(Map.of("message","Formato de payload inválido (reserva)"));
+                reserva = om.convertValue(reservaMap, Reserva.class);
             } catch (Exception e) {
-                logger.debug("Error mapeando reserva: {}", e.getMessage());
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message","Error interno mapeando reserva"));
+                // si no se pudo convertir, limpiar pago guardado y devolver error
+                try { pagoRepository.deleteById(pagoGuardado.getIdPago()); } catch (Exception ex) { logger.warn("No se pudo borrar pago tras fallo de mapping: {}", ex.getMessage()); }
+                return ResponseEntity.badRequest().body(Map.of("message", "Formato inválido en objeto reserva"));
             }
 
-            // Persistir reserva
+            // Si fecha vino como string no parseable por ObjectMapper, intentar parse manualmente
+            if (reserva.getFechaReserva() == null && reservaMap.get("fechaReserva") != null) {
+                try {
+                    String s = String.valueOf(reservaMap.get("fechaReserva"));
+                    LocalDateTime fecha = LocalDateTime.parse(s);
+                    reserva.setFechaReserva(fecha);
+                } catch (Exception e) {
+                    // fecha inválida -> limpiar pago y error
+                    try { pagoRepository.deleteById(pagoGuardado.getIdPago()); } catch (Exception ex) { logger.warn("No se pudo borrar pago tras fallo fecha: {}", ex.getMessage()); }
+                    return ResponseEntity.badRequest().body(Map.of("message", "fechaReserva tiene formato inválido. Use ISO-8601 'yyyy-MM-ddTHH:mm:ss'"));
+                }
+            }
+
+            // Asignar idResidente o idPropietario según rol del usuario autenticado (igual que antes)
+            try {
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                if (auth != null && auth.getPrincipal() instanceof com.example.SAC.service.CustomUserDetails.CustomUserDetails) {
+                    com.example.SAC.service.CustomUserDetails.CustomUserDetails userDetails =
+                            (com.example.SAC.service.CustomUserDetails.CustomUserDetails) auth.getPrincipal();
+
+                    boolean isResidente = userDetails.getAuthorities().stream()
+                            .anyMatch(a -> a.getAuthority().equals("RESIDENTE"));
+                    boolean isPropietario = userDetails.getAuthorities().stream()
+                            .anyMatch(a -> a.getAuthority().equals("PROPIETARIO"));
+
+                    if (isResidente) {
+                        reserva.setIdResidente(userDetails.getId().intValue());
+                    } else if (isPropietario) {
+                        reserva.setIdPropietario(userDetails.getId().intValue());
+                    } else {
+                        // limpiar pago guardado
+                        try { pagoRepository.deleteById(pagoGuardado.getIdPago()); } catch (Exception ex) { logger.warn("No se pudo borrar pago tras rol inválido: {}", ex.getMessage()); }
+                        logger.error("Usuario no tiene rol de RESIDENTE o PROPIETARIO");
+                        return ResponseEntity.badRequest().body(Map.of("message", "Usuario no autorizado para hacer reservas"));
+                    }
+                } else {
+                    // limpiar pago guardado
+                    try { pagoRepository.deleteById(pagoGuardado.getIdPago()); } catch (Exception ex) { logger.warn("No se pudo borrar pago tras usuario no autenticado: {}", ex.getMessage()); }
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message","Usuario no autenticado"));
+                }
+            } catch (Exception ex) {
+                try { pagoRepository.deleteById(pagoGuardado.getIdPago()); } catch (Exception e) { logger.warn("No se pudo borrar pago tras excepción rol: {}", e.getMessage()); }
+                logger.error("Error al asignar ID de usuario a la reserva: {}", ex.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Error interno al crear reserva"));
+            }
+
+            // VALIDACIÓN: idAreaComun debe estar presente y area existir
+            Integer idAreaToCheck = reserva.getIdAreaComun();
+            if (idAreaToCheck == null || idAreaToCheck <= 0) {
+                try { pagoRepository.deleteById(pagoGuardado.getIdPago()); } catch (Exception ex) { logger.warn("No se pudo borrar pago tras idArea inválido: {}", ex.getMessage()); }
+                return ResponseEntity.badRequest().body(Map.of("message", "idAreaComun no proporcionado o inválido"));
+            }
+            if (!areaComunRepository.existsById(idAreaToCheck.longValue())) {
+                try { pagoRepository.deleteById(pagoGuardado.getIdPago()); } catch (Exception ex) { logger.warn("No se pudo borrar pago tras area no encontrada: {}", ex.getMessage()); }
+                return ResponseEntity.badRequest().body(Map.of("message", "Área común no encontrada: " + idAreaToCheck));
+            }
+
+            // Persistir reserva (si esto falla, borramos el pago guardado para no dejar inconsistencia)
             try {
                 reservaService.agregarReserva(reserva);
             } catch (IllegalArgumentException ex) {
+                try { pagoRepository.deleteById(pagoGuardado.getIdPago()); } catch (Exception e) { logger.warn("No se pudo borrar pago tras error reserva: {}", e.getMessage()); }
                 return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
             } catch (Exception ex) {
+                try { pagoRepository.deleteById(pagoGuardado.getIdPago()); } catch (Exception e) { logger.warn("No se pudo borrar pago tras error reserva: {}", e.getMessage()); }
                 logger.error("Error guardando reserva: {}", ex.getMessage(), ex);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body(Map.of("message", "Error al crear reserva: " + ex.getMessage()));
             }
 
-            // Crear preferencia MercadoPago
-            Preference preference = crearPreferenciaParaPago(pago);
+            // Crear preferencia MercadoPago (usa pagoGuardado)
+            Preference preference = crearPreferenciaParaPago(pagoGuardado);
 
             Map<String, Object> response = new HashMap<>();
             response.put("init_point", preference.getSandboxInitPoint());
-            response.put("pago", toDTO(pago));
+            response.put("pago", toDTO(pagoGuardado));
             return ResponseEntity.ok(response);
 
         } catch (ClassCastException cce) {
@@ -516,7 +481,7 @@ public class PagoController {
                                     estado = "EN_PROCESO";
                                     break;
                                 default:
-                                    
+
                             }
 
                             pagoService.actualizarEstadoPago(
@@ -560,15 +525,44 @@ public class PagoController {
         logger.debug("AUTH principal toString: {}", principal);
         logger.debug("AUTH name: {}", auth.getName());
 
-        Integer idCuentaInt = extractIdFromPrincipal(principal);
-        if (idCuentaInt == null) {
-            logger.warn("obtenerPagos: no se pudo extraer idCuenta del principal. Clase={} principal={}",
-                    principal != null ? principal.getClass().getName() : "null", principal);
-            return ResponseEntity.ok(Collections.emptyList());
+        Long idCuentaLong = null;
+
+        try {
+            if (principal instanceof com.example.SAC.service.CustomUserDetails.CustomUserDetails) {
+                long idCuentaPrimitive = ((com.example.SAC.service.CustomUserDetails.CustomUserDetails) principal).getIdCuenta();
+                logger.debug("obtenerPagos: extracción directa getIdCuenta() -> {}", idCuentaPrimitive);
+                if (idCuentaPrimitive > 0) idCuentaLong = Long.valueOf(idCuentaPrimitive);
+            }
+        } catch (Exception e) {
+            logger.debug("Error extrayendo idCuenta del principal mediante cast directo: {}", e.getMessage());
         }
 
-        Long idCuenta = idCuentaInt.longValue();
-        List<Pago> pagos = pagoService.obtenerPagosPorCuenta(idCuenta);
+        if (idCuentaLong == null) {
+            Integer idCuentaInt = extractIdFromPrincipal(principal);
+            logger.debug("obtenerPagos: extractIdFromPrincipal -> {}", idCuentaInt);
+            if (idCuentaInt == null) {
+                logger.warn("obtenerPagos: no se pudo extraer idCuenta del principal. Clase={} principal={}",
+                        principal != null ? principal.getClass().getName() : "null", principal);
+                return ResponseEntity.ok(Collections.emptyList());
+            }
+            idCuentaLong = idCuentaInt.longValue();
+        }
+
+        logger.debug("obtenerPagos: idCuenta final usada para consulta -> {}", idCuentaLong);
+
+        List<Pago> pagos = pagoService.obtenerPagosPorCuenta(idCuentaLong);
+        logger.debug("obtenerPagos: pagos encontrados via pagoService.obtenerPagosPorCuenta -> {}", pagos == null ? 0 : pagos.size());
+
+        // 4) Si no hay resultados, intentar consulta directa por la columna idcuenta (fallback)
+        if ((pagos == null || pagos.isEmpty())) {
+            try {
+                logger.debug("obtenerPagos: intentando fallback directo por columna idCuenta");
+                pagos = pagoRepository.findByIdCuenta(idCuentaLong);
+                logger.debug("obtenerPagos: pagos encontrados via pagoRepository.findByIdCuenta -> {}", pagos == null ? 0 : pagos.size());
+            } catch (Exception ex) {
+                logger.debug("obtenerPagos: fallback directo no disponible o falló: {}", ex.getMessage());
+            }
+        }
 
         List<PagoDTO> dtos = toDTOList(pagos);
         return ResponseEntity.ok(dtos);

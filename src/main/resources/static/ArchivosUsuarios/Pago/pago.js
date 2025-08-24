@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         montoReserva.value = monto > 0 ? monto.toLocaleString('es-CO') : '';
     }
 
-    // ---------- tarifa administración ----------
+    // ---------- tarifa administración ---------- //
     async function cargarTarifaAdministracion() {
         const inputMontoAdmin = document.getElementById('monto-admin');
         if (!inputMontoAdmin) return;
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // ---------- Historial (CORREGIDO: ordenamiento y filtros) ----------
+    // ---------- Historial (ordenamiento y filtros) ----------
     async function cargarHistorialDesdeBackend() {
         if (!historialBody) {
             console.warn('cargarHistorialDesdeBackend: historialBody no encontrado');
@@ -255,11 +255,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         return { raw: p, id, valor, estado: String(estado), descripcion: String(descripcion), categoria: String(categoria), fecha };
     }
 
-    // CORRECCIÓN 1: Función de filtrado mejorada para manejar acentos y mayúsculas
     function matchesFilter(categoria, filtro) {
         if (!filtro || filtro === 'todos') return true;
 
-        // Normalizar strings: quitar acentos, convertir a minúsculas
         const normalizeString = (str) => {
             return str.toLowerCase()
                 .normalize('NFD')
@@ -269,7 +267,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const categoriaNormalizada = normalizeString(categoria);
         const filtroNormalizado = normalizeString(filtro);
 
-        // Verificar coincidencias
         if (filtroNormalizado === 'administracion') {
             return categoriaNormalizada.includes('administracion') ||
                 categoriaNormalizada.includes('admin');
@@ -283,20 +280,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         return categoriaNormalizada.includes(filtroNormalizado);
     }
 
-    // CORRECCIÓN 2: Renderizado con ordenamiento por fecha (más recientes primero)
     function renderPagos(rawArray, filtro = 'todos') {
         if (!historialBody) return;
         historialBody.innerHTML = '';
 
         const arr = Array.isArray(rawArray) ? rawArray : [];
 
-        // CORRECCIÓN 1: Filtrado mejorado
         const filtrados = arr.filter(p => {
             const categoria = (p.categoria ?? p.tipo ?? p.category ?? '').toString();
             return matchesFilter(categoria, filtro);
         });
 
-        // CORRECCIÓN 2: Ordenar por fecha descendente (más recientes primero)
         filtrados.sort((a, b) => {
             const fechaA = new Date(a.fecha ?? a.fechaPago ?? a.createdAt ?? 0);
             const fechaB = new Date(b.fecha ?? b.fechaPago ?? b.createdAt ?? 0);
@@ -329,7 +323,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Función auxiliar para determinar la clase CSS del estado
     function getEstadoClass(estado) {
         const estadoLower = String(estado).toLowerCase();
         if (estadoLower.includes('pagado') || estadoLower.includes('approved') || estadoLower.includes('completado')) {
@@ -356,7 +349,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         alert(detalle);
     }
 
-    // conectar filtro
     const filtroTipo = document.getElementById('filtro-tipo');
     if (filtroTipo) {
         filtroTipo.addEventListener('change', () => {
@@ -432,7 +424,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const data = await response.json();
                 const init = data.init_point;
-                // recargar el historial desde backend para que aparezca el pago creado (si fue guardado)
                 await cargarHistorialDesdeBackend();
 
                 if (init) {
