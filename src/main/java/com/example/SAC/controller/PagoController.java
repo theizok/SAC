@@ -477,11 +477,15 @@ public class PagoController {
                                 case ("canceled"):
                                     estado = "CANCELADO";
                                     break;
-                                case ("in_process"):
-                                    estado = "EN_PROCESO";
+                                case ("refunded"):
+                                    estado = "REEMBOLSADO";
+                                    break;
+                                case ("rejected"):
+                                    estado = "RECHAZADO";
                                     break;
                                 default:
-
+                                    estado = "ERROR";
+                                    break;
                             }
 
                             pagoService.actualizarEstadoPago(
