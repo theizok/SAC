@@ -9,8 +9,9 @@ import java.util.Optional;
 @Repository
 public interface PropietarioRepository extends JpaRepository<Propietario, Long> {
     Optional<Propietario> findByCorreo(String correo);
-
+    Optional<Propietario> findByDocumento(String documento);
     Optional<Propietario> findByNombre(String nombre);
+    Optional<Propietario> findByTelefonoPropietario(String telefonoPropietario);
 
     void deleteByDocumento(String document);
 }

@@ -87,4 +87,19 @@ public class AdministradorService {
         return administradorRepository.findById(id);
     }
 
+    //Obtener administrador por correo
+    public Optional<Administrador> obtenerAdministradorPorCorreo(String correo) {
+        return administradorRepository.findByCorreo(correo);
+    }
+
+    //Obtener administrador por documento
+    public Optional<Administrador> obtenerAdministradorPorDocumento(String documento) {
+        return administradorRepository.findByDocumento(documento);
+    }
+
+    //Obtener administrador por telefono
+    public Optional<Administrador> obtenerAdministradorPorTelefono(String telefono) {
+        return administradorRepository.findByTelefono(telefono);
+    }
+
 }
