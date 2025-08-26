@@ -37,7 +37,7 @@ document.getElementById('registro-form').addEventListener('submit', async functi
             nuevoUsuario = residente;
             break;
         case("propietario"):
-            apiUrl="api/register/propietario";
+            apiUrl="/api/register/propietario";
             nuevoUsuario = propietario;
             break;
         default:

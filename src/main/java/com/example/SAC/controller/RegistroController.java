@@ -5,6 +5,7 @@ import com.example.SAC.entity.Propietario;
 import com.example.SAC.entity.Residente;
 import com.example.SAC.service.AdministradorService;
 import com.example.SAC.service.PropietarioService;
+import com.example.SAC.service.RegistroService;
 import com.example.SAC.service.ResidenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,28 +14,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/register")
 public class RegistroController {
     @Autowired
-    ResidenteService residenteService;
-
-    @Autowired
-    private PropietarioService propietarioService;
-    @Autowired
-    private AdministradorService administradorService;
+    RegistroService registroService;
 
     //Registrar residente
     @PostMapping("/residente")
     public Residente registrarResidente(@RequestBody Residente residente) {
-
-        return residenteService.crearResidente(residente);
+        return registroService.registrarResidente(residente);
     }
     //Registrar propietario
     @PostMapping("/propietario")
     public Propietario registrarPropietario(@RequestBody Propietario propietario) {
-        return propietarioService.agregarPropietario(propietario);
+        return registroService.registrarPropietario(propietario);
     }
 
-    @PostMapping("/administrador")
+    //Registrar admin
+    @PostMapping("/1603aeZakmi/administrador")
     public Administrador registrarAdministrador(@RequestBody Administrador administrador) {
-        return administradorService.agregarAdministrador(administrador);
+        return registroService.registrarAdministrador(administrador);
     }
 
 

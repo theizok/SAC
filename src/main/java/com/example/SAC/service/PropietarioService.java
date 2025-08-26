@@ -99,6 +99,21 @@ public class PropietarioService {
     //ELiminar propietario por id
     public void eliminarPropietarioPorId(Long id) {
         propietarioRepository.deleteById(id);
-
     }
+
+    // Obtener propietario por correo
+    public Optional<Propietario> obtenerPropietarioPorCorreo(String correo) {
+        return propietarioRepository.findByCorreo(correo);
+    }
+
+    // Obtener propietario por documento
+    public Optional<Propietario> obtenerPropietarioPorDocumento(String documento) {
+        return propietarioRepository.findByDocumento(documento);
+    }
+
+    //Obtener propietario por telefono
+    public Optional<Propietario> obtenerPropietarioPorTelefono(String telefono) {
+        return propietarioRepository.findByTelefonoPropietario(telefono);
+    }
+
 }

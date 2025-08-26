@@ -23,7 +23,6 @@ public class ResidenteService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     //Crear residente
     public Residente crearResidente(Residente residente) {
 
@@ -40,7 +39,6 @@ public class ResidenteService {
         residente.setContraseña(passwordEncoder.encode(residente.getContraseña()));//Encriptar la contraseña antes de ingresarla en la base de datos
         return residenteRepository.save(residente);}
 
-
     //Actualizar residente
     public Residente actualizarResidente(Long id, Residente nuevosDatos) {
         return residenteRepository.findById(id).map(residente -> {
@@ -56,7 +54,6 @@ public class ResidenteService {
     public void eliminarResidente(String documento) {
         residenteRepository.deleteByDocumento(documento);
     }
-
 
     //Cambiar contraseña
     public boolean cambiarContraseña(Long idResidente, String passwordActual, String passwordNueva) {
@@ -90,7 +87,6 @@ public class ResidenteService {
         return residenteRepository.getByNombre(nombre);
     }
 
-
     //Eliminar residente por id
     public void eliminarResidentePorId(long Id) {
         residenteRepository.deleteById(Id);
@@ -99,5 +95,20 @@ public class ResidenteService {
     //Obtener por id
     public Optional<Residente> obtenerPorId(long id) {
         return residenteRepository.findById(id);
+    }
+
+    //Obtener residente por correo
+    public Optional<Residente> obtenerResidentePorCorreo(String correo) {
+        return residenteRepository.findByCorreo(correo);
+    }
+
+    //Obtener residente por documento
+    public Optional<Residente> obtenerResidentePorDocumento(String documento) {
+        return residenteRepository.findByDocumento(documento);
+    }
+
+    //Obtener residente por telefono
+    public Optional<Residente> obtenerResidentePorTelefono(String telefono) {
+        return residenteRepository.findByTelefono(telefono);
     }
 }
