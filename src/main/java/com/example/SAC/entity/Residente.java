@@ -16,13 +16,13 @@ public class Residente {
     private String nombre;
     @Column(name="edad")
     private int edad;
-    @Column (name = "correo")
+    @Column(name = "correo", unique = true, nullable = false)
     private String correo;
     @Column (name = "contraseña")
     private String contraseña;
-    @Column (name = "telefono")
+    @Column(name = "telefono", unique = true, nullable = false)
     private String telefono;
-    @Column(name="documento")
+    @Column(name = "documento", unique = true, nullable = false)
     private String documento;
     @Column(name="idcuenta")
     private long idcuenta;

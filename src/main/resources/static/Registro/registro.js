@@ -1,66 +1,175 @@
-document.getElementById('registro-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('registro-form');
+    const alertContainer = document.getElementById('alert-container');
+    const registerBtn = document.getElementById('register-btn');
+    const btnSpinner = document.getElementById('btn-spinner');
+    const btnText = document.getElementById('btn-text');
 
-    const nombre = document.getElementById('nombre').value;
-    const documento = document.getElementById('documento').value;
-    const telefono = document.getElementById('telefono').value;
-    const correo = document.getElementById('email').value; // Campo correo
-    const contraseña = document.getElementById('password').value;
-    const rol = document.getElementById('rol').value;
+    function showMessage(message, type = 'error', autoHide = true, timeout = 4000) {
+        alertContainer.innerHTML = ''; // limpiar mensajes anteriores
+        const div = document.createElement('div');
+        div.className = `alert ${type === 'success' ? 'success' : 'error'}`;
+        div.setAttribute('role', 'alert');
+        div.innerHTML = (type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>') +
+            `<span style="margin-left:8px">${message}</span>`;
+        alertContainer.appendChild(div);
 
-    let apiUrl = ""
-    let nuevoUsuario = "";
-
-    // Crear nuevo usuario con todos los campos
-    //Propietario
-    const propietario = JSON.stringify({
-        nombre:nombre,
-        correo:correo,
-        documento:documento,
-        telefonoPropietario:telefono,
-        contraseña:contraseña
-    });
-    //Residente
-    const residente = JSON.stringify({
-        nombre:nombre,
-        correo:correo,
-        documento:documento,
-        telefono:telefono,
-        contraseña:contraseña
-    })
-
-    const rolMinuscula = rol.toLowerCase();
-
-    switch(rolMinuscula) {
-        case("residente"):
-            apiUrl = "/api/register/residente";
-            nuevoUsuario = residente;
-            break;
-        case("propietario"):
-            apiUrl="/api/register/propietario";
-            nuevoUsuario = propietario;
-            break;
-        default:
-    }
-
-    try {
-        const response = await fetch(apiUrl,{
-            method: "POST",
-            headers: {
-                "Content-Type":"application/json"
-            }
-            ,body:nuevoUsuario
-        })
-        if(!response.ok){
-            alert("Fallo al registrarse")
-
+        if (autoHide) {
+            setTimeout(() => {
+                if (alertContainer.contains(div)) alertContainer.removeChild(div);
+            }, timeout);
         }
-        alert("Usuario creado correctamente")
-        windowlocation.href='/InicioNoAuth/Inicio_no.html'
-
-
-    } catch(e){
-        console.log("Error al crear la cuenta\nError :" + e)
     }
 
+    function clearMessages() {
+        alertContainer.innerHTML = '';
+    }
+
+    function setLoading(loading) {
+        if (loading) {
+            registerBtn.setAttribute('disabled', 'disabled');
+            btnSpinner.classList.remove('hidden');
+            btnText.textContent = ' Registrando...';
+        } else {
+            registerBtn.removeAttribute('disabled');
+            btnSpinner.classList.add('hidden');
+            btnText.innerHTML = '<i class="fas fa-user-plus"></i> Registrar';
+        }
+    }
+
+    function validateForm(data) {
+        if (!data.nombre || data.nombre.trim().length < 2) {
+            return { ok: false, field: 'nombre', msg: 'Ingrese un nombre válido (mínimo 2 caracteres).' };
+        }
+        if (!data.documento || data.documento.trim().length < 4) {
+            return { ok: false, field: 'documento', msg: 'Ingrese un documento válido.' };
+        }
+        if (!data.telefono || data.telefono.trim().length < 7) {
+            return { ok: false, field: 'telefono', msg: 'Ingrese un teléfono válido.' };
+        }
+        if (!data.correo || !/^\S+@\S+\.\S+$/.test(data.correo)) {
+            return { ok: false, field: 'email', msg: 'Ingrese un correo válido.' };
+        }
+        if (!data.contrasena || data.contrasena.length < 6) {
+            return { ok: false, field: 'password', msg: 'La contraseña debe tener al menos 6 caracteres.' };
+        }
+        return { ok: true };
+    }
+
+    function focusField(fieldId) {
+        const el = document.getElementById(fieldId);
+        if (el) {
+            el.focus();
+            el.classList.add('input-error');
+            setTimeout(() => el.classList.remove('input-error'), 3000);
+        }
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearMessages();
+
+        // Leer valores
+        const nombre = document.getElementById('nombre').value.trim();
+        const documento = document.getElementById('documento').value.trim();
+        const telefono = document.getElementById('telefono').value.trim();
+        const correo = document.getElementById('email').value.trim();
+        const contrasena = document.getElementById('password').value; // variable en JS
+        const rol = document.getElementById('rol').value;
+
+        // Crear payload base
+        const payloadBase = {
+            nombre,
+            correo,
+            documento
+        };
+
+        let apiUrl = '';
+        let bodyObj = null;
+
+        if (rol === 'residente') {
+            apiUrl = '/api/register/residente';
+            bodyObj = {
+                ...payloadBase,
+                telefono: telefono,
+                "contraseña": contrasena
+            };
+        } else {
+            apiUrl = '/api/register/propietario';
+            bodyObj = {
+                ...payloadBase,
+                telefonoPropietario: telefono,
+                "contraseña": contrasena
+            };
+        }
+
+        // Validación cliente
+        const check = validateForm({ nombre, documento, telefono, correo, contrasena });
+        if (!check.ok) {
+            showMessage(check.msg, 'error', true, 5000);
+            focusField(check.field);
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bodyObj)
+            });
+
+            let responseBody = null;
+            try {
+                responseBody = await response.json();
+            } catch (err) {
+                // no JSON body
+            }
+
+            if (response.status === 409) {
+                const serverMsg = responseBody && responseBody.message
+                    ? responseBody.message
+                    : 'Ese correo o documento ya está en uso. Intenta iniciar sesión.';
+                showMessage(serverMsg, 'error', true, 7000);
+
+                if (serverMsg.toLowerCase().includes('correo') || serverMsg.toLowerCase().includes('email')) {
+                    focusField('email');
+                } else if (serverMsg.toLowerCase().includes('documento')) {
+                    focusField('documento');
+                } else if (serverMsg.toLowerCase().includes('telefono')) {
+                    focusField('telefono');
+                }
+                setLoading(false);
+                return;
+            }
+
+            // Otros errores HTTP
+            if (!response.ok) {
+                const serverMsg = responseBody && (responseBody.message || responseBody.error)
+                    ? (responseBody.message || responseBody.error)
+                    : `Fallo al registrarse (código ${response.status})`;
+                showMessage(serverMsg, 'error', true, 6000);
+                // enfocar campo si se detecta en el mensaje
+                if (serverMsg.toLowerCase().includes('correo')) focusField('email');
+                if (serverMsg.toLowerCase().includes('documento')) focusField('documento');
+                setLoading(false);
+                return;
+            }
+
+            // Éxito
+            showMessage('Cuenta creada correctamente. Redirigiendo...', 'success', false);
+            setTimeout(() => {
+                window.location.href = '/InicioNoAuth/Inicio_no.html';
+            }, 900);
+
+        } catch (error) {
+            console.error('Error creando la cuenta', error);
+            showMessage('Error de red. Intenta de nuevo más tarde.', 'error', true, 6000);
+            setLoading(false);
+        } finally {
+
+            setTimeout(() => setLoading(false), 1000);
+        }
+    });
 });

@@ -17,11 +17,11 @@ public class  Propietario {
     private long idPropietario;
     @Column(name="nombre")
     private String nombre;
-    @Column(name="documento")
+    @Column(name = "documento", unique = true, nullable = false)
     private String documento;
-    @Column (name = "correo")
+    @Column(name = "correo", unique = true, nullable = false)
     private String correo;
-    @Column (name = "telefono")
+    @Column(name = "telefono", unique = true, nullable = false)
     private String telefonoPropietario;
     @Column (name = "contraseña")
     private String contraseña;
