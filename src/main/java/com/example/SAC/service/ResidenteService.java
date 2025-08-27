@@ -7,6 +7,7 @@ import com.example.SAC.repository.ResidenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,17 +17,43 @@ public class ResidenteService {
 
     @Autowired
     private ResidenteRepository residenteRepository;
-
     @Autowired
     CuentaRepository cuentaRepository;
+    @Autowired
+    ValidacionService validacionService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private RegistroService registroService;
 
-    //Crear residente
-    public Residente crearResidente(Residente residente) {
+
+    private String normalize(String s) {
+        if (s == null) return null;
+        String t = s.trim();
+        return t.isEmpty() ? null : t.toLowerCase();
+    }
+
+
+    //Crear residente - Registrarlo
+
+    @Transactional
+    public Residente registrarResidente(Residente residente) {
+        String correo = normalize(residente.getCorreo());
+        String documento = normalize(residente.getDocumento());
+        String telefono = normalize(residente.getTelefono());
+
+        if (correo != null && validacionService.verificarCorreoRegistrado(correo)) {
+            throw new RuntimeException("El correo ya se encuentra registrado");
+        }
+        if (documento != null && validacionService.verificarDocumentoRegistrado(documento)) {
+            throw new RuntimeException("El documento ya se encuentra registrado");
+        }
+        if (telefono != null && validacionService.verificarNumeroRegistrado(telefono)) {
+            throw new RuntimeException("El número de teléfono ya se encuentra registrado");
+        }
+
+        residente.setCorreo(correo);
+        residente.setDocumento(documento);
+        residente.setTelefono(telefono);
 
         //Creacion de cuenta antes de registrar el residente
         Cuenta nuevaCuenta = new Cuenta();
@@ -39,43 +66,40 @@ public class ResidenteService {
         residente.setIdcuenta(nuevaCuenta.getIdCuenta());
         //Se encripta la contraseña
         residente.setContraseña(passwordEncoder.encode(residente.getContraseña()));//Encriptar la contraseña antes de ingresarla en la base de datos
-        return residenteRepository.save(residente);}
+        return residenteRepository.save(residente);
+    }
+
 
     // Actualizar residente
     public Residente actualizarResidente(Long id, Residente nuevosDatos) {
         Residente residente = residenteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("No se encontró el residente con id: " + id));
 
-        try {
-            // Validar correo
-            if (!residente.getCorreo().equals(nuevosDatos.getCorreo())
-                    && registroService.verificarCorreoRegistrado(nuevosDatos.getCorreo())) {
-                throw new RuntimeException("El correo ya está registrado");
-            }
-
-            // Validar documento
-            if (!residente.getDocumento().equals(nuevosDatos.getDocumento())
-                    && registroService.verificarDocumentoRegistrado(nuevosDatos.getDocumento())) {
-                throw new RuntimeException("El documento ya está registrado");
-            }
-
-            // Validar teléfono
-            if (!residente.getTelefono().equals(nuevosDatos.getTelefono())
-                    && registroService.verificarNumeroRegistrado(nuevosDatos.getTelefono())) {
-                throw new RuntimeException("El número ya está registrado");
-            }
-
-            // Actualizar datos
-            residente.setNombre(nuevosDatos.getNombre());
-            residente.setDocumento(nuevosDatos.getDocumento());
-            residente.setCorreo(nuevosDatos.getCorreo());
-            residente.setTelefono(nuevosDatos.getTelefono());
-
-            return residenteRepository.save(residente);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar el residente: " + e.getMessage(), e);
+        // Validar correo
+        if (!residente.getCorreo().equals(nuevosDatos.getCorreo())
+                && validacionService.verificarCorreoRegistrado(nuevosDatos.getCorreo())) {
+            throw new RuntimeException("El correo ya está registrado");
         }
+
+        // Validar documento
+        if (!residente.getDocumento().equals(nuevosDatos.getDocumento())
+                && validacionService.verificarDocumentoRegistrado(nuevosDatos.getDocumento())) {
+            throw new RuntimeException("El documento ya está registrado");
+        }
+
+        // Validar teléfono
+        if (!residente.getTelefono().equals(nuevosDatos.getTelefono())
+                && validacionService.verificarNumeroRegistrado(nuevosDatos.getTelefono())) {
+            throw new RuntimeException("El número ya está registrado");
+        }
+
+        // Actualizar datos
+        residente.setNombre(nuevosDatos.getNombre());
+        residente.setDocumento(nuevosDatos.getDocumento());
+        residente.setCorreo(nuevosDatos.getCorreo());
+        residente.setTelefono(nuevosDatos.getTelefono());
+
+        return residenteRepository.save(residente);
     }
 
     //Eliminar residente
@@ -140,3 +164,4 @@ public class ResidenteService {
         return residenteRepository.findByTelefono(telefono);
     }
 }
+
