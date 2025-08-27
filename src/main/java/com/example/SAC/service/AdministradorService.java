@@ -26,6 +26,9 @@ public class AdministradorService {
     private ResidenteService residenteService;
     @Autowired
     private PropietarioService propietarioService;
+    @Autowired
+    private RegistroService registroService;
+
 
 
     public Administrador agregarAdministrador(Administrador administrador){
@@ -44,15 +47,29 @@ public class AdministradorService {
         return administradorRepository.save(administrador);
     }
 
-    //Actualizar residente
+    //Actualizar administrador
     public Administrador actualizarAdministrador(Long id, Administrador nuevosDatos) {
-        return administradorRepository.findById(id).map(administrador -> {
-            administrador.setNombreAdministrador(nuevosDatos.getNombreAdministrador());
-            administrador.setDocumento(nuevosDatos.getDocumento());
-            administrador.setCorreo(nuevosDatos.getCorreo());
-            administrador.setTelefono(nuevosDatos.getTelefono());
-            return administradorRepository.save(administrador);
-        } ).orElseThrow(() -> new RuntimeException("No se encontro el propietario"));
+        try {
+            if(registroService.verificarCorreoRegistrado(nuevosDatos.getCorreo())){
+                throw new RuntimeException("El correo ya esta registrado");
+            } else if (registroService.verificarDocumentoRegistrado(nuevosDatos.getDocumento())) {
+                throw new RuntimeException("El documento ya esta registrado");
+            } else if (registroService.verificarNumeroRegistrado(nuevosDatos.getTelefono())) {
+                throw new RuntimeException("El numero ya esta registrado");
+            } else {
+                return administradorRepository.findById(id).map( administrador -> {
+                        administrador.setNombreAdministrador(nuevosDatos.getNombreAdministrador());
+                        administrador.setCorreo(nuevosDatos.getCorreo());
+                        administrador.setTelefono(nuevosDatos.getTelefono());
+                        administrador.setDocumento(nuevosDatos.getTelefono());
+                        return administradorRepository.save(administrador);
+                }
+                ).orElseThrow(() -> new RuntimeException("No se encontro el administrador"));
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al actualizar el administrador: " + e.getMessage() + "");
+        }
     }
 
     //Cambiar contraseña

@@ -280,6 +280,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         return categoriaNormalizada.includes(filtroNormalizado);
     }
 
+    // --- Normalización y mapeo de estado (compatibilidad con AdminPagos.js) ---
+    function normalizeEstadoTexto(s) {
+        if (!s && s !== 0) return '';
+        return String(s)
+            .normalize('NFD')                // separar diacríticos
+            .replace(/[\u0300-\u036f]/g, '') // quitar acentos
+            .toLowerCase()
+            .trim();
+    }
+
+    function estadoToClase(estado) {
+        const e = normalizeEstadoTexto(estado);
+
+        if (!e) return 'estado-pendiente'; // fallback consistente con admin
+
+        if (e.includes('aprob') || e.includes('approved')) return 'estado-pagado';
+        if (e.includes('pend') || e.includes('pending')) return 'estado-pendiente';
+
+        // Agrupar cancelado / rechazado / reembolsado / refunded en la misma clase visual
+        if (e.includes('cancel') || e.includes('canceled') ||
+            e.includes('rechaz') || e.includes('reembol') ||
+            e.includes('reembols') || e.includes('refunded')) {
+            return 'estado-cancelado';
+        }
+
+        // fallback
+        return 'estado-pendiente';
+    }
+
     function renderPagos(rawArray, filtro = 'todos') {
         if (!historialBody) return;
         historialBody.innerHTML = '';
@@ -310,9 +339,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             fila.style.cursor = 'pointer';
             fila.dataset.id = p.id ?? '';
 
-            // Aplicar clase de estado para el styling
-            const estadoClass = getEstadoClass(p.estado);
-
+            const estadoClass = estadoToClase(p.estado);
             fila.innerHTML = `<td>${formatDate(p.fecha)}</td>
                               <td>${escapeHtml(p.categoria)}</td>
                               <td>${escapeHtml(p.descripcion)}</td>
@@ -321,20 +348,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             fila.addEventListener('click', () => mostrarDetallePago(p));
             historialBody.appendChild(fila);
         });
-    }
-
-    function getEstadoClass(estado) {
-        const estadoLower = String(estado).toLowerCase();
-        if (estadoLower.includes('pagado') || estadoLower.includes('approved') || estadoLower.includes('completado')) {
-            return 'estado-pagado';
-        }
-        if (estadoLower.includes('pendiente') || estadoLower.includes('pending')) {
-            return 'estado-pendiente';
-        }
-        if (estadoLower.includes('cancelado') || estadoLower.includes('cancelled') || estadoLower.includes('rechazado')) {
-            return 'estado-cancelado';
-        }
-        return 'estado-pendiente'; // Default
     }
 
     function mostrarDetallePago(p) {

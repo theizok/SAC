@@ -22,6 +22,8 @@ public class ResidenteService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RegistroService registroService;
 
     //Crear residente
     public Residente crearResidente(Residente residente) {
@@ -41,13 +43,26 @@ public class ResidenteService {
 
     //Actualizar residente
     public Residente actualizarResidente(Long id, Residente nuevosDatos) {
-        return residenteRepository.findById(id).map(residente -> {
-            residente.setNombre(nuevosDatos.getNombre());
-            residente.setDocumento(nuevosDatos.getDocumento());
-            residente.setCorreo(nuevosDatos.getCorreo());
-            residente.setTelefono(nuevosDatos.getTelefono());
-            return residenteRepository.save(residente);
-        } ).orElseThrow(() -> new RuntimeException("No se encontro el propietario"));
+        try {
+            if (registroService.verificarCorreoRegistrado(nuevosDatos.getCorreo()) ) {
+                throw new RuntimeException("El correo ya esta registrado");
+            }   else if (registroService.verificarDocumentoRegistrado(nuevosDatos.getDocumento())) {
+                throw new RuntimeException("El documento ya esta registrado");
+            }    else if (registroService.verificarNumeroRegistrado(nuevosDatos.getTelefono())) {
+                throw new RuntimeException("El numero ya esta registrado");
+            }     else {
+                return residenteRepository.findById(id).map( residente -> {
+                    residente.setNombre(nuevosDatos.getNombre());
+                    residente.setDocumento(nuevosDatos.getDocumento());
+                    residente.setCorreo(nuevosDatos.getCorreo());
+                    residente.setTelefono(nuevosDatos.getTelefono());
+                    return residenteRepository.save(residente);
+                }
+                ).orElseThrow(() -> new RuntimeException("No se encontro el residente"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al actualizar el residente: " + e.getMessage() + "");
+        }
     }
 
     //Eliminar residente

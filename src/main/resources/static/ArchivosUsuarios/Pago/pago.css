@@ -99,7 +99,7 @@ header {
     transition: var(--transition);
 }
 
-.nav-list a:hover, 
+.nav-list a:hover,
 .nav-list a.active {
     color: #4fc3f7;
 }
@@ -352,6 +352,7 @@ tbody tr:hover {
     background-color: #f5f5f5;
 }
 
+/* Estado badges: base */
 .estado-pago {
     padding: 5px 10px;
     border-radius: 20px;
@@ -360,19 +361,52 @@ tbody tr:hover {
     display: inline-block;
 }
 
-.estado-pagado {
+/* Estados principales (con especificidad adicional para evitar sobrescrituras) */
+.estado-pago.estado-pagado,
+.tabla-container table .estado-pago.estado-pagado {
     background-color: rgba(40, 167, 69, 0.1);
     color: var(--success-color);
 }
 
-.estado-pendiente {
+.estado-pago.estado-pendiente,
+.tabla-container table .estado-pago.estado-pendiente {
     background-color: rgba(255, 193, 7, 0.1);
     color: var(--warning-color);
 }
 
-.estado-cancelado {
+.estado-pago.estado-cancelado,
+.tabla-container table .estado-pago.estado-cancelado {
     background-color: rgba(220, 53, 69, 0.1);
     color: var(--danger-color);
+}
+
+/* Aliases y variantes que el backend o JS puedan enviar */
+.estado-pagado,
+.estado-pago-pagado,
+.estado-pendiente,
+.estado-cancelado,
+.estado-reembolsado,
+.estado-rechazado,
+.estado-refunded,
+.estado-refund,
+.estado-unknown,
+.estado-error {
+    /* Si alguna de estas clases se aplica directamente sin "estado-pago", forzamos apariencia similar */
+}
+
+/* Versiones agrupadas para variantes: (si tu JS devuelve .estado-reembolsado o .estado-rechazado) */
+.estado-reembolsado,
+.estado-refunded,
+.estado-rechazado {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--danger-color);
+}
+
+/* Estilo para errores / unknown */
+.estado-error,
+.estado-unknown {
+    background-color: rgba(52, 58, 64, 0.12);
+    color: #343a40;
 }
 
 /* Modal Styles */
@@ -493,7 +527,7 @@ footer {
     .menu-button {
         display: block;
     }
-    
+
     .main-nav {
         position: fixed;
         top: 90px;
@@ -506,24 +540,24 @@ footer {
         transition: var(--transition);
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     }
-    
+
     .menu-toggle:checked ~ .main-nav {
         left: 0;
     }
-    
+
     .nav-list {
         flex-direction: column;
         gap: 1.5rem;
     }
-    
+
     .tabs {
         flex-direction: column;
     }
-    
+
     .tab-btn {
         justify-content: center;
     }
-    
+
     .payment-card, .history-card {
         padding: 1.5rem;
     }
@@ -533,23 +567,23 @@ footer {
     .logo {
         height: 60px;
     }
-    
+
     .section-title {
         font-size: 1.5rem;
     }
-    
+
     .section-subtitle {
         font-size: 1rem;
     }
-    
+
     .modal-content {
         padding: 1.5rem;
     }
-    
+
     #modal-confirmacion .modal-content {
         padding: 1.5rem;
     }
-    
+
     .success-icon {
         font-size: 3rem;
     }

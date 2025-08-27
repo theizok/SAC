@@ -127,16 +127,95 @@ body {
     font-size: 0.85rem;
 }
 
+/* -------------------------------------------------------------------
+   Mensajes estilizados (error / success / info) - agregado
+   ------------------------------------------------------------------- */
+
 .response-message {
-    text-align: center;
-    margin-top: 20px;
-    padding: 10px;
-    border-radius: 5px;
-    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    min-height: 44px;
+    max-width: 100%;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    transform-origin: center;
+    transition: transform 220ms ease, opacity 220ms ease;
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+    pointer-events: none; /* mientras oculto no interfiere */
+    position: relative;
+    z-index: 30;
+    margin-top: 18px;
 }
 
+/* Estado visible */
+.response-message.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* Error */
+.response-message.error {
+    background: linear-gradient(90deg, rgba(255,230,230,1) 0%, rgba(255,244,244,1) 100%);
+    color: #8b0000;
+    border: 1px solid rgba(139,0,0,0.12);
+}
+
+/* Success */
+.response-message.success {
+    background: linear-gradient(90deg, rgba(230,255,240,1) 0%, rgba(240,255,245,1) 100%);
+    color: #0b6b3a;
+    border: 1px solid rgba(11,107,58,0.12);
+}
+
+/* Info */
+.response-message.info {
+    background: linear-gradient(90deg, rgba(230,240,255,1) 0%, rgba(245,250,255,1) 100%);
+    color: #004078;
+    border: 1px solid rgba(0,64,120,0.08);
+}
+
+/* Icon sizes */
+#responseIcon {
+    font-size: 1.05rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* Texto */
+#responseText {
+    font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1;
+}
+
+/* Animación de "shake" para formularios al error */
+@keyframes shake {
+    0% { transform: translateX(0) }
+    20% { transform: translateX(-6px) }
+    40% { transform: translateX(6px) }
+    60% { transform: translateX(-4px) }
+    80% { transform: translateX(4px) }
+    100% { transform: translateX(0) }
+}
+.login-card.shake {
+    animation: shake 420ms ease;
+}
+
+/* Pequeña transición en botón cuando hay error */
+.login-btn.error-glow {
+    box-shadow: 0 6px 18px rgba(139,0,0,0.12);
+}
+
+/* Responsive: asegurar que el mensaje se vea bien */
 @media (max-width: 480px) {
     .login-card {
         padding: 20px;
     }
+    .response-message { font-size: 0.9rem; padding: 10px 12px; }
 }
