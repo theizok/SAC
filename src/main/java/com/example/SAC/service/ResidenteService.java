@@ -41,27 +41,40 @@ public class ResidenteService {
         residente.setContraseña(passwordEncoder.encode(residente.getContraseña()));//Encriptar la contraseña antes de ingresarla en la base de datos
         return residenteRepository.save(residente);}
 
-    //Actualizar residente
+    // Actualizar residente
     public Residente actualizarResidente(Long id, Residente nuevosDatos) {
+        Residente residente = residenteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No se encontró el residente con id: " + id));
+
         try {
-            if (registroService.verificarCorreoRegistrado(nuevosDatos.getCorreo()) ) {
-                throw new RuntimeException("El correo ya esta registrado");
-            }   else if (registroService.verificarDocumentoRegistrado(nuevosDatos.getDocumento())) {
-                throw new RuntimeException("El documento ya esta registrado");
-            }    else if (registroService.verificarNumeroRegistrado(nuevosDatos.getTelefono())) {
-                throw new RuntimeException("El numero ya esta registrado");
-            }     else {
-                return residenteRepository.findById(id).map( residente -> {
-                    residente.setNombre(nuevosDatos.getNombre());
-                    residente.setDocumento(nuevosDatos.getDocumento());
-                    residente.setCorreo(nuevosDatos.getCorreo());
-                    residente.setTelefono(nuevosDatos.getTelefono());
-                    return residenteRepository.save(residente);
-                }
-                ).orElseThrow(() -> new RuntimeException("No se encontro el residente"));
+            // Validar correo
+            if (!residente.getCorreo().equals(nuevosDatos.getCorreo())
+                    && registroService.verificarCorreoRegistrado(nuevosDatos.getCorreo())) {
+                throw new RuntimeException("El correo ya está registrado");
             }
+
+            // Validar documento
+            if (!residente.getDocumento().equals(nuevosDatos.getDocumento())
+                    && registroService.verificarDocumentoRegistrado(nuevosDatos.getDocumento())) {
+                throw new RuntimeException("El documento ya está registrado");
+            }
+
+            // Validar teléfono
+            if (!residente.getTelefono().equals(nuevosDatos.getTelefono())
+                    && registroService.verificarNumeroRegistrado(nuevosDatos.getTelefono())) {
+                throw new RuntimeException("El número ya está registrado");
+            }
+
+            // Actualizar datos
+            residente.setNombre(nuevosDatos.getNombre());
+            residente.setDocumento(nuevosDatos.getDocumento());
+            residente.setCorreo(nuevosDatos.getCorreo());
+            residente.setTelefono(nuevosDatos.getTelefono());
+
+            return residenteRepository.save(residente);
+
         } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar el residente: " + e.getMessage() + "");
+            throw new RuntimeException("Error al actualizar el residente: " + e.getMessage(), e);
         }
     }
 
