@@ -51,26 +51,40 @@ public class PropietarioService {
         return propietarioRepository.save(propietario);
     }
 
-    //Actualizar propietario
+    // Actualizar propietario
     public Propietario actualizarPropietario(Long id, Propietario nuevosDatos) {
+        Propietario propietario = propietarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No se encontró el propietario con id: " + id));
+
         try {
-            if (registroService.verificarCorreoRegistrado(nuevosDatos.getCorreo()) ) {
-                throw new RuntimeException("El correo ya esta registrado");
-            } else if (registroService.verificarDocumentoRegistrado(nuevosDatos.getDocumento())) {
-                throw new RuntimeException("El documento ya esta registrado");
-            } else if (registroService.verificarNumeroRegistrado(nuevosDatos.getTelefonoPropietario())) {
-                throw new RuntimeException("El numero ya esta registrado");
-            } else {
-                return propietarioRepository.findById(id).map(propietario -> {
-                    propietario.setNombre(nuevosDatos.getNombre());
-                    propietario.setDocumento(nuevosDatos.getDocumento());
-                    propietario.setCorreo(nuevosDatos.getCorreo());
-                    propietario.setTelefonoPropietario(nuevosDatos.getTelefonoPropietario());
-                    return propietarioRepository.save(propietario);
-                } ).orElseThrow(() -> new RuntimeException("No se encontro el propietario"));
+            // Validar correo
+            if (!propietario.getCorreo().equals(nuevosDatos.getCorreo())
+                    && registroService.verificarCorreoRegistrado(nuevosDatos.getCorreo())) {
+                throw new RuntimeException("El correo ya está registrado");
             }
+
+            // Validar documento
+            if (!propietario.getDocumento().equals(nuevosDatos.getDocumento())
+                    && registroService.verificarDocumentoRegistrado(nuevosDatos.getDocumento())) {
+                throw new RuntimeException("El documento ya está registrado");
+            }
+
+            // Validar teléfono
+            if (!propietario.getTelefonoPropietario().equals(nuevosDatos.getTelefonoPropietario())
+                    && registroService.verificarNumeroRegistrado(nuevosDatos.getTelefonoPropietario())) {
+                throw new RuntimeException("El número ya está registrado");
+            }
+
+            // Actualizar datos
+            propietario.setNombre(nuevosDatos.getNombre());
+            propietario.setDocumento(nuevosDatos.getDocumento());
+            propietario.setCorreo(nuevosDatos.getCorreo());
+            propietario.setTelefonoPropietario(nuevosDatos.getTelefonoPropietario());
+
+            return propietarioRepository.save(propietario);
+
         } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar el propietario: " + e.getMessage() + "");
+            throw new RuntimeException("Error al actualizar el propietario: " + e.getMessage(), e);
         }
     }
 
