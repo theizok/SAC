@@ -102,7 +102,7 @@ public class AdministradorController {
     //Agregar residente
     @PostMapping("/agregarResidente")
     public Residente addResidente(@RequestBody Residente residente) {
-        return residenteService.crearResidente(residente);
+        return residenteService.registrarResidente(residente);
     }
 
     //Actualizar cuenta residente (ya existente)
@@ -132,7 +132,7 @@ public class AdministradorController {
     //Agregar propietario
     @PostMapping("/agregarPropietario")
     public Propietario addPropietario(@RequestBody Propietario propietario) {
-        return propietarioService.agregarPropietario(propietario);
+        return propietarioService.registrarPropietario(propietario);
     }
 
     //Editar datos propietario (ya existente)
@@ -280,7 +280,7 @@ public class AdministradorController {
     //Agregar admin
     @PostMapping("agregarAdministrador")
     public Administrador agregarAdministrador(@RequestBody Administrador administrador){
-        return administradorService.agregarAdministrador(administrador);
+        return administradorService.registrarAdministrador(administrador);
     }
 
     //Vistas del administrador

@@ -7,6 +7,7 @@ import com.example.SAC.repository.PropietarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,15 +26,35 @@ public class PropietarioService {
     private CuentaRepository cuentaRepository;
 
     @Autowired
-    private RegistroService registroService;
+    private ValidacionService validacionService;
 
     //Obtener todos los propietarios
     public List<Propietario> obtenerTodos() {
         return propietarioRepository.findAll();
     }
 
-    //Agregar propietario
-    public Propietario agregarPropietario(Propietario propietario) {
+    private String normalize(String s) {
+        if (s == null) return null;
+        String t = s.trim();
+        return t.isEmpty() ? null : t.toLowerCase();
+    }
+
+    //Agregar propietario - crear propietario
+    @Transactional
+    public Propietario registrarPropietario(Propietario propietario) {
+        String correo = normalize(propietario.getCorreo());
+        String documento = normalize(propietario.getDocumento());
+        String telefono = normalize(propietario.getTelefonoPropietario());
+
+        if (correo != null && validacionService.verificarCorreoRegistrado(correo)) {
+            throw new RuntimeException("El correo ya se encuentra registrado");
+        }
+        if (documento != null && validacionService.verificarDocumentoRegistrado(documento)) {
+            throw new RuntimeException("El documento ya se encuentra registrado");
+        }
+        if (telefono != null && validacionService.verificarNumeroRegistrado(telefono)) {
+            throw new RuntimeException("El número de teléfono ya se encuentra registrado");
+        }
 
         //Se crea la cuenta
         Cuenta cuentanueva = new Cuenta();
@@ -49,6 +70,7 @@ public class PropietarioService {
         propietario.setContraseña(passwordEncoder.encode(propietario.getContraseña()));//Se encripta la contraseña del propietario con psword encoder
         //Se guarda el propietario en la base de datos
         return propietarioRepository.save(propietario);
+
     }
 
     // Actualizar propietario
@@ -59,19 +81,19 @@ public class PropietarioService {
         try {
             // Validar correo
             if (!propietario.getCorreo().equals(nuevosDatos.getCorreo())
-                    && registroService.verificarCorreoRegistrado(nuevosDatos.getCorreo())) {
+                    && validacionService.verificarCorreoRegistrado(nuevosDatos.getCorreo())) {
                 throw new RuntimeException("El correo ya está registrado");
             }
 
             // Validar documento
             if (!propietario.getDocumento().equals(nuevosDatos.getDocumento())
-                    && registroService.verificarDocumentoRegistrado(nuevosDatos.getDocumento())) {
+                    && validacionService.verificarDocumentoRegistrado(nuevosDatos.getDocumento())) {
                 throw new RuntimeException("El documento ya está registrado");
             }
 
             // Validar teléfono
             if (!propietario.getTelefonoPropietario().equals(nuevosDatos.getTelefonoPropietario())
-                    && registroService.verificarNumeroRegistrado(nuevosDatos.getTelefonoPropietario())) {
+                    && validacionService.verificarNumeroRegistrado(nuevosDatos.getTelefonoPropietario())) {
                 throw new RuntimeException("El número ya está registrado");
             }
 
