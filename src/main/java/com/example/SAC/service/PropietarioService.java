@@ -24,6 +24,9 @@ public class PropietarioService {
     @Autowired
     private CuentaRepository cuentaRepository;
 
+    @Autowired
+    private RegistroService registroService;
+
     //Obtener todos los propietarios
     public List<Propietario> obtenerTodos() {
         return propietarioRepository.findAll();
@@ -50,13 +53,25 @@ public class PropietarioService {
 
     //Actualizar propietario
     public Propietario actualizarPropietario(Long id, Propietario nuevosDatos) {
-        return propietarioRepository.findById(id).map(propietario -> {
-            propietario.setNombre(nuevosDatos.getNombre());
-            propietario.setDocumento(nuevosDatos.getDocumento());
-            propietario.setCorreo(nuevosDatos.getCorreo());
-            propietario.setTelefonoPropietario(nuevosDatos.getTelefonoPropietario());
-            return propietarioRepository.save(propietario);
-        } ).orElseThrow(() -> new RuntimeException("No se encontro el propietario"));
+        try {
+            if (registroService.verificarCorreoRegistrado(nuevosDatos.getCorreo()) ) {
+                throw new RuntimeException("El correo ya esta registrado");
+            } else if (registroService.verificarDocumentoRegistrado(nuevosDatos.getDocumento())) {
+                throw new RuntimeException("El documento ya esta registrado");
+            } else if (registroService.verificarNumeroRegistrado(nuevosDatos.getTelefonoPropietario())) {
+                throw new RuntimeException("El numero ya esta registrado");
+            } else {
+                return propietarioRepository.findById(id).map(propietario -> {
+                    propietario.setNombre(nuevosDatos.getNombre());
+                    propietario.setDocumento(nuevosDatos.getDocumento());
+                    propietario.setCorreo(nuevosDatos.getCorreo());
+                    propietario.setTelefonoPropietario(nuevosDatos.getTelefonoPropietario());
+                    return propietarioRepository.save(propietario);
+                } ).orElseThrow(() -> new RuntimeException("No se encontro el propietario"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al actualizar el propietario: " + e.getMessage() + "");
+        }
     }
 
     //Cambiar contraseña
