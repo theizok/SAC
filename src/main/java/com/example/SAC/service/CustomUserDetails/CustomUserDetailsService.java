@@ -70,20 +70,17 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(tipo));
 
 
-        if (usuario instanceof Residente) {
-            Residente residente = (Residente) usuario;
+        if (usuario instanceof Residente residente) {
             correo = residente.getCorreo();
             contraseña = residente.getContraseña();
             id = residente.getIdresidente();
             idCuenta = residente.getIdcuenta();
-        }else if (usuario instanceof Propietario) {
-            Propietario propietario = (Propietario) usuario;
+        }else if (usuario instanceof Propietario propietario) {
             correo = propietario.getCorreo();
             contraseña = propietario.getContraseña();
             id = propietario.getIdPropietario();
             idCuenta = propietario.getIdCuenta();
-        }else if( usuario instanceof Administrador) {
-            Administrador administrador = (Administrador) usuario;
+        }else if(usuario instanceof Administrador administrador) {
             correo = administrador.getCorreo();
             contraseña = administrador.getContraseña();
             id = administrador.getIdAdministrador();

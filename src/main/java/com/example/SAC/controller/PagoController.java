@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -258,9 +259,7 @@ public class PagoController {
             // Asignar idResidente o idPropietario según rol del usuario autenticado (igual que antes)
             try {
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                if (auth != null && auth.getPrincipal() instanceof com.example.SAC.service.CustomUserDetails.CustomUserDetails) {
-                    com.example.SAC.service.CustomUserDetails.CustomUserDetails userDetails =
-                            (com.example.SAC.service.CustomUserDetails.CustomUserDetails) auth.getPrincipal();
+                if (auth != null && auth.getPrincipal() instanceof com.example.SAC.service.CustomUserDetails.CustomUserDetails userDetails) {
 
                     boolean isResidente = userDetails.getAuthorities().stream()
                             .anyMatch(a -> a.getAuthority().equals("RESIDENTE"));
@@ -376,9 +375,7 @@ public class PagoController {
             // Asignar idResidente o idPropietario según el rol del usuario autenticado
             if (reserva.getIdResidente() <= 0 && reserva.getIdPropietario() == null) {
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                if (auth != null && auth.getPrincipal() instanceof com.example.SAC.service.CustomUserDetails.CustomUserDetails) {
-                    com.example.SAC.service.CustomUserDetails.CustomUserDetails userDetails =
-                            (com.example.SAC.service.CustomUserDetails.CustomUserDetails) auth.getPrincipal();
+                if (auth != null && auth.getPrincipal() instanceof com.example.SAC.service.CustomUserDetails.CustomUserDetails userDetails) {
 
                     boolean isResidente = userDetails.getAuthorities().stream()
                             .anyMatch(a -> a.getAuthority().equals("RESIDENTE"));
@@ -448,8 +445,7 @@ public class PagoController {
                 if (body.get("type") != null) {
                     topic = String.valueOf(body.get("type"));
                 }
-                if (body.get("data") instanceof Map) {
-                    Map<?, ?> data = (Map<?, ?>) body.get("data");
+                if (body.get("data") instanceof Map<?, ?> data) {
                     Object idObj = data.get("id");
                     if (idObj != null) id = String.valueOf(idObj);
                 }
@@ -572,6 +568,47 @@ public class PagoController {
         return ResponseEntity.ok(dtos);
     }
 
+    @GetMapping("/obtenerTodos")
+    public ResponseEntity<?> obtenerTodosPagos() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null || auth.getPrincipal() == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Usuario no autenticado"));
+            }
+
+            // Opcional: validar rol administrador
+            boolean isAdmin = false;
+            try {
+                isAdmin = auth.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .anyMatch(a -> a.equalsIgnoreCase("ADMIN") || a.equalsIgnoreCase("ADMINISTRADOR"));
+            } catch (Exception e) {
+                // Si hay error al leer roles, permitimos false y devolvemos 403 abajo
+            }
+
+            if (!isAdmin) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Acceso denegado"));
+            }
+
+            // Obtener todos los pagos y convertir a DTO ordenados por fecha DESC
+            List<Pago> pagos = pagoService.obtenerPagos();
+            if (pagos == null) pagos = new ArrayList<>();
+
+            // Ordenar por fecha (si fecha es null se considera antigua)
+            pagos.sort(Comparator.comparing(
+                    p -> p.getFecha() != null ? p.getFecha() : LocalDateTime.MIN,
+                    Comparator.reverseOrder()
+            ));
+
+            List<PagoDTO> dtos = toDTOList(pagos);
+            return ResponseEntity.ok(dtos);
+
+        } catch (Exception e) {
+            logger.error("Error en obtenerTodosPagos: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Error interno"));
+        }
+    }
+
     // ----------------- Handler para IllegalArgumentException (opcional) -----------------
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException ex) {
@@ -617,7 +654,7 @@ public class PagoController {
             Method getUsername = principal.getClass().getMethod("getUsername");
             Object username = getUsername.invoke(principal);
             if (username != null) {
-                logger.debug("Principal tiene username = {}. Si quieres asignar idResidente desde username, implementa una búsqueda en ResidenteService.", username.toString());
+                logger.debug("Principal tiene username = {}. Si quieres asignar idResidente desde username, implementa una búsqueda en ResidenteService.", username);
             }
         } catch (NoSuchMethodException ignored) {
         } catch (Exception e) {
