@@ -7,6 +7,8 @@ import com.example.SAC.service.PropietarioService;
 import com.example.SAC.service.ResidenteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,13 +27,13 @@ public class RegistroControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @InjectMocks
     private ResidenteService residenteService;
 
-    @MockBean
+    @InjectMocks
     private PropietarioService propietarioService; // Agregado
 
-    @MockBean
+    @InjectMocks
     private AdministradorService administradorService; // Agregado
 
 
@@ -40,7 +42,7 @@ public class RegistroControllerTest {
         Residente residente = new Residente("Carlos", "clave123", 25, "carlos@mail.com", "0987654321", "12345678", 1L);
 
         // Simula la respuesta esperada del servicio
-        Mockito.when(residenteService.crearResidente(Mockito.any(Residente.class))).thenReturn(residente);
+        Mockito.when(residenteService.registrarResidente(Mockito.any(Residente.class))).thenReturn(residente);
 
         ObjectMapper objectMapper = new ObjectMapper();
 

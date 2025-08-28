@@ -1,6 +1,7 @@
 package com.example.SAC.service;
 
 import com.example.SAC.entity.Reserva;
+import com.example.SAC.entity.Residente;
 import com.example.SAC.repository.ReservaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ public class ReservaServiceTest {
     public void testAgregarReserva() {
         // Arrange
         Reserva reserva = new Reserva();
+        reserva.setIdResidente(1);
 
         // Simular repositorio
         when(reservaRepository.save(reserva)).thenReturn(reserva);

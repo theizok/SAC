@@ -7,6 +7,7 @@ import com.example.SAC.repository.PropietarioRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +18,8 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -33,6 +36,9 @@ public class PropietarioServiceTest {
 
     @Mock
     PasswordEncoder passwordEncoder;
+
+    @Mock
+    ValidacionService validacionService;
 
     @InjectMocks
     PropietarioService propietarioService;
@@ -61,35 +67,52 @@ public class PropietarioServiceTest {
 
     //Prueba creación de propietario
     @Test
-    public void testCrearPropietario() {
-        //Arrange
-        Propietario propietario = new Propietario( "Pepito", "Clave123", "123456789", "correo@gmail.com", "3013214567", 1L);
+    void testCrearPropietario_ok() {
+        // Arrange
+        Propietario propietario = new Propietario(
+                "Pepito",
+                "Clave123",
+                "123456789",
+                "correo@gmail.com",
+                "3013214567",
+                1L
+        );
 
-        //Simular repositorio de cuenta (Simular creacion de cuenta en la base de datos para asignar id)
-        when(cuentaRepository.save(any(Cuenta.class))).thenAnswer( invocation  -> {
+        // Ningún dato ya registrado
+        when(validacionService.verificarCorreoRegistrado("correo@gmail.com")).thenReturn(false);
+        when(validacionService.verificarDocumentoRegistrado("123456789")).thenReturn(false);
+        when(validacionService.verificarNumeroRegistrado("3013214567")).thenReturn(false);
+
+        // Simular repositorio de cuenta (guardar cuenta y asignar id)
+        when(cuentaRepository.save(any(Cuenta.class))).thenAnswer(invocation -> {
             Cuenta cuenta = invocation.getArgument(0);
             cuenta.setIdCuenta(1L);
             return cuenta;
         });
 
-        propietario.setIdCuenta(1L);
+        // Simular encriptación de contraseña
+        when(passwordEncoder.encode("Clave123")).thenReturn("clave123_encriptada");
 
-        //Simular encriptación de contraseña
-        when(passwordEncoder.encode(propietario.getContraseña())).thenReturn("clave123_encriptada");
-
-        propietario.setContraseña("clave123_encriptada");
-
-        //Simular repositorio de propietario
-        when(propietarioRepository.save(propietario)).thenReturn(propietario);
+        // Capturar lo que se guarda en propietario
+        ArgumentCaptor<Propietario> propietarioCaptor = ArgumentCaptor.forClass(Propietario.class);
+        when(propietarioRepository.save(propietarioCaptor.capture())).thenAnswer(inv -> inv.getArgument(0));
 
         // Act
-        Propietario propietarioCreado = propietarioService.registrarPropietario(propietario);
+        Propietario propietarioGuardado = propietarioService.registrarPropietario(propietario);
 
         // Assert
-        Assertions.assertEquals(propietario, propietarioCreado);
-        Assertions.assertEquals(propietario.getContraseña(), propietarioCreado.getContraseña());
-        Assertions.assertEquals(propietario.getIdCuenta(), propietarioCreado.getIdCuenta());
+        assertNotNull(propietarioGuardado);
+        assertEquals("clave123_encriptada", propietarioGuardado.getContraseña());
+        assertEquals(1L, propietarioGuardado.getIdCuenta());
+
+        // Verificaciones
+        verify(validacionService).verificarCorreoRegistrado("correo@gmail.com");
+        verify(validacionService).verificarDocumentoRegistrado("123456789");
+        verify(validacionService).verificarNumeroRegistrado("3013214567");
+        verify(cuentaRepository).save(any(Cuenta.class));
+        verify(propietarioRepository).save(any(Propietario.class));
     }
+
 
     //Test actualizar propietario
     @Test

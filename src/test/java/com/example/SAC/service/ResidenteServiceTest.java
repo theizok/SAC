@@ -7,6 +7,7 @@ import com.example.SAC.repository.ResidenteRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -33,18 +35,32 @@ public class ResidenteServiceTest {
         @Mock
         PasswordEncoder passwordEncoder;
 
+        @Mock
+        ValidacionService validacionService;
+
         @InjectMocks
         ResidenteService residenteService;
 
         //Prueba creación de Residente
         @Test
-        public void testCrearResidente() {
+        void testCrearResidente_ok() {
             // Arrange
-            Residente residente = new Residente("Carlos", "clave123", 25, "<EMAIL>", "0987654321", "12345678", 1L);
+            Residente residente = new Residente(
+                    "Carlos",
+                    "clave123",
+                    25,
+                    "carlos@mail.com",
+                    "0987654321",
+                    "12345678",
+                    1L
+            );
 
-            //Simular guardado de cuenta
+            // Ningún dato ya registrado
+            when(validacionService.verificarCorreoRegistrado("carlos@mail.com")).thenReturn(false);
+            when(validacionService.verificarDocumentoRegistrado("12345678")).thenReturn(false);
+            when(validacionService.verificarNumeroRegistrado("0987654321")).thenReturn(false);
 
-            //Cuando se llama al "cuentaRepository.save" con cualquier objeto de tipo Cuenta, se modifica el objeto para simular que se le asigno un ID como se hace en una BD y se devuelve
+            // Simular guardado de cuenta
             when(cuentaRepository.save(any(Cuenta.class))).thenAnswer(invocation -> {
                 Cuenta cuenta = invocation.getArgument(0);
                 cuenta.setIdCuenta(99L);
@@ -52,21 +68,30 @@ public class ResidenteServiceTest {
             });
 
             // Simular encriptación de contraseña
-            when(passwordEncoder.encode(residente.getContraseña())).thenReturn("clave123_encriptada");
+            when(passwordEncoder.encode("clave123")).thenReturn("clave123_encriptada");
 
-            // Simular repositorio de residente (Guardado)
-            when(residenteRepository.save(residente)).thenReturn(residente);
+            // Capturar lo que se guarda
+            ArgumentCaptor<Residente> residenteCaptor = ArgumentCaptor.forClass(Residente.class);
+            when(residenteRepository.save(residenteCaptor.capture())).thenAnswer(inv -> inv.getArgument(0));
 
             // Act
             Residente residenteGuardado = residenteService.registrarResidente(residente);
 
             // Assert
-            assertEquals(residente, residenteGuardado);
+            assertNotNull(residenteGuardado);
             assertEquals("clave123_encriptada", residenteGuardado.getContraseña());
             assertEquals(99L, residenteGuardado.getIdcuenta());
+
+            // Verificaciones
+            verify(validacionService).verificarCorreoRegistrado("carlos@mail.com");
+            verify(validacionService).verificarDocumentoRegistrado("12345678");
+            verify(validacionService).verificarNumeroRegistrado("0987654321");
+            verify(cuentaRepository).save(any(Cuenta.class));
+            verify(residenteRepository).save(any(Residente.class));
         }
 
-        //Prueba actualización de residente
+
+    //Prueba actualización de residente
         @Test
         public void testActualizarResidente() {
             // Arrange

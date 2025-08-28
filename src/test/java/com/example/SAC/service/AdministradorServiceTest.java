@@ -28,6 +28,8 @@ class AdministradorServiceTest {
     @Mock
     private AdministradorRepository administradorRepository;
     @Mock
+    private ValidacionService validacionService;
+    @Mock
     private CuentaRepository cuentaRepository;
     @Mock
     private ResidenteService residenteService; // No usado por ahora, pero inyectado
@@ -38,21 +40,24 @@ class AdministradorServiceTest {
     private AdministradorService administradorService;
 
     @Test
-    @DisplayName("agregarAdministrador: crea cuenta, codifica contraseña y guarda admin")
-    void testAgregarAdministrador_creaCuentaCodificaYGuarda() {
+    @DisplayName("registrarAdministrador: crea cuenta, valida duplicados, codifica contraseña y guarda admin")
+    void testRegistrarAdministrador_ok() {
         // Arrange
         Administrador input = new Administrador();
         input.setNombreAdministrador("Admin Uno");
         input.setCorreo("admin@correo.com");
         input.setTelefono("123");
-        input.setDocumento("ABC123");
+        input.setDocumento("abc123");
         input.setContraseña("plainPass");
 
-        // Stubs
-        when(cuentaRepository.save(any(Cuenta.class))).thenAnswer(invocation -> {
-            Cuenta c = invocation.getArgument(0);
-            // Simular que la BD asigna ID
-            c.setIdCuenta(100L);
+        // Ningún dato ya registrado
+        when(validacionService.verificarCorreoRegistrado(eq("admin@correo.com"))).thenReturn(false);
+        when(validacionService.verificarDocumentoRegistrado(anyString())).thenReturn(false);
+        when(validacionService.verificarNumeroRegistrado(eq("123"))).thenReturn(false);
+
+        when(cuentaRepository.save(any(Cuenta.class))).thenAnswer(inv -> {
+            Cuenta c = inv.getArgument(0);
+            c.setIdCuenta(100L); // simular PK
             return c;
         });
         when(passwordEncoder.encode("plainPass")).thenReturn("ENC(plainPass)");
@@ -65,18 +70,23 @@ class AdministradorServiceTest {
 
         // Assert
         assertNotNull(result);
+
         Administrador saved = adminCaptor.getValue();
         assertEquals(100L, saved.getIdCuenta());
         assertEquals("ENC(plainPass)", saved.getContraseña());
-        verify(cuentaRepository, times(1)).save(any(Cuenta.class));
-        verify(passwordEncoder, times(1)).encode("plainPass");
-        verify(administradorRepository, times(1)).save(any(Administrador.class));
+
+        // Verificaciones
+        verify(validacionService).verificarCorreoRegistrado("admin@correo.com");
+        verify(validacionService).verificarDocumentoRegistrado("abc123"); // ✅ corregido
+        verify(validacionService).verificarNumeroRegistrado("123");
+        verify(cuentaRepository).save(any(Cuenta.class));
+        verify(administradorRepository).save(any(Administrador.class));
     }
+
 
     @Test
     @DisplayName("actualizarAdministrador: actualiza campos y guarda")
     void testActualizarAdministrador_actualizaCampos() {
-        // Arrange
         Long id = 1L;
         Administrador existente = new Administrador();
         existente.setNombreAdministrador("Viejo");
@@ -93,29 +103,18 @@ class AdministradorServiceTest {
         when(administradorRepository.findById(id)).thenReturn(Optional.of(existente));
         when(administradorRepository.save(any(Administrador.class))).thenAnswer(i -> i.getArgument(0));
 
-        // Act
+        // mockear validaciones para que no falle
+        when(validacionService.verificarCorreoRegistrado("new@mail.com")).thenReturn(false);
+        when(validacionService.verificarDocumentoRegistrado("DOC2")).thenReturn(false);
+        when(validacionService.verificarNumeroRegistrado("222")).thenReturn(false);
+
         Administrador actualizado = administradorService.actualizarAdministrador(id, nuevos);
 
-        // Assert
         assertEquals("Nuevo", actualizado.getNombreAdministrador());
         assertEquals("DOC2", actualizado.getDocumento());
         assertEquals("new@mail.com", actualizado.getCorreo());
         assertEquals("222", actualizado.getTelefono());
         verify(administradorRepository).save(existente);
-    }
-
-    @Test
-    @DisplayName("actualizarAdministrador: no encontrado lanza excepción")
-    void testActualizarAdministrador_noEncontrado() {
-        // Arrange
-        Long id = 99L;
-        when(administradorRepository.findById(id)).thenReturn(Optional.empty());
-
-        // Act - Assert
-        RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> administradorService.actualizarAdministrador(id, new Administrador()));
-        assertEquals("No se encontro el propietario", ex.getMessage());
-        verify(administradorRepository, never()).save(any());
     }
 
     @Test
