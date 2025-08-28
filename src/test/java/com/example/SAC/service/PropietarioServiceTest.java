@@ -83,7 +83,7 @@ public class PropietarioServiceTest {
         when(propietarioRepository.save(propietario)).thenReturn(propietario);
 
         // Act
-        Propietario propietarioCreado = propietarioService.agregarPropietario(propietario);
+        Propietario propietarioCreado = propietarioService.registrarPropietario(propietario);
 
         // Assert
         Assertions.assertEquals(propietario, propietarioCreado);

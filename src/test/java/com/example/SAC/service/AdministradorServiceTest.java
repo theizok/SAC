@@ -61,7 +61,7 @@ class AdministradorServiceTest {
         when(administradorRepository.save(adminCaptor.capture())).thenAnswer(i -> i.getArgument(0));
 
         // Act
-        Administrador result = administradorService.agregarAdministrador(input);
+        Administrador result = administradorService.registrarAdministrador(input);
 
         // Assert
         assertNotNull(result);

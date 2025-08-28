@@ -58,7 +58,7 @@ public class ResidenteServiceTest {
             when(residenteRepository.save(residente)).thenReturn(residente);
 
             // Act
-            Residente residenteGuardado = residenteService.crearResidente(residente);
+            Residente residenteGuardado = residenteService.registrarResidente(residente);
 
             // Assert
             assertEquals(residente, residenteGuardado);
