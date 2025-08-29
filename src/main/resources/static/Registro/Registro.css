@@ -216,3 +216,46 @@ body {
         padding: 20px;
     }
 }
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background 180ms ease, color 180ms ease, transform 120ms ease;
+    margin-bottom: 10px;
+}
+
+.back-link i {
+    font-size: 0.95rem;
+    line-height: 1;
+}
+
+.login-card .back-link,
+.register-card .back-link {
+    margin-left: 0;
+}
+
+/* Hover / focus */
+.back-link:hover,
+.back-link:focus {
+    background: rgba(0,0,0,0.04);
+    color: var(--secondary-color);
+    transform: translateX(-2px);
+    outline: none;
+    text-decoration: none;
+}
+
+.back-text {
+    display: inline-block;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 420px) {
+    .back-text { display: none; }
+    .back-link { padding: 6px; }
+}
