@@ -1,5 +1,6 @@
 package com.example.SAC.service;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import com.example.SAC.entity.Cuenta;
 import com.example.SAC.entity.Residente;
 import com.example.SAC.repository.CuentaRepository;
@@ -75,29 +76,41 @@ public class ResidenteService {
         Residente residente = residenteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("No se encontró el residente con id: " + id));
 
-        // Validar correo
-        if (!residente.getCorreo().equals(nuevosDatos.getCorreo())
-                && validacionService.verificarCorreoRegistrado(nuevosDatos.getCorreo())) {
-            throw new RuntimeException("El correo ya está registrado");
+        // Normalizar entradas para comparación segura
+        String nuevoCorreo = nuevosDatos.getCorreo() != null ? nuevosDatos.getCorreo().trim().toLowerCase() : null;
+        String nuevoDocumento = nuevosDatos.getDocumento() != null ? nuevosDatos.getDocumento().trim().toLowerCase() : null;
+        String nuevoTelefono = nuevosDatos.getTelefono() != null ? nuevosDatos.getTelefono().trim() : null;
+
+        // 1) correo
+        if (nuevoCorreo != null && !nuevoCorreo.equals(residente.getCorreo() != null ? residente.getCorreo().trim().toLowerCase() : null)) {
+            Optional<Residente> porCorreo = residenteRepository.findByCorreo(nuevoCorreo);
+            if (porCorreo.isPresent() && !porCorreo.get().getIdresidente().equals(id)) {
+                throw new DataIntegrityViolationException("correo ya registrado");
+            }
         }
 
-        // Validar documento
-        if (!residente.getDocumento().equals(nuevosDatos.getDocumento())
-                && validacionService.verificarDocumentoRegistrado(nuevosDatos.getDocumento())) {
-            throw new RuntimeException("El documento ya está registrado");
+        // 2) documento
+        if (nuevoDocumento != null && !nuevoDocumento.equals(residente.getDocumento() != null ? residente.getDocumento().trim().toLowerCase() : null)) {
+            Optional<Residente> porDocumento = residenteRepository.findByDocumento(nuevoDocumento);
+            if (porDocumento.isPresent() && !porDocumento.get().getIdresidente().equals(id)) {
+                throw new DataIntegrityViolationException("documento ya registrado");
+            }
         }
 
-        // Validar teléfono
-        if (!residente.getTelefono().equals(nuevosDatos.getTelefono())
-                && validacionService.verificarNumeroRegistrado(nuevosDatos.getTelefono())) {
-            throw new RuntimeException("El número ya está registrado");
+        // 3) telefono
+        if (nuevoTelefono != null && !nuevoTelefono.equals(residente.getTelefono() != null ? residente.getTelefono().trim() : null)) {
+            Optional<Residente> porTelefono = residenteRepository.findByTelefono(nuevoTelefono);
+            if (porTelefono.isPresent() && !porTelefono.get().getIdresidente().equals(id)) {
+                throw new DataIntegrityViolationException("telefono ya registrado");
+            }
         }
 
-        // Actualizar datos
-        residente.setNombre(nuevosDatos.getNombre());
-        residente.setDocumento(nuevosDatos.getDocumento());
-        residente.setCorreo(nuevosDatos.getCorreo());
-        residente.setTelefono(nuevosDatos.getTelefono());
+        // Aplicar cambios (conservando otros campos)
+        if (nuevosDatos.getNombre() != null) residente.setNombre(nuevosDatos.getNombre());
+        if (nuevosDatos.getCorreo() != null) residente.setCorreo(nuevosDatos.getCorreo());
+        if (nuevosDatos.getDocumento() != null) residente.setDocumento(nuevosDatos.getDocumento());
+        if (nuevosDatos.getTelefono() != null) residente.setTelefono(nuevosDatos.getTelefono());
+        if (nuevosDatos.getEdad() != 0) residente.setEdad(nuevosDatos.getEdad());
 
         return residenteRepository.save(residente);
     }

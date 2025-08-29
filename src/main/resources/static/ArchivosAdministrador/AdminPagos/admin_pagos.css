@@ -6,10 +6,11 @@
     --text-color: #333;
     --text-light: #777;
     --white: #fff;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --transition: all 0.3s ease;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+    --transition: all 0.22s ease;
 }
 
+/* Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -26,7 +27,7 @@ body {
     flex-direction: column;
 }
 
-/* Header Styles */
+/* Header */
 header {
     background-color: var(--primary-color);
     color: var(--white);
@@ -46,17 +47,12 @@ header {
     padding: 0 20px;
 }
 
-.logo-container {
-    display: flex;
-    align-items: center;
-}
-
 .logo {
     height: 70px;
     width: auto;
 }
 
-/* Navigation */
+/* Nav */
 .menu-toggle {
     display: none;
 }
@@ -96,28 +92,12 @@ header {
     font-size: 0.9rem;
 }
 
-.nav-list a:hover, 
+.nav-list a:hover,
 .nav-list a.active {
     color: #4fc3f7;
 }
 
-.nav-list a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: #4fc3f7;
-    transition: var(--transition);
-}
-
-.nav-list a:hover::after,
-.nav-list a.active::after {
-    width: 100%;
-}
-
-/* Main Content */
+/* Main */
 main {
     flex: 1;
     padding: 2rem 1rem;
@@ -157,7 +137,7 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     flex-wrap: wrap;
     gap: 1rem;
 }
@@ -166,14 +146,6 @@ main {
     display: flex;
     align-items: center;
     gap: 10px;
-}
-
-.filter-group label {
-    font-weight: 500;
-    color: var(--text-color);
-    display: flex;
-    align-items: center;
-    gap: 5px;
 }
 
 .form-select {
@@ -188,34 +160,98 @@ main {
 .form-select:focus {
     outline: none;
     border-color: var(--secondary-color);
-    box-shadow: 0 0 0 2px rgba(0, 128, 128, 0.2);
+    box-shadow: 0 0 0 2px rgba(0, 128, 128, 0.12);
 }
 
-/* Buttons */
+/* Admin cash form */
+.admin-cash-form {
+    margin: 1rem 0 1.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e7eef0;
+    background: linear-gradient(180deg, #fff, #fbfdfe);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.admin-cash-form h3 {
+    font-size: 1.05rem;
+    color: var(--primary-color);
+    margin-bottom: 0.6rem;
+}
+
+.cash-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 160px;
+}
+
+.input-group.small {
+    min-width: 120px;
+}
+
+.input-group.flex {
+    flex: 1;
+    min-width: 200px;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.admin-cash-form input,
+.admin-cash-form select {
+    padding: 0.55rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
 .btn {
-    padding: 0.6rem 1.2rem;
-    border-radius: 5px;
-    font-weight: 500;
-    font-size: 0.9rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 6px;
+    font-weight: 600;
     cursor: pointer;
-    transition: var(--transition);
+    border: none;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    border: none;
+    transition: var(--transition);
+    background: #eee;
+    color: var(--text-color);
+}
+
+.action-btn {
+    background: var(--secondary-color);
+    color: #fff;
+}
+
+.action-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 .export-btn {
-    background-color: var(--secondary-color);
+    background: var(--secondary-color);
     color: var(--white);
 }
 
-.export-btn:hover {
-    background-color: var(--accent-color);
-    transform: translateY(-2px);
+.admin-msg {
+    margin-top: 6px;
+    font-size: 0.95rem;
+    color: #b00;
 }
 
-/* Table Styles */
+/* Table styles */
 .table-responsive {
     overflow-x: auto;
     margin-bottom: 2rem;
@@ -224,7 +260,7 @@ main {
 .data-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
 .data-table th {
@@ -237,10 +273,6 @@ main {
     top: 0;
 }
 
-.data-table th i {
-    margin-right: 5px;
-}
-
 .data-table td {
     padding: 0.8rem 1rem;
     border-bottom: 1px solid #eee;
@@ -248,14 +280,14 @@ main {
 }
 
 .data-table tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #fbfbfb;
 }
 
 .data-table tr:hover {
-    background-color: #f0f0f0;
+    background-color: #f6f9fa;
 }
 
-/* Status Badges */
+/* Status badges */
 .estado-pago {
     padding: 0.3rem 0.8rem;
     border-radius: 20px;
@@ -296,28 +328,20 @@ footer {
 .footer-bottom {
     text-align: center;
     padding: 1rem 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
     font-size: 0.9rem;
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 992px) {
+    .cash-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
     .filters-container {
         flex-direction: column;
         align-items: flex-start;
-    }
-    
-    .filter-group {
-        width: 100%;
-    }
-    
-    .form-select {
-        flex-grow: 1;
-    }
-    
-    .export-btn {
-        width: 100%;
-        justify-content: center;
     }
 }
 
@@ -325,7 +349,7 @@ footer {
     .menu-button {
         display: block;
     }
-    
+
     .main-nav {
         position: fixed;
         top: 90px;
@@ -338,37 +362,17 @@ footer {
         transition: var(--transition);
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     }
-    
+
     .menu-toggle:checked ~ .main-nav {
         left: 0;
     }
-    
+
     .nav-list {
         flex-direction: column;
         gap: 1.5rem;
     }
-    
+
     .container {
         padding: 1.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .logo {
-        height: 60px;
-    }
-    
-    .page-header h1 {
-        font-size: 1.5rem;
-    }
-    
-    .data-table th, 
-    .data-table td {
-        padding: 0.6rem;
-        font-size: 0.8rem;
-    }
-    
-    .data-table th i {
-        display: none;
     }
 }

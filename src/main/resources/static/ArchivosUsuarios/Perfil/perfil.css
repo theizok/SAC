@@ -182,6 +182,26 @@ footer {
 }
 .footer-container { max-width: 1200px; margin: 0 auto; }
 
+.field-error {
+    color: #b00;
+    font-size: 0.9rem;
+    margin-top: 6px;
+    display: block;
+    line-height: 1.2;
+}
+
+.input-error {
+    border-color: #e05a4f !important;
+    box-shadow: 0 0 0 3px rgba(224,90,79,0.08);
+    transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+#responseMessage {
+    margin-top: 8px;
+    color: #b00;
+    font-size: 0.95rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .menu-button { display: block; }

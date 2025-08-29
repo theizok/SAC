@@ -6,6 +6,50 @@ document.addEventListener("DOMContentLoaded", () => {
         return u.id ?? u.idCuenta ?? u.idUsuario ?? u.idCuentaUsuario ?? u.idPropietario ?? u.idresidente ?? u.idResidente ?? null;
     }
 
+    // ================= Helpers para errores inline =================
+    function showFieldError(fieldId, message, ttl = 6000) {
+        const field = document.getElementById(fieldId);
+        if (!field) return;
+
+        clearFieldError(fieldId);
+
+        const span = document.createElement('span');
+        span.id = `${fieldId}-error`;
+        span.className = 'field-error';
+        span.setAttribute('role', 'alert');
+        span.textContent = message;
+
+        // colocar después del input, intentando respetar wrappers
+        const wrapper = field.closest('.input-group') || field.parentNode || document.body;
+        wrapper.appendChild(span);
+
+        field.classList.add('input-error');
+        try { field.focus(); } catch (e) {}
+
+        const timer = setTimeout(() => clearFieldError(fieldId), ttl);
+        field.dataset._errorTimeout = String(timer);
+    }
+
+    function clearFieldError(fieldId) {
+        const field = document.getElementById(fieldId);
+        if (!field) return;
+        field.classList.remove('input-error');
+        const existing = document.getElementById(`${fieldId}-error`);
+        if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+        const t = field.dataset._errorTimeout;
+        if (t) {
+            try { clearTimeout(Number(t)); } catch (e) {}
+            delete field.dataset._errorTimeout;
+        }
+    }
+
+    // limpiar al escribir en los campos del modal
+    ['editar-nombre','editar-documento','editar-correo','editar-celular'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => clearFieldError(id));
+    });
+
+    // ================= Obtener y renderizar usuarios =================
     async function obtenerUsuarios() {
         try {
             const res = await fetch("/api/administrador/obtenerUsuarios", { credentials: 'include' });
@@ -44,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Abrir modal: siempre pedir al backend por ID (sin cache)
+    // ================= Abrir modal y precargar datos =================
     document.getElementById("users-table")?.addEventListener("click", async (e) => {
         if (!e.target) return;
         if (e.target.closest(".btn-editar")) {
@@ -69,7 +113,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     usuario = await r.json();
                 }
 
-                // Llenar campos (rol solo lectura)
                 document.getElementById("editar-nombre").value = usuario.nombre || "";
                 document.getElementById("editar-documento").value = usuario.documento || "";
                 document.getElementById("editar-correo").value = usuario.correo || "";
@@ -77,6 +120,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 const telefonoVal = usuario.telefonoPropietario ?? usuario.telefono ?? usuario.telefonoResidente ?? "";
                 document.getElementById("editar-celular").value = telefonoVal;
                 document.getElementById("mostrar-rol").textContent = usuario.tipoUsuario || currentEditTipo || "";
+
+                clearFieldError('editar-nombre');
+                clearFieldError('editar-documento');
+                clearFieldError('editar-correo');
+                clearFieldError('editar-celular');
 
                 document.getElementById("modal-editar").style.display = "block";
             } catch (err) {
@@ -86,13 +134,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Guardar cambios (envíar payload acorde al tipo)
+    // ================= Guardar cambios  =================
     document.getElementById("form-editar-usuario")?.addEventListener("submit", async (e) => {
         e.preventDefault();
         if (!currentEditId) {
             alert("Id del usuario no definido.");
             return;
         }
+
+        clearFieldError('editar-correo');
+        clearFieldError('editar-documento');
+        clearFieldError('editar-celular');
 
         const nombreVal = document.getElementById("editar-nombre").value || "";
         const documentoVal = document.getElementById("editar-documento").value || "";
@@ -132,23 +184,41 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Usuario actualizado");
                 document.getElementById("modal-editar").style.display = "none";
                 await obtenerUsuarios();
-            } else {
-                const errBody = await res.json().catch(() => ({}));
-                console.error("Error update:", errBody);
-                alert("Error: " + (errBody.message || "No se pudo actualizar"));
+                return;
             }
+
+            let errBody = {};
+            try { errBody = await res.json(); } catch (_) {  }
+
+            const serverMsg = (errBody && (errBody.message || errBody.error)) ? (errBody.message || errBody.error) : `Error al actualizar (código ${res.status})`;
+            console.error("Error update:", serverMsg);
+
+            const lower = serverMsg.toLowerCase();
+            // Mensaje estandar que queremos mostrar inline (igual para documento/telefono)
+            const standardMsg = "Esta informacion ya está registrada. Intenta con uno nuevo.";
+
+            if (lower.includes("correo") || lower.includes("email")) {
+                showFieldError('editar-correo', standardMsg);
+            } else if (lower.includes("documento")) {
+                showFieldError('editar-documento', standardMsg);
+            } else if (lower.includes("tel") || lower.includes("telefono") || lower.includes("telefono_propietario")) {
+                showFieldError('editar-celular', standardMsg);
+            } else {
+                // fallback: mostrar alert con el mensaje del backend
+                alert(serverMsg);
+            }
+
         } catch (err) {
             console.error(err);
             alert("Error al actualizar: " + (err.message || err));
         }
     });
 
-    // Cerrar modal (botón X)
+    // ================= Cerrar modal  =================
     document.querySelector(".cerrar")?.addEventListener("click", () => {
         document.getElementById("modal-editar").style.display = "none";
     });
 
-    // Cerrar modal al hacer click fuera del contenido
     window.addEventListener("click", (ev) => {
         const modal = document.getElementById("modal-editar");
         if (modal && ev.target === modal) {
@@ -156,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Eliminar usuario (siempre por id en backend)
+    // ================= Eliminar usuario =================
     document.getElementById("users-table")?.addEventListener("click", async (e) => {
         if (e.target.closest(".btn-eliminar")) {
             const tr = e.target.closest("tr");
@@ -193,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Redirigir a agregar usuario
+    // ================= Redirigir a agregar usuario =================
     const btnAgregar = document.getElementById("btn-agregar-usuario");
     if (btnAgregar) {
         btnAgregar.addEventListener("click", () => {
@@ -201,6 +271,5 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Inicializar
     obtenerUsuarios();
 });

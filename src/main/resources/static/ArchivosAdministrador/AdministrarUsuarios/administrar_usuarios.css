@@ -327,6 +327,21 @@ footer {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.field-error {
+    color: #b00;
+    font-size: 0.9rem;
+    margin-top: 6px;
+    display: block;
+    line-height: 1.2;
+}
+
+.input-error {
+    border-color: #e05a4f !important;
+    box-shadow: 0 0 0 3px rgba(224,90,79,0.08);
+    transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+
 /* Responsive Design */
 @media (max-width: 992px) {
     .nav-list {

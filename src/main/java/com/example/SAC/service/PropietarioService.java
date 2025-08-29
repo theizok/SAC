@@ -1,5 +1,6 @@
 package com.example.SAC.service;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import com.example.SAC.entity.Cuenta;
 import com.example.SAC.entity.Propietario;
 import com.example.SAC.repository.CuentaRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -78,36 +80,43 @@ public class PropietarioService {
         Propietario propietario = propietarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("No se encontró el propietario con id: " + id));
 
-        try {
-            // Validar correo
-            if (!propietario.getCorreo().equals(nuevosDatos.getCorreo())
-                    && validacionService.verificarCorreoRegistrado(nuevosDatos.getCorreo())) {
-                throw new RuntimeException("El correo ya está registrado");
+        // Normalizar para comparar (trim/lowerCase donde aplique)
+        String nuevoCorreo = nuevosDatos.getCorreo() != null ? nuevosDatos.getCorreo().trim().toLowerCase() : null;
+        String nuevoDocumento = nuevosDatos.getDocumento() != null ? nuevosDatos.getDocumento().trim().toLowerCase() : null;
+        String nuevoTelefono = nuevosDatos.getTelefonoPropietario() != null ? nuevosDatos.getTelefonoPropietario().trim() : null;
+
+        // 1) correo
+        if (nuevoCorreo != null && !nuevoCorreo.equals(propietario.getCorreo() != null ? propietario.getCorreo().trim().toLowerCase() : null)) {
+            Optional<Propietario> porCorreo = propietarioRepository.findByCorreo(nuevoCorreo);
+            if (porCorreo.isPresent() && !Objects.equals(porCorreo.get().getIdPropietario(), id)) {
+                throw new DataIntegrityViolationException("correo ya registrado");
             }
-
-            // Validar documento
-            if (!propietario.getDocumento().equals(nuevosDatos.getDocumento())
-                    && validacionService.verificarDocumentoRegistrado(nuevosDatos.getDocumento())) {
-                throw new RuntimeException("El documento ya está registrado");
-            }
-
-            // Validar teléfono
-            if (!propietario.getTelefonoPropietario().equals(nuevosDatos.getTelefonoPropietario())
-                    && validacionService.verificarNumeroRegistrado(nuevosDatos.getTelefonoPropietario())) {
-                throw new RuntimeException("El número ya está registrado");
-            }
-
-            // Actualizar datos
-            propietario.setNombre(nuevosDatos.getNombre());
-            propietario.setDocumento(nuevosDatos.getDocumento());
-            propietario.setCorreo(nuevosDatos.getCorreo());
-            propietario.setTelefonoPropietario(nuevosDatos.getTelefonoPropietario());
-
-            return propietarioRepository.save(propietario);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar el propietario: " + e.getMessage(), e);
         }
+
+        // 2) documento
+        if (nuevoDocumento != null && !nuevoDocumento.equals(propietario.getDocumento() != null ? propietario.getDocumento().trim().toLowerCase() : null)) {
+            Optional<Propietario> porDocumento = propietarioRepository.findByDocumento(nuevoDocumento);
+            if (porDocumento.isPresent() && !Objects.equals(porDocumento.get().getIdPropietario(), id)) {
+                throw new DataIntegrityViolationException("documento ya registrado");
+            }
+        }
+
+        // 3) telefono
+        if (nuevoTelefono != null && !nuevoTelefono.equals(propietario.getTelefonoPropietario() != null ? propietario.getTelefonoPropietario().trim() : null)) {
+            Optional<Propietario> porTelefono = propietarioRepository.findByTelefonoPropietario(nuevoTelefono);
+            if (porTelefono.isPresent() && !Objects.equals(porTelefono.get().getIdPropietario(), id)) {
+                throw new DataIntegrityViolationException("telefono ya registrado");
+            }
+        }
+
+        // Aplicar cambios
+        if (nuevosDatos.getNombre() != null) propietario.setNombre(nuevosDatos.getNombre());
+        if (nuevosDatos.getCorreo() != null) propietario.setCorreo(nuevosDatos.getCorreo());
+        if (nuevosDatos.getDocumento() != null) propietario.setDocumento(nuevosDatos.getDocumento());
+        if (nuevosDatos.getTelefonoPropietario() != null) propietario.setTelefonoPropietario(nuevosDatos.getTelefonoPropietario());
+        // otros campos si aplica...
+
+        return propietarioRepository.save(propietario);
     }
 
     //Cambiar contraseña
@@ -129,7 +138,7 @@ public class PropietarioService {
         propietario.setContraseña(passwordEncoder.encode(passwordNueva));
         propietarioRepository.save(propietario);
 
-        return true; // Indica que se cambió la contraseña con éxito
+        return true;
     }
 
     //Obtener propietario por id
