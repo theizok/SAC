@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const documento = document.getElementById('documento').value.trim();
         const telefono = document.getElementById('telefono').value.trim();
         const correo = document.getElementById('email').value.trim();
-        const contrasena = document.getElementById('password').value; // variable en JS
+        const contrasena = document.getElementById('password').value;
         const rol = document.getElementById('rol').value;
 
         // Crear payload base

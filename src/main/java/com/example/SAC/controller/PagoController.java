@@ -5,9 +5,12 @@ import com.example.SAC.dto.PagoReservaDTO;
 import com.example.SAC.entity.Pago;
 import com.example.SAC.entity.Reserva;
 import com.example.SAC.entity.Cuenta;
+import com.example.SAC.entity.Propietario;
+import com.example.SAC.entity.Residente;
 import com.example.SAC.repository.PagoRepository;
 import com.example.SAC.repository.AreaComunRepository;
 import com.example.SAC.repository.ResidenteRepository;
+import com.example.SAC.repository.PropietarioRepository;
 import com.example.SAC.service.PagoService;
 import com.example.SAC.service.ReservaService;
 import com.mercadopago.MercadoPagoConfig;
@@ -56,6 +59,8 @@ public class PagoController {
     private AreaComunRepository areaComunRepository;
     @Autowired
     private ResidenteRepository residenteRepository;
+    @Autowired
+    private PropietarioRepository propietarioRepository;
 
     // --------- Helpers: mapeo Pago -> PagoDTO ----------
     private PagoDTO toDTO(Pago p) {
@@ -76,6 +81,42 @@ public class PagoController {
         } catch (Exception e) {
             logger.debug("No se pudo extraer idCuenta desde Pago.cuenta: {}", e.getMessage());
         }
+
+        // Enriquecer con nombre/documento del usuario (si hay idCuenta)
+        try {
+            Long idCuenta = dto.getIdCuenta();
+            if (idCuenta != null) {
+                // Buscar en Residente
+                try {
+                    List<Residente> residentes = residenteRepository.findAll();
+                    for (Residente r : residentes) {
+                        if (r != null && r.getIdcuenta() == idCuenta.longValue()) {
+                            dto.setUsuarioNombre(r.getNombre());
+                            dto.setUsuarioDocumento(r.getDocumento());
+                            return dto;
+                        }
+                    }
+                } catch (Exception ex) {
+                    logger.debug("Error buscando residente por idCuenta: {}", ex.getMessage());
+                }
+                // Buscar en Propietario
+                try {
+                    List<Propietario> propis = propietarioRepository.findAll();
+                    for (Propietario pr : propis) {
+                        if (pr != null && pr.getIdCuenta() == idCuenta.longValue()) {
+                            dto.setUsuarioNombre(pr.getNombre());
+                            dto.setUsuarioDocumento(pr.getDocumento());
+                            return dto;
+                        }
+                    }
+                } catch (Exception ex) {
+                    logger.debug("Error buscando propietario por idCuenta: {}", ex.getMessage());
+                }
+            }
+        } catch (Exception e) {
+            logger.debug("No se pudo enriquecer DTO con info usuario: {}", e.getMessage());
+        }
+
         return dto;
     }
 
@@ -605,6 +646,107 @@ public class PagoController {
 
         } catch (Exception e) {
             logger.error("Error en obtenerTodosPagos: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Error interno"));
+        }
+    }
+
+    @PostMapping("/admin/crear-efectivo")
+    public ResponseEntity<?> crearPagoEfectivo(@RequestBody Map<String, Object> body) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null || auth.getPrincipal() == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Usuario no autenticado"));
+            }
+            boolean isAdmin = auth.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .anyMatch(a -> a.equalsIgnoreCase("ADMIN") || a.equalsIgnoreCase("ADMINISTRADOR"));
+            if (!isAdmin) return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Acceso denegado"));
+
+            // parsear inputs
+            Object idCuentaObj = body.get("idCuenta");
+            Long idCuenta = null;
+            if (idCuentaObj instanceof Number) idCuenta = ((Number) idCuentaObj).longValue();
+            else if (idCuentaObj instanceof String) {
+                try { idCuenta = Long.parseLong((String) idCuentaObj); } catch (NumberFormatException ignored) {}
+            }
+
+            Object valorObj = body.get("valor");
+            Float valor = null;
+            if (valorObj instanceof Number) valor = ((Number) valorObj).floatValue();
+            else if (valorObj instanceof String) {
+                try { valor = Float.parseFloat(((String) valorObj).replaceAll("[^0-9.,-]", "").replace(",", ".")); } catch (Exception ignored) {}
+            }
+
+            String descripcion = body.getOrDefault("descripcion", "").toString();
+            String categoria = body.getOrDefault("categoria", "Administración").toString();
+            String fechaStr = body.getOrDefault("fecha", "").toString();
+
+            if (idCuenta == null || idCuenta <= 0) {
+                return ResponseEntity.badRequest().body(Map.of("message", "idCuenta inválido"));
+            }
+            if (valor == null || valor <= 0.0f) {
+                return ResponseEntity.badRequest().body(Map.of("message", "valor inválido"));
+            }
+
+            Pago pago = new Pago();
+            pago.setValor(valor);
+            pago.setDescripcion(descripcion);
+            pago.setCategoria(categoria);
+            pago.setEstadoPago("APROBADO"); // ya fue pagado en efectivo
+            if (fechaStr != null && !fechaStr.isEmpty()) {
+                try {
+                    pago.setFecha(LocalDateTime.parse(fechaStr));
+                } catch (DateTimeParseException e) {
+                    pago.setFecha(LocalDateTime.now());
+                }
+            } else {
+                pago.setFecha(LocalDateTime.now());
+            }
+
+            Cuenta cuenta = new Cuenta();
+            cuenta.setIdCuenta(idCuenta);
+            pago.setCuenta(cuenta);
+
+            Pago guardado = pagoRepository.save(pago);
+            return ResponseEntity.ok(toDTO(guardado));
+        } catch (Exception e) {
+            logger.error("Error creando pago efectivo (admin): {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Error interno"));
+        }
+    }
+
+    @GetMapping("/admin/resolveCuenta")
+    public ResponseEntity<?> resolveCuentaByDocumento(@RequestParam String documento) {
+        try {
+            if (documento == null || documento.isBlank()) return ResponseEntity.badRequest().body(Map.of("message", "documento requerido"));
+
+            // buscar en residentes
+            try {
+                List<Residente> residentes = residenteRepository.findAll();
+                for (Residente r : residentes) {
+                    if (r != null && documento.equalsIgnoreCase(String.valueOf(r.getDocumento()))) {
+                        return ResponseEntity.ok(Map.of("idCuenta", r.getIdcuenta(), "nombre", r.getNombre(), "tipo", "RESIDENTE"));
+                    }
+                }
+            } catch (Exception ex) {
+                logger.debug("Error buscando residente por documento: {}", ex.getMessage());
+            }
+
+            // buscar en propietarios
+            try {
+                List<Propietario> propis = propietarioRepository.findAll();
+                for (Propietario p : propis) {
+                    if (p != null && documento.equalsIgnoreCase(String.valueOf(p.getDocumento()))) {
+                        return ResponseEntity.ok(Map.of("idCuenta", p.getIdCuenta(), "nombre", p.getNombre(), "tipo", "PROPIETARIO"));
+                    }
+                }
+            } catch (Exception ex) {
+                logger.debug("Error buscando propietario por documento: {}", ex.getMessage());
+            }
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Cuenta no encontrada"));
+        } catch (Exception e) {
+            logger.error("Error resolviendo cuenta por documento: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Error interno"));
         }
     }

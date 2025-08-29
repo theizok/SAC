@@ -127,10 +127,6 @@ body {
     font-size: 0.85rem;
 }
 
-/* -------------------------------------------------------------------
-   Mensajes estilizados (error / success / info) - agregado
-   ------------------------------------------------------------------- */
-
 .response-message {
     display: inline-flex;
     align-items: center;
@@ -194,7 +190,6 @@ body {
     line-height: 1;
 }
 
-/* Animación de "shake" para formularios al error */
 @keyframes shake {
     0% { transform: translateX(0) }
     20% { transform: translateX(-6px) }
@@ -207,15 +202,56 @@ body {
     animation: shake 420ms ease;
 }
 
-/* Pequeña transición en botón cuando hay error */
 .login-btn.error-glow {
     box-shadow: 0 6px 18px rgba(139,0,0,0.12);
 }
 
-/* Responsive: asegurar que el mensaje se vea bien */
 @media (max-width: 480px) {
     .login-card {
         padding: 20px;
     }
     .response-message { font-size: 0.9rem; padding: 10px 12px; }
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background 180ms ease, color 180ms ease, transform 120ms ease;
+    margin-bottom: 10px;
+}
+
+.back-link i {
+    font-size: 0.95rem;
+    line-height: 1;
+}
+
+.login-card .back-link,
+.register-card .back-link {
+    margin-left: 0;
+}
+
+/* Hover / focus */
+.back-link:hover,
+.back-link:focus {
+    background: rgba(0,0,0,0.04);
+    color: var(--secondary-color);
+    transform: translateX(-2px);
+    outline: none;
+    text-decoration: none;
+}
+
+.back-text {
+    display: inline-block;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 420px) {
+    .back-text { display: none; }
+    .back-link { padding: 6px; }
 }

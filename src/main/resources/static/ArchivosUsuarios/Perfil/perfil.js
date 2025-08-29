@@ -18,6 +18,58 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // —————————————————————————————————————
+    // Helpers para errores inline
+    // —————————————————————————————————————
+    function showFieldError(fieldId, message, ttl = 6000) {
+        const field = document.getElementById(fieldId);
+        if (!field) return;
+
+        clearFieldError(fieldId);
+
+        // crear span para error debajo del campo
+        const span = document.createElement('span');
+        span.id = `${fieldId}-error`;
+        span.className = 'field-error';
+        span.setAttribute('role', 'alert');
+        span.textContent = message;
+
+        // intentar colocar después del input (si está dentro de label o wrapper)
+        if (field.parentNode) {
+            const wrapper = field.closest('.input-group') || field.parentNode;
+            wrapper.appendChild(span);
+        } else {
+            field.after(span);
+        }
+
+        field.classList.add('input-error');
+        try { field.focus(); } catch (e) { /* no-op */ }
+
+        const timer = setTimeout(() => clearFieldError(fieldId), ttl);
+        field.dataset._errorTimeout = String(timer);
+    }
+
+    function clearFieldError(fieldId) {
+        const field = document.getElementById(fieldId);
+        if (!field) return;
+        field.classList.remove('input-error');
+        const existing = document.getElementById(`${fieldId}-error`);
+        if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+        const t = field.dataset._errorTimeout;
+        if (t) {
+            try { clearTimeout(Number(t)); } catch (e) {}
+            delete field.dataset._errorTimeout;
+        }
+    }
+
+    // limpiar errores al escribir
+    ['nombre','documento','correo','telefono'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', () => clearFieldError(id));
+        }
+    });
+
+    // —————————————————————————————————————
     // 2. Configuración de URLs según rol
     // —————————————————————————————————————
     const userType = sessionStorage.getItem("userType");
@@ -60,20 +112,27 @@ document.addEventListener("DOMContentLoaded", () => {
         .addEventListener("submit", async event => {
             event.preventDefault();
 
+            // limpiar errores previos
+            clearFieldError('correo');
+            clearFieldError('documento');
+            clearFieldError('telefono');
+            // limpiar mensaje global solo si teníamos uno
+            const msgElem = document.getElementById("responseMessage");
+            if (msgElem) msgElem.innerText = "";
+
             const nombre    = document.getElementById("nombre").value.trim();
             const documento = document.getElementById("documento").value.trim();
             const correo    = document.getElementById("correo").value.trim();
             const telefono  = document.getElementById("telefono").value.trim();
-            const msgElem   = document.getElementById("responseMessage");
 
             if (!nombre || !documento || !correo || !telefono) {
-                msgElem.innerText = "Todos los campos son obligatorios";
+                if (msgElem) msgElem.innerText = "Todos los campos son obligatorios";
                 return;
             }
 
             try {
                 // Obtener datos actuales para conservar campos no editables
-                const respGet = await fetch(`${API_URL}?id=${id}`, { method: "GET" });
+                const respGet = await fetch(`${API_URL}?id=${id}`, { method: "GET", credentials: 'include' });
                 if (!respGet.ok) throw new Error("Error al obtener datos");
                 const data = await respGet.json();
 
@@ -105,22 +164,53 @@ document.addEventListener("DOMContentLoaded", () => {
                     };
                 }
 
-                // Enviar PUT
                 const respPut = await fetch(`${UPDATE_URL}?id=${id}`, {
                     method:  "PUT",
                     headers: { "Content-Type": "application/json" },
-                    body:    JSON.stringify(payload)
+                    body:    JSON.stringify(payload),
+                    credentials: 'include'
                 });
 
+                // Manejo detallado de la respuesta
                 if (respPut.ok) {
-                    msgElem.innerText = "Usuario actualizado correctamente";
-                    setTimeout(() => location.reload(), 1000);
+                    if (msgElem) msgElem.innerText = "Usuario actualizado correctamente";
+                    clearFieldError('correo');
+                    clearFieldError('documento');
+                    clearFieldError('telefono');
+                    setTimeout(() => location.reload(), 900);
                 } else {
-                    msgElem.innerText = "Error al actualizar el usuario";
+                    let errorBody = null;
+                    try {
+                        errorBody = await respPut.json();
+                    } catch (e) {
+                        try {
+                            const txt = await respPut.text();
+                            if (txt) errorBody = { message: txt };
+                        } catch (_ignored) { /* no-op */ }
+                    }
+
+                    const serverMsg = (errorBody && (errorBody.message || errorBody.error)) ?
+                        (errorBody.message || errorBody.error) :
+                        `Error al actualizar el usuario (código ${respPut.status})`;
+
+                    const lower = serverMsg.toLowerCase();
+                    const standardMsg = "Esta informacion ya está registrada. Intenta con uno nuevo.";
+
+                    if (lower.includes("correo") || lower.includes("email")) {
+                        showFieldError('correo', standardMsg);
+                    } else if (lower.includes("documento")) {
+                        showFieldError('documento', standardMsg);
+                    } else if (lower.includes("tel") || lower.includes("telefono") || lower.includes("telefono_propietario")) {
+                        showFieldError('telefono', standardMsg);
+                    } else {
+                        // Mensaje general (no campo detectado)
+                        if (msgElem) msgElem.innerText = serverMsg;
+                    }
                 }
             } catch (error) {
                 console.error("Error en la actualización:", error);
-                msgElem.innerText = "Ocurrió un error al actualizar";
+                const msgElem2 = document.getElementById("responseMessage");
+                if (msgElem2) msgElem2.innerText = "Ocurrió un error al actualizar";
             }
         });
 
@@ -154,10 +244,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 const resp = await fetch(`${CHANGE_URL}?id=${id}`, {
                     method:  "PUT",
                     headers: { "Content-Type": "application/json" },
-                    body:    JSON.stringify(body)
+                    body:    JSON.stringify(body),
+                    credentials: 'include'
                 });
 
-                const result = await resp.json();
+                const result = await resp.json().catch(() => ({}));
                 if (resp.ok) {
                     alert("Contraseña actualizada correctamente");
                     sessionStorage.clear();
@@ -190,7 +281,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try {
                 const resp = await fetch(`${DELETE_URL}?id=${id}`, {
-                    method: "DELETE"
+                    method: "DELETE",
+                    credentials: 'include'
                 });
 
                 if (resp.ok) {
@@ -198,7 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     sessionStorage.clear();
                     window.location.href = "../../Login/Index.html";
                 } else {
-                    const err = await resp.json();
+                    const err = await resp.json().catch(() => ({}));
                     alert(err.message || "No se pudo eliminar la cuenta.");
                 }
             } catch (error) {
@@ -244,7 +336,8 @@ async function obtenerDatosPerfil(url, id) {
     try {
         const resp = await fetch(`${url}?id=${id}`, {
             method:  "GET",
-            headers: { "Content-Type": "application/json" }
+            headers: { "Content-Type": "application/json" },
+            credentials: 'include'
         });
         if (!resp.ok) throw new Error("Error al obtener datos");
         const data = await resp.json();
