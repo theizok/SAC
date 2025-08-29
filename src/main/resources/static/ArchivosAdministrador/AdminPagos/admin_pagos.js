@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let areasCache = [];
 
-    // normaliza: quita acentos y pasa a minúsculas
     function normalizeString(s) {
         if (!s && s !== 0) return '';
         return String(s)
@@ -52,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return cat.includes(filtro);
     }
 
-    // Cargar pagos (admin) -> /api/pago/obtenerTodos
     async function cargarPagos() {
         pagosBody.innerHTML = '';
         try {
@@ -71,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Ordenar por fecha descendente (intentar contener diferentes formatos)
             pagos.sort((a, b) => {
                 const fa = a.fecha ? new Date(a.fecha) : new Date(0);
                 const fb = b.fecha ? new Date(b.fecha) : new Date(0);
@@ -91,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     fechaFormateada = isNaN(d.getTime()) ? '-' : d.toLocaleString('es-CO');
                 }
 
-                // Mostrar nombre(documento) si el backend lo devuelve, si no mostrar idCuenta
                 let usuarioDisplay = 'N/A';
                 if (pago.usuarioNombre) {
                     const doc = pago.usuarioDocumento || pago.idCuenta || '';
@@ -182,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.warn('fetchAreas error:', err);
             areasCache = [];
-            populateAreaSelect(); // mostrará mensaje de no disponibles
+            populateAreaSelect();
         }
     }
 
@@ -203,16 +199,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
         areasCache.forEach(a => {
             const opt = document.createElement('option');
-            // soporta distintos nombres devueltos por el backend
             const idVal = a.id ?? a.idareacomun ?? a.idAreaComun ?? '';
             opt.value = idVal;
             opt.textContent = `${a.area ?? a.nombre ?? 'Área'}${a.descripcion ? ` — ${a.descripcion}` : ''}`;
-            // Guardamos el precio en dataset PRECIO para usarlo al seleccionar
             const precioVal = (a.precio !== undefined && a.precio !== null) ? a.precio : (a.tarifa ?? '');
             if (precioVal !== '') opt.dataset.precio = precioVal;
             selectArea.appendChild(opt);
         });
         selectArea.disabled = false;
+    }
+
+    // ---------- obtener tarifa administración ----------
+    async function fetchTarifaAdministracion() {
+        // intenta obtener /api/tarifa y buscar la tarifa de administración
+        try {
+            const res = await fetch('/api/tarifa', { credentials: 'include' });
+            if (!res.ok) {
+                console.warn('fetchTarifaAdministracion: respuesta no ok', res.status);
+                return null;
+            }
+            const json = await res.json();
+            // normalizar a arreglo
+            let arr = Array.isArray(json) ? json : (Array.isArray(json.data) ? json.data : (Array.isArray(json.tarifas) ? json.tarifas : []));
+            if (!arr.length && typeof json === 'object') {
+                const maybe = Object.values(json).find(v => Array.isArray(v));
+                if (maybe) arr = maybe;
+            }
+
+            if (!arr || !arr.length) return null;
+
+            // buscar por campos comunes
+            const tarifaAdmin = arr.find(t => String(t.categoria ?? t.nombre ?? t.tipo ?? '').toLowerCase().includes('administr')) ||
+                arr.find(t => String(t.id ?? '').toLowerCase().includes('administr'));
+
+            if (!tarifaAdmin) return null;
+
+            const valor = tarifaAdmin.valor ?? tarifaAdmin.precio ?? tarifaAdmin.monto ?? tarifaAdmin.tarifa ?? null;
+            if (valor == null) return null;
+            // devolver número (o string numérico)
+            const n = Number(valor);
+            return isNaN(n) ? null : n;
+        } catch (err) {
+            console.error('fetchTarifaAdministracion error:', err);
+            return null;
+        }
     }
 
     // ---------- Manejo del tipo de pago (mostrar/ocultar select de áreas) ----------
@@ -222,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         inputCategoria.value = '';
     }
 
-    selectTipoPago.addEventListener('change', () => {
+    selectTipoPago.addEventListener('change', async () => {
         const v = selectTipoPago.value;
         if (!v) {
             areaContainer.style.display = 'none';
@@ -236,39 +266,48 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (v === 'administracion') {
             areaContainer.style.display = 'none';
             inputCategoria.value = 'Administración';
+            try {
+                inputValor.value = ''; // limpiar mientras carga
+                const tarifa = await fetchTarifaAdministracion();
+                if (tarifa != null) {
+                    inputValor.value = Number(tarifa).toLocaleString('es-CO');
+                } else {
+                    // si no encontró nada, dejar el campo vacío para que el admin lo ingrese manualmente
+                    inputValor.value = '';
+                    // opcional: informar al admin
+                    msg.style.color = '#b00';
+                    msg.textContent = 'No se encontró tarifa de administración; ingrésala manualmente.';
+                    setTimeout(()=> { if (msg.textContent && msg.textContent.includes('tarifa')) msg.textContent = ''; }, 4000);
+                }
+            } catch (err) {
+                console.error('Error al cargar tarifa administración:', err);
+            }
         } else {
             areaContainer.style.display = 'none';
             inputCategoria.value = '';
         }
     });
 
-    // ---------- CAMBIO IMPORTANTE: al seleccionar un área, AUTOCOMPLETAR SIEMPRE el VALOR ----------
+    // ---------- Al seleccionar área, AUTOCOMPLETAR VALOR ----------
     selectArea.addEventListener('change', () => {
         const opt = selectArea.options[selectArea.selectedIndex];
         if (!opt) return;
-
-        // Leer precio desde dataset (puso populateAreaSelect)
         const precioStr = opt.dataset ? opt.dataset.precio : undefined;
-
         if (precioStr !== undefined && precioStr !== '') {
-            // Convertir a número y formatear
-            const precioNum = Number(precioStr);
+            const precioNum = Number(String(precioStr).replace(/,/g,'.'));
             if (!isNaN(precioNum)) {
                 inputValor.value = precioNum.toLocaleString('es-CO');
             }
         }
-        // Si la descripción está vacía, completarla con el nombre del área
         if (!inputDescripcion.value) {
             inputDescripcion.value = opt.textContent || '';
         }
     });
 
-    // ---------- Crear pago en efectivo (admin) ----------
     async function crearPagoEfectivo() {
         msg.textContent = '';
         msg.style.color = '#b00';
 
-        // requiere elegir tipo explícitamente
         const tipoPago = selectTipoPago.value;
         if (!tipoPago) {
             msg.textContent = 'Selecciona primero el tipo de pago (Administración o Área común).';
@@ -280,13 +319,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const idCuenta = Number(String(idCuentaRaw).replace(/\D/g, '')) || null;
         if (!idCuenta) { msg.textContent = 'IdCuenta inválido'; return; }
 
-        // Validar y parsear valor
         const valorRaw = (inputValor.value || '').trim();
         if (!valorRaw) { msg.textContent = 'Ingresa el valor'; return; }
         const valor = Number(String(valorRaw).replace(/\./g, '').replace(/,/g, '.'));
         if (!valor || isNaN(valor) || valor <= 0) { msg.textContent = 'Valor inválido'; return; }
 
-        // Construir payload teniendo en cuenta tipo de pago
         let categoria = inputCategoria.value || '';
         let descripcion = inputDescripcion.value || '';
 
@@ -330,16 +367,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
             msg.style.color = 'green';
             msg.textContent = 'Pago registrado correctamente.';
-            // refrescar la tabla
             await cargarPagos();
 
-            // limpiar formulario parcialmente
             inputDocumento.value = '';
             inputDescripcion.value = '';
             inputValor.value = '';
             inputNombreUsuario.value = '';
             inputIdCuenta.value = '';
-            // reset tipo y area UI to no selection
             resetTipoUI();
             selectArea.innerHTML = '';
         } catch (err) {
@@ -352,12 +386,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Listeners
     if (filtroTipo) filtroTipo.addEventListener('change', cargarPagos);
     if (btnResolver) btnResolver.addEventListener('click', resolverPorDocumento);
     if (btnCrear) btnCrear.addEventListener('click', crearPagoEfectivo);
 
-    // Inicial
     resetTipoUI();
     cargarPagos();
 });
