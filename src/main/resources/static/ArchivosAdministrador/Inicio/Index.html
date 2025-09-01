@@ -1,153 +1,128 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Inicio Admin - SAC</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="Inicio.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="Inicio.css"/>
 </head>
-<body>
-    <header>
-        <div class="header-container">
-            <a href="Index.html" class="logo-container">
-                <img src="image.png" alt="Logo SAC" class="logo">
-            </a>
-            
-            <input type="checkbox" id="menu-toggle" class="menu-toggle">
-            <label for="menu-toggle" class="menu-button">
-                <i class="fas fa-bars"></i>
-            </label>
-            
-            <nav class="main-nav">
-                <ul class="nav-list">
-                    <li><a href="Index.html" class="active"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="../Mensaje/mensaje.html"><i class="fas fa-comments"></i> Mensajes</a></li>
-                    <li><a href="../Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
-                    <li><a href="../TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
-                    <li><a href="../AdministrarUsuarios/administrar_usuarios.html"><i class="fas fa-users-cog"></i> Usuarios</a></li>
-                    <li><a href="../AdminPagos/admin_pagos.html"><i class="fas fa-cash-register"></i> Admin Pagos</a></li>
-                    <li><a href="../AdAreasComunes/administrar_areas_comunes.html"><i class="fas fa-building"></i> Áreas Comunes</a></li>
-                    <li><a href="../Perfil/perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-    
-    <main>
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Panel de Administración</h1>
-                <p class="subtitle">Bienvenido al Sistema de Administración Condominal</p>
-                <p>Gestiona todas las operaciones de tu conjunto residencial desde un solo lugar.</p>
-                <div class="cta-buttons">
-                    <a href="../AdminPagos/admin_pagos.html" class="btn primary"><i class="fas fa-cash-register"></i> Administrar Pagos</a>
-                    <a href="../AdministrarUsuarios/administrar_usuarios.html" class="btn secondary"><i class="fas fa-users-cog"></i> Gestionar Usuarios</a>
-                </div>
-            </div>
-        </section>
-        
-        <section class="quick-stats">
-            <h2 class="section-title">Resumen Rápido</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3>Residentes</h3>
-                        <p class="stat-number" id="residentes-count">0</p>
-                        <a href="../AdministrarUsuarios/administrar_usuarios.html" class="stat-link">Ver todos</a>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3>Mensajes Nuevos</h3>
-                        <p class="stat-number" id="mensajes-count">0</p>
-                        <a href="../Mensaje/mensaje.html" class="stat-link">Ver mensajes</a>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3>Pagos Pendientes</h3>
-                        <p class="stat-number" id="pagos-count">0</p>
-                        <a href="../AdminPagos/admin_pagos.html" class="stat-link">Ver pagos</a>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-bullhorn"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3>Anuncios Activos</h3>
-                        <p class="stat-number" id="anuncios-count">0</p>
-                        <a href="../TablonAnuncios/tablon_anuncios.html" class="stat-link">Ver anuncios</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section class="features">
-            <h2 class="section-title">Herramientas de Administración</h2>
-            <p class="section-subtitle">Todo lo que necesitas para gestionar eficientemente tu conjunto residencial</p>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-users-cog"></i>
-                    </div>
-                    <h3>Gestión de Usuarios</h3>
-                    <p>Administra residentes, propietarios y personal autorizado. Crea, edita o elimina cuentas según sea necesario.</p>
-                    <a href="../AdministrarUsuarios/administrar_usuarios.html" class="feature-link">Acceder <i class="fas fa-arrow-right"></i></a>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-cash-register"></i>
-                    </div>
-                    <h3>Administración de Pagos</h3>
-                    <p>Registra pagos, genera reportes y gestiona el historial financiero del conjunto residencial.</p>
-                    <a href="../AdminPagos/admin_pagos.html" class="feature-link">Acceder <i class="fas fa-arrow-right"></i></a>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-comments"></i>
-                    </div>
-                    <h3>Mensajería</h3>
-                    <p>Comunícate con los residentes, recibe y responde inquietudes o sugerencias de la comunidad.</p>
-                    <a href="../Mensaje/mensaje.html" class="feature-link">Acceder <i class="fas fa-arrow-right"></i></a>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bullhorn"></i>
-                    </div>
-                    <h3>Tablón de Anuncios</h3>
-                    <p>Publica anuncios importantes para mantener informada a toda la comunidad residencial.</p>
-                    <a href="../TablonAnuncios/tablon_anuncios.html" class="feature-link">Acceder <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-        </section>
-    </main>
-    
-    <footer>
-        <div class="footer-container">
-            <div class="footer-bottom">
-                <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+<body data-refresh-counts="30000" data-refresh-modal="60000">
+<header>
+    <div class="header-container">
+        <a href="Index.html" class="logo-container">
+            <img src="image.png" alt="Logo SAC" class="logo">
+        </a>
+
+        <input type="checkbox" id="menu-toggle" class="menu-toggle">
+        <label for="menu-toggle" class="menu-button" aria-label="Abrir menú">
+            <i class="fas fa-bars"></i>
+        </label>
+
+        <nav class="main-nav" aria-label="Navegación principal">
+            <ul class="nav-list">
+                <li><a href="Index.html" class="active"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="../Mensaje/mensaje.html"><i class="fas fa-comments"></i> Mensajes</a></li>
+                <li><a href="../Contacto/contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                <li><a href="../TablonAnuncios/tablon_anuncios.html"><i class="fas fa-bullhorn"></i> Tablón</a></li>
+                <li><a href="../AdministrarUsuarios/administrar_usuarios.html"><i class="fas fa-users-cog"></i> Usuarios</a></li>
+                <li><a href="../AdminPagos/admin_pagos.html"><i class="fas fa-cash-register"></i> Admin Pagos</a></li>
+                <li><a href="../AdAreasComunes/administrar_areas_comunes.html"><i class="fas fa-building"></i> Áreas Comunes</a></li>
+                <li><a href="../Perfil/perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Panel de Administración</h1>
+            <p class="subtitle">Bienvenido al Sistema de Administración Condominal</p>
+            <p>Gestiona todas las operaciones de tu conjunto residencial desde un solo lugar.</p>
+            <div class="cta-buttons">
+                <a href="../AdminPagos/admin_pagos.html" class="btn primary"><i class="fas fa-cash-register"></i> Administrar Pagos</a>
+                <a href="../AdministrarUsuarios/administrar_usuarios.html" class="btn secondary"><i class="fas fa-users-cog"></i> Gestionar Usuarios</a>
             </div>
         </div>
-    </footer>
-    
-    <script src="inicio.js"></script>
+    </section>
+
+    <section class="quick-stats">
+        <h2 class="section-title">Resumen Rápido</h2>
+        <div class="stats-grid">
+            <div class="stat-card stat-clickable" id="card-usuarios" role="button" tabindex="0" aria-pressed="false" aria-label="Ver usuarios">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-content">
+                    <h3>Usuarios</h3>
+                    <p class="stat-number" id="residentes-count">0</p>
+                    <a href="../AdministrarUsuarios/administrar_usuarios.html" class="stat-link">Ir a usuarios</a>
+                </div>
+            </div>
+
+            <div class="stat-card stat-clickable" id="card-mensajes" role="button" tabindex="0" aria-pressed="false" aria-label="Ver mensajes">
+                <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+                <div class="stat-content">
+                    <h3>Mensajes</h3>
+                    <p class="stat-number" id="mensajes-count">0</p>
+                    <a href="../Mensaje/mensaje.html" class="stat-link">Ir a Mensajes</a>
+                </div>
+            </div>
+
+            <div class="stat-card stat-clickable" id="card-anuncios" role="button" tabindex="0" aria-pressed="false" aria-label="Ver anuncios">
+                <div class="stat-icon"><i class="fas fa-bullhorn"></i></div>
+                <div class="stat-content">
+                    <h3>Anuncios</h3>
+                    <p class="stat-number" id="anuncios-count">0</p>
+                    <a href="../TablonAnuncios/tablon_anuncios.html" class="stat-link">Ir a Tablón</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <h2 class="section-title">Herramientas de Administración</h2>
+        <p class="section-subtitle">Todo lo que necesitas para gestionar eficientemente tu conjunto residencial</p>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-users-cog"></i></div>
+                <h3>Gestión de Usuarios</h3>
+                <p>Administra residentes, propietarios y personal autorizado. Crea, edita o elimina cuentas según sea necesario.</p>
+                <a href="../AdministrarUsuarios/administrar_usuarios.html" class="feature-link">Acceder <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-cash-register"></i></div>
+                <h3>Administración de Pagos</h3>
+                <p>Registra pagos, genera reportes y gestiona el historial financiero del conjunto residencial.</p>
+                <a href="../AdminPagos/admin_pagos.html" class="feature-link">Acceder <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-comments"></i></div>
+                <h3>Mensajería</h3>
+                <p>Comunícate con los residentes, recibe y responde inquietudes o sugerencias de la comunidad.</p>
+                <a href="../Mensaje/mensaje.html" class="feature-link">Acceder <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-bullhorn"></i></div>
+                <h3>Tablón de Anuncios</h3>
+                <p>Publica anuncios importantes para mantener informada a toda la comunidad residencial.</p>
+                <a href="../TablonAnuncios/tablon_anuncios.html" class="feature-link">Acceder <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-bottom">
+            <p>© 2024 Aplicativo Residencial. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="inicio.js"></script>
 </body>
 </html>
