@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const areaContenido = document.getElementById("areaContenido");
     const emptyStateEl = document.getElementById("emptyState");
 
-    let allMessages = []; // original
-    let filteredMessages = []; // actualmente mostradas
+    let allMessages = [];
+    let filteredMessages = [];
 
     // ====== Helpers ======
     function escapeHtml(text) {
