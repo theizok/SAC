@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const btnCrear = document.getElementById('btn-crear');
     if (btnCrear) {
         btnCrear.addEventListener('click', function () {
-            window.location.href = '../CrearPublicacion';
+            window.location.href = '../CrearPublicacion/crear_publi.html';
         });
     }
 

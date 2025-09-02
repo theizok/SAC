@@ -31,10 +31,73 @@ document.addEventListener('DOMContentLoaded', () => {
     function formatFecha(val) {
         if (!val) return '';
         try {
+            // acepta timestamps numéricos o cadenas ISO
             const d = (typeof val === 'number' || /^\d+$/.test(String(val))) ? new Date(Number(val)) : new Date(val);
             if (isNaN(d.getTime())) return String(val);
             return d.toLocaleString('es-CO', { year: 'numeric', month: 'short', day: '2-digit' });
         } catch (e) { return String(val); }
+    }
+
+    // helpers para extraer remitente de distintas posibles estructuras
+    function getRemitenteNombre(m) {
+        if (!m) return '';
+        // prioridad a los campos creados en backend
+        if (m.remitenteNombre && String(m.remitenteNombre).trim()) return String(m.remitenteNombre).trim();
+        if (m.remitente_nombre && String(m.remitente_nombre).trim()) return String(m.remitente_nombre).trim();
+
+        // propiedades planas alternativas
+        if (m.nombre && String(m.nombre).trim()) return String(m.nombre).trim();
+        if (m.remitente && String(m.remitente).trim()) return String(m.remitente).trim();
+        if (m.autor && String(m.autor).trim()) return String(m.autor).trim();
+        if (m.titulo && String(m.titulo).trim()) return String(m.titulo).trim();
+        if (m.nombre_autor && String(m.nombre_autor).trim()) return String(m.nombre_autor).trim();
+
+        // estructura con cuenta
+        try {
+            const c = m.cuenta || m.account || null;
+            if (c) {
+                if (c.nombre && String(c.nombre).trim()) return String(c.nombre).trim();
+                if (c.name && String(c.name).trim()) return String(c.name).trim();
+                // residente/propietario anidados
+                if (c.residente) {
+                    const r = c.residente;
+                    if (r.nombre && String(r.nombre).trim()) return String(r.nombre).trim();
+                    if (r.name && String(r.name).trim()) return String(r.name).trim();
+                }
+                if (c.propietario) {
+                    const p = c.propietario;
+                    if (p.nombre && String(p.nombre).trim()) return String(p.nombre).trim();
+                    if (p.name && String(p.name).trim()) return String(p.name).trim();
+                }
+                // campos alternativos dentro de cuenta
+                if (c.nombre_residente && String(c.nombre_residente).trim()) return String(c.nombre_residente).trim();
+            }
+        } catch (e) { /* ignore */ }
+
+        return '';
+    }
+
+    function getRemitenteCorreo(m) {
+        if (!m) return '';
+        // prioridad a los campos creados en backend
+        if (m.remitenteCorreo && String(m.remitenteCorreo).trim()) return String(m.remitenteCorreo).trim();
+        if (m.remitente_correo && String(m.remitente_correo).trim()) return String(m.remitente_correo).trim();
+
+        // propiedades planas alternativas
+        if (m.correo && String(m.correo).trim()) return String(m.correo).trim();
+        if (m.email && String(m.email).trim()) return String(m.email).trim();
+
+        try {
+            const c = m.cuenta || m.account || null;
+            if (c) {
+                if (c.correo && String(c.correo).trim()) return String(c.correo).trim();
+                if (c.email && String(c.email).trim()) return String(c.email).trim();
+                if (c.residente && c.residente.correo && String(c.residente.correo).trim()) return String(c.residente.correo).trim();
+                if (c.propietario && c.propietario.correo && String(c.propietario.correo).trim()) return String(c.propietario.correo).trim();
+            }
+        } catch (e) { /* ignore */ }
+
+        return '';
     }
 
     // fetch con timeout
@@ -315,21 +378,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div style="margin-top:10px" class="mensajes-list" id="mensajes-list"></div>
             `;
 
-
             const list = body.querySelector('#mensajes-list');
+
+            // renderMensajes ahora usa los helpers getRemitenteNombre/getRemitenteCorreo
             const renderMensajes = (arr) => {
                 list.innerHTML = '';
                 arr.forEach(m => {
-                    const remitente = m.nombre ?? m.remitente ?? m.autor ?? '';
-                    const correo = m.correo ?? '';
-                    const contenido = m.contenido ?? m.mensaje ?? '';
+                    const remitenteNombre = getRemitenteNombre(m) || '';
+                    const correo = getRemitenteCorreo(m) || '';
+                    const remitenteDisplay = remitenteNombre || correo || '(Sin remitente)';
+
+                    const contenido = m.contenido ?? m.mensaje ?? m.body ?? '';
                     const fecha = formatFecha(m.fecha ?? m.timestamp ?? m.createdAt);
                     const respuesta = m.respuesta ?? m.respuestaAdmin ?? '';
+
                     const div = document.createElement('div');
                     div.className = 'mensaje-item';
                     div.innerHTML = `
-                        <h4>${escapeHtml(remitente || correo || '(Sin remitente)')}</h4>
-                        <div class="meta">${escapeHtml(fecha)} ${correo ? ' • ' + escapeHtml(correo) : ''}</div>
+                        <h4>${escapeHtml(remitenteDisplay)}</h4>
+                        <div class="meta">${escapeHtml(fecha)}${correo ? ' • ' + escapeHtml(correo) : ''}</div>
                         <div class="body">${escapeHtml(contenido)}</div>
                         ${respuesta ? `<div style="margin-top:8px; padding:8px; background:#f7f7f7; border-radius:6px;"><strong>Respuesta:</strong> ${escapeHtml(respuesta)}</div>` : ''}
                     `;
@@ -344,7 +411,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const q = (e.target.value || '').toLowerCase().trim();
                 if (!q) return renderMensajes(mensajes);
                 const filtered = mensajes.filter(m => {
-                    return (String(m.nombre || '') + ' ' + String(m.correo || '') + ' ' + String(m.contenido || '')).toLowerCase().includes(q);
+                    const hay = [
+                        getRemitenteNombre(m),
+                        getRemitenteCorreo(m),
+                        m.contenido,
+                        m.mensaje,
+                        m.body,
+                        m.asunto,
+                        m.titulo
+                    ].map(x => String(x || '')).join(' ').toLowerCase();
+                    return hay.includes(q);
                 });
                 renderMensajes(filtered);
             });
