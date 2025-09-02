@@ -47,8 +47,8 @@ public class AdministradorController {
 
     //Obtener mensajes
     @GetMapping("/obtenerMensajes")
-    public List<Mensaje> getMensajes() {
-        return mensajeService.findAllMensajes();
+    public List<Map<String, Object>> getMensajes() {
+        return mensajeService.findAllMensajesConRemitente();
     }
 
     //Responder Mensajes
