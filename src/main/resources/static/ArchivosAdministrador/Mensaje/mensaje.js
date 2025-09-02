@@ -198,8 +198,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         let data = allMessages.slice();
 
         const sel = filterSelect ? filterSelect.value : 'all';
-        // si en algún punto tu backend añade 'unread' y quieres filtrar por no leídos, aquí puedes implementarlo.
-        // como pediste eliminar 'no leidos', no filtramos por eso.
 
         // búsqueda
         const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
@@ -374,7 +372,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // ---------- Enviar respuesta usando modal (robusto) ----------
+    // ---------- Enviar respuesta usando modal ----------
     if (sendReplyBtn) {
         sendReplyBtn.addEventListener('click', async (ev) => {
             ev.preventDefault();
@@ -448,7 +446,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // ---------- Buscador admin (filtrado local + debounce) ----------
+    // ---------- Buscador admin  ---------- //
     if (searchInput) {
         let debounceTimer = null;
         searchInput.addEventListener('input', (e) => {
@@ -459,7 +457,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // ---------- select filter (all / oldest) ----------
+    // ---------- select filter  ---------- //
     if (filterSelect) {
         filterSelect.addEventListener('change', () => {
             applyFilterAndRender();
