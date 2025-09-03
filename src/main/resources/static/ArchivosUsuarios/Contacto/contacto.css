@@ -92,7 +92,7 @@ header {
     transition: var(--transition);
 }
 
-.nav-list a:hover, 
+.nav-list a:hover,
 .nav-list a.active {
     color: #4fc3f7;
 }
@@ -300,12 +300,11 @@ footer {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .menu-button {
         display: block;
     }
-    
+
     .main-nav {
         position: fixed;
         top: 90px;
@@ -318,20 +317,20 @@ footer {
         transition: var(--transition);
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     }
-    
+
     .menu-toggle:checked ~ .main-nav {
         left: 0;
     }
-    
+
     .nav-list {
         flex-direction: column;
         gap: 1.5rem;
     }
-    
+
     .section-title {
         font-size: 2rem;
     }
-    
+
     .section-subtitle {
         font-size: 1rem;
     }
@@ -341,15 +340,15 @@ footer {
     .logo {
         height: 60px;
     }
-    
+
     .section-title {
         font-size: 1.8rem;
     }
-    
+
     .contact-card {
         padding: 1.5rem;
     }
-    
+
     .contact-form {
         padding: 1.5rem;
     }
