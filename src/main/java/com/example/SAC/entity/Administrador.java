@@ -17,11 +17,11 @@ public class Administrador {
     private String nombreAdministrador;
     @Column (name = "correo")
     private String correo;
-    @Column(name="documento")
+    @Column(name="documento", length =10, nullable=false)
     private String documento;
     @Column (name = "contraseña")
     private String contraseña;
-    @Column (name = "telefono")
+    @Column (name = "telefono", length=10, nullable=false)
     private String telefono;
     @Column(name ="idcuenta")
     private long idCuenta;

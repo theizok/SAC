@@ -20,9 +20,9 @@ public class Residente {
     private String correo;
     @Column (name = "contraseña")
     private String contraseña;
-    @Column(name = "telefono", unique = true, nullable = false)
+    @Column(name = "telefono", unique = true, nullable = false, length=10)
     private String telefono;
-    @Column(name = "documento", unique = true, nullable = false)
+    @Column(name = "documento", unique = true, nullable = false, length=10)
     private String documento;
     @Column(name="idcuenta")
     private long idcuenta;
