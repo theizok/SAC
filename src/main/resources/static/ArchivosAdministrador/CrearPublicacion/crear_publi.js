@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return
             }
             alert("Publicacion creada exitosamente")
+            window.location.href = '/TablonAnuncios/tablon_anuncios.html';
+
 
         }catch (error) {
             console.error("Error:", error);
@@ -51,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        //window.location.href = '/TablonAnuncios/tablon_anuncios.html';
     });
 
 

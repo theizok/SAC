@@ -51,8 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById("responseMessage").innerText = "Error de conexión";
         }
 
-
-        //window.location.href = '/TablonAnuncios/tablon_anuncios.html';
     });
 
 
