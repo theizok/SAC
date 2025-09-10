@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return
             }
             alert("Publicacion creada exitosamente")
-            window.location.href = "/TablonAnuncios/tablon_anuncios.html";
+            window.location.href = "/ArchivosAdministrador/TablonAnuncios/tablon_anuncios.html";
 
         }catch (error) {
             console.error("Error:", error);
