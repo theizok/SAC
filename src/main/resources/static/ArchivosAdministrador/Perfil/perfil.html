@@ -124,6 +124,22 @@
     </div>
 </footer>
 
+<div id="confirm-modal" class="confirm-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" aria-describedby="confirm-modal-desc">
+    <div class="confirm-modal-backdrop" data-close="true"></div>
+    <div class="confirm-modal-panel" role="document">
+        <header class="confirm-modal-header">
+            <h2 id="confirm-modal-title">Confirmar acción</h2>
+        </header>
+        <div class="confirm-modal-body">
+            <p id="confirm-modal-desc">¿Estás seguro?</p>
+        </div>
+        <footer class="confirm-modal-footer">
+            <button type="button" class="btn btn-cancel" data-action="cancel">Cancelar</button>
+            <button type="button" class="btn btn-confirm" data-action="confirm">Aceptar</button>
+        </footer>
+    </div>
+</div>
+
 <script src="perfil.js"></script>
 </body>
 </html>

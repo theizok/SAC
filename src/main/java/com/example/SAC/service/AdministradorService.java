@@ -129,6 +129,30 @@ public class AdministradorService {
         return true; // Indica que se cambió la contraseña con éxito
     }
 
+    @Transactional
+    public void eliminarAdministrador(Long idAdministrador, String passwordPlain) {
+        Administrador admin = administradorRepository.findById(idAdministrador)
+                .orElseThrow(() -> new RuntimeException("Administrador no encontrado"));
+
+        if (passwordPlain == null || passwordPlain.trim().isEmpty()) {
+            throw new RuntimeException("La contraseña no puede ser nula o vacía");
+        }
+
+        if (!passwordEncoder.matches(passwordPlain, admin.getContraseña())) {
+            throw new RuntimeException("Contraseña incorrecta");
+        }
+
+        administradorRepository.deleteById(idAdministrador);
+
+        try {
+            Long idCuenta = admin.getIdCuenta();
+            if (idCuenta != null && idCuenta > 0L) {
+                cuentaRepository.deleteById(idCuenta);
+            }
+        } catch (Exception ex) {
+        }
+    }
+
 
 
     public List<Administrador> obtenerAdministradores() {

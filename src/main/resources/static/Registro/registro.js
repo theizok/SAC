@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const registerBtn = document.getElementById('register-btn');
     const btnSpinner = document.getElementById('btn-spinner');
     const btnText = document.getElementById('btn-text');
+    const card = document.querySelector('.register-card');
 
     function showMessage(message, type = 'error', autoHide = true, timeout = 4000) {
         alertContainer.innerHTML = ''; // limpiar mensajes anteriores
@@ -19,6 +20,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (alertContainer.contains(div)) alertContainer.removeChild(div);
             }, timeout);
         }
+    }
+
+    function showBannerAndRedirect(message, type = 'success', displayMs = 2500, redirectUrl = '/InicioNoAuth/Inicio_no.html') {
+        // eliminar banner previo si existe
+        const existing = document.querySelector('.response-message');
+        if (existing) existing.remove();
+
+        const banner = document.createElement('div');
+        banner.className = `response-message ${type} show`;
+        banner.setAttribute('role', 'status');
+
+        banner.innerHTML = `
+            <div id="responseIcon">${type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>'}</div>
+            <div id="responseText">${message}</div>
+        `;
+
+        card.insertAdjacentElement('afterend', banner);
+
+        setLoading(false);
+        registerBtn.setAttribute('disabled', 'disabled');
+
+        // tiempo visible y luego redirect
+        setTimeout(() => {
+            banner.classList.remove('show');
+            setTimeout(() => {
+                if (banner.parentNode) banner.parentNode.removeChild(banner);
+                window.location.href = redirectUrl;
+            }, 220);
+        }, displayMs);
     }
 
     function clearMessages() {
@@ -157,19 +187,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Éxito
-            showMessage('Cuenta creada correctamente. Redirigiendo...', 'success', false);
-            setTimeout(() => {
-                window.location.href = '/InicioNoAuth/Inicio_no.html';
-            }, 900);
+            // Éxito: mostrar banner persistente debajo de la card y luego redirigir
+            showBannerAndRedirect('Usuario registrado correctamente', 'success', 2500, '../Login/Index.html');
 
         } catch (error) {
             console.error('Error creando la cuenta', error);
             showMessage('Error de red. Intenta de nuevo más tarde.', 'error', true, 6000);
             setLoading(false);
         } finally {
-
-            setTimeout(() => setLoading(false), 1000);
+            setTimeout(() => {
+                if (!document.querySelector('.response-message')) setLoading(false);
+            }, 1000);
         }
     });
 });

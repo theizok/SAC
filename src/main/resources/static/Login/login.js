@@ -32,7 +32,6 @@ function showMessage(text, type = "error", options = {}) {
 
     // Mostrar
     container.hidden = false;
-    // forzar reflow para animación si es necesario
     void container.offsetWidth;
     container.classList.add("show");
 
@@ -48,7 +47,6 @@ function showMessage(text, type = "error", options = {}) {
         }
     }
 
-    // Auto ocultar después de X ms (por defecto 4s). usa options.duration ms para cambiar.
     const duration = typeof options.duration === "number" ? options.duration : 4000;
     if (messageTimeout) clearTimeout(messageTimeout);
     messageTimeout = setTimeout(() => {
@@ -58,7 +56,6 @@ function showMessage(text, type = "error", options = {}) {
     }, duration);
 }
 
-// Opcional: resetear mensaje si el usuario escribe de nuevo
 document.addEventListener("DOMContentLoaded", () => {
     const inputs = document.querySelectorAll("#correo, #contraseña");
     inputs.forEach(el => {
@@ -72,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-/* ---------- submit handler mejorado ---------- */
+/* ---------- submit handler ---------- */
 document.getElementById("loginForm").addEventListener("submit", async function(event) {
     event.preventDefault();
 
@@ -115,7 +112,6 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
         showMessage("Inicio de sesión correcto. Redirigiendo...", "success", { duration: 1200 });
 
-        // pequeña demora para que se vea el mensaje (no bloqueante)
         setTimeout(() => {
             if (role === "ADMINISTRADOR") {
                 window.location.href = "/api/administrador/dashboard";

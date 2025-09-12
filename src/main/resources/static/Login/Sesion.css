@@ -142,7 +142,7 @@ body {
     transition: transform 220ms ease, opacity 220ms ease;
     opacity: 0;
     transform: translateY(-8px) scale(0.98);
-    pointer-events: none; /* mientras oculto no interfiere */
+    pointer-events: none;
     position: relative;
     z-index: 30;
     margin-top: 18px;

@@ -363,4 +363,22 @@ public class AdministradorController {
         }
     }
 
+    @PostMapping("/eliminarAdministrador")
+    public ResponseEntity<?> eliminarAdministradorPost(@RequestBody PasswordRequest request) {
+        try {
+            if (request == null || request.getIdUsuario() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "Se requiere idUsuario"));
+            }
+            if (request.getPasswordActual() == null || request.getPasswordActual().trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "La contraseña es requerida para eliminar la cuenta"));
+            }
+
+            administradorService.eliminarAdministrador(request.getIdUsuario(), request.getPasswordActual());
+            return ResponseEntity.ok(Map.of("message", "Cuenta eliminada correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
 }
