@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnSpinner = document.getElementById('btn-spinner');
     const btnText = document.getElementById('btn-text');
 
+
     function showMessage(message, type = 'error', autoHide = true, timeout = 4000) {
         alertContainer.innerHTML = ''; // limpiar mensajes anteriores
         const div = document.createElement('div');
@@ -77,11 +78,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const contrasena = document.getElementById('password').value;
         const rol = document.getElementById('rol').value;
 
+        const recaptchaToken = grecaptcha.getResponse();
+
+        if (!recaptchaToken) {
+            alert("Por favor completa el captcha");
+            return;
+        }
+
         // Crear payload base
         const payloadBase = {
             nombre,
             correo,
-            documento
+            documento,
+            telefono,
+            contrasena,
+            recaptchaToken
         };
 
         let apiUrl = '';
@@ -91,20 +102,16 @@ document.addEventListener('DOMContentLoaded', () => {
             apiUrl = '/api/register/residente';
             bodyObj = {
                 ...payloadBase,
-                telefono: telefono,
-                "contraseña": contrasena
             };
         } else {
             apiUrl = '/api/register/propietario';
             bodyObj = {
-                ...payloadBase,
-                telefonoPropietario: telefono,
-                "contraseña": contrasena
-            };
+                ...payloadBase
+            }
         }
 
         // Validación cliente
-        const check = validateForm({ nombre, documento, telefono, correo, contrasena });
+        const check = validateForm({ nombre, documento, telefono, correo, contrasena, recaptchaToken  });
         if (!check.ok) {
             showMessage(check.msg, 'error', true, 5000);
             focusField(check.field);
