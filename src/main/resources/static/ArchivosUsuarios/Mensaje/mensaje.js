@@ -220,10 +220,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function obtenerMensajesRecibidos() {
-        if (!allMessages.length) await obtenerMensajesEnviados();
-        const recibidos = (allMessages || []).filter(m => m.respuesta && String(m.respuesta).trim() !== '');
-        filteredMessages = recibidos.slice();
-        renderizarMensajes(filteredMessages);
+        let tipoRol = "/api"
+        if (rol === "residente") {
+            tipoRol = "/api/residente"
+        } else if (rol === "propietario") {
+            tipoRol = "/api/propietario"
+        }
+
+        if(!idCuenta) return;
+        try {
+            const resp = await fetch(`${tipoRol}/obtenerMensajesRecibidos?idCuenta=${encodeURIComponent(idCuenta)}`, { credentials: 'include' });
+            if (!resp.ok) throw new Error ("Error al obtener mensajes recibidos");
+            const data = await resp.json();
+            filteredMessages = Array.isArray(data) ? data : [];
+            renderizarMensajes(filteredMessages);
+        } catch (e) {
+            console.error(e);
+            clearListAndPanel();
+            if (areaTitulo) areaTitulo.innerHTML = `<div class="empty-state"><p>Error al cargar mensajes recibidos.</p></div>`;
+        }
+
     }
 
     // ====== Search (debounced) ======

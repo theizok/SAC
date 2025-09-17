@@ -10,14 +10,16 @@ public class    UsuarioDTO {
     public String documento;
     public String telefono;
     public String tipoUsuario;
+    public long idCuenta;
 
 
-    public UsuarioDTO(long id,String nombre, String correo, String documento, String telefono, String tipoUsuario) {
+    public UsuarioDTO(long id,String nombre, String correo, String documento, String telefono, String tipoUsuario, long idCuenta) {
         this.id = id;
         this.nombre = nombre;
         this.correo = correo;
         this.documento = documento;
         this.telefono = telefono;
         this.tipoUsuario = tipoUsuario;
+        this.idCuenta = idCuenta;
     }
 }

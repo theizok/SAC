@@ -77,6 +77,17 @@ public class AdministradorController {
         }
     }
 
+    //Enviar Mensajes
+    @PostMapping("/enviarMensaje")
+    public ResponseEntity<?> enviarMensaje(@RequestBody Mensaje mensaje) {
+        try {
+            mensajeService.sendMensaje(mensaje);
+            return ResponseEntity.ok(Map.of("message", "Mensaje enviado correctamente"));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        }
+    }
+
     //Usuarios General
 
     //Obtener todos los usuarios

@@ -2,13 +2,10 @@
 package com.example.SAC.entity;
 
 import java.time.LocalDateTime;
-import java.sql.Date;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Generated;
 import lombok.NoArgsConstructor;
-import org.hibernate.grammars.hql.HqlParser;
 
 @Data
 @Entity
@@ -31,18 +28,17 @@ public class Mensaje {
         @Column(name = "fecha")
         private LocalDateTime fecha;
 
-        @OneToOne
+        @ManyToOne
         @JoinColumn(name = "idcuenta")
         private Cuenta cuenta;
 
-        // nuevos campos
         @Column(name = "respuesta", columnDefinition = "TEXT")
         private String respuesta;
 
         @Column(name = "fecha_respuesta")
         private LocalDateTime fechaRespuesta;
 
-        @OneToOne
+        @ManyToOne
         @JoinColumn(name = "idcuenta_respondido")
         private Cuenta cuentaRespondido;
 }

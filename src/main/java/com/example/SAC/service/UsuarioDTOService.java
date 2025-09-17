@@ -28,7 +28,8 @@ public class UsuarioDTOService {
                     residente.getCorreo(),
                     residente.getDocumento(),
                     residente.getTelefono(),
-                    "Residente"
+                    "Residente",
+                    residente.getIdcuenta()
             ));
         });
 
@@ -39,7 +40,8 @@ public class UsuarioDTOService {
                     propietario.getCorreo(),
                     propietario.getDocumento(),
                     propietario.getTelefonoPropietario(),
-                    "Propietario"
+                    "Propietario",
+                    propietario.getIdCuenta()
             ));
         });
 
@@ -50,6 +52,7 @@ public class UsuarioDTOService {
                     ,administrador.getCorreo()
                     ,administrador.getDocumento()
                     , administrador.getTelefono(), "Administrador"
+                    , administrador.getIdCuenta()
             ));
         });
 

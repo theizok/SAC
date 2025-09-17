@@ -95,6 +95,12 @@ public class PropietarioController {
         return mensajeService.findMensajeByIdCuentaPropietario(idCuenta);
     }
 
+    //Obtener mensajes enviados por admin (Recibir mensajes pues)
+    //Mostrar mensajes recibidos por admin
+    @GetMapping("/obtenerMensajesRecibidos") public List<Map<String, Object>> obtenerMensajesRecibidos(@RequestParam long idCuenta){
+        return mensajeService.findMensajesEnviadosPorAdmin(idCuenta);
+    }
+
     // Obtener todas las áreas comunes
     @GetMapping("/obtenerAreasComunes")
     public List<AreaComun> obtenerAreasComunes() {

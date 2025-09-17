@@ -23,8 +23,6 @@ public class MensajeService {
     @Autowired
     private CuentaRepository cuentaRepository;
 
-    @Autowired
-    private MensajeRepository MensajeRepository;
 
     @Autowired
     private ResidenteRepository ResidenteRepository;
@@ -79,7 +77,6 @@ public class MensajeService {
                     .orElseThrow(() -> new RuntimeException("Cuenta respondiente no encontrada con id: " + idCuentaRespondido));
             mensaje.setCuentaRespondido(cuenta);
         }
-
         return mensajeRepository.save(mensaje);
     }
 
@@ -131,4 +128,68 @@ public class MensajeService {
 
         return salida;
     }
+
+    //Encontrar mensajes enviados por el administrador para cuenta en especifico.
+    /**
+     * Obtiene los mensajes enviados por un administrador a un usuario específico
+     * @param idCuentaDestinatario id del usuario al que se le enviaron mensajes
+     * @return lista de mapas con los mensajes
+     */
+    public List<Map<String, Object>> findMensajesEnviadosPorAdmin(Long idCuentaDestinatario) {
+        List<Mensaje> mensajes = mensajeRepository.findAll();
+        List<Map<String, Object>> salida = new ArrayList<>();
+
+        for (Mensaje m : mensajes) {
+            // 1️⃣ Verificar que el remitente sea ADMIN
+            if (m.getCuenta() == null) continue;
+            Optional<Cuenta> cuenta = cuentaRepository.findById(m.getCuenta().getIdCuenta());
+            if (cuenta.isEmpty()) continue;
+
+            if (m.getCuenta() != null && "Administrador".equalsIgnoreCase(cuenta.get().getTipoCuenta())) {
+                // 2️⃣ Verificar que el destinatario sea el usuario solicitado
+                if (m.getCuentaRespondido() != null &&
+                        Objects.equals(m.getCuentaRespondido().getIdCuenta(), idCuentaDestinatario)) {
+
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("idMensaje", m.getIdMensaje());
+                    map.put("asunto", m.getAsunto());
+                    map.put("contenido", m.getContenido());
+                    map.put("fecha", m.getFecha());
+                    map.put("respuesta", m.getRespuesta());
+                    map.put("fechaRespuesta", m.getFechaRespuesta());
+
+                    // ---------------- Remitente (Admin)
+                    map.put("remitenteNombre", "Administrador");
+
+                    // ---------------- Destinatario
+                    String destinatarioNombre = null;
+                    String destinatarioCorreo = null;
+
+                    Long idDest = m.getCuentaRespondido().getIdCuenta();
+                    Optional<Residente> optR = ResidenteRepository.findByIdcuenta(idDest);
+                    if (optR.isPresent()) {
+                        Residente r = optR.get();
+                        destinatarioNombre = r.getNombre();
+                        destinatarioCorreo = r.getCorreo();
+                    } else {
+                        Optional<Propietario> optP = PropietarioRepository.findByIdCuenta(idDest);
+                        if (optP.isPresent()) {
+                            Propietario p = optP.get();
+                            destinatarioNombre = p.getNombre();
+                            destinatarioCorreo = p.getCorreo();
+                        }
+                    }
+
+                    map.put("destinatarioNombre", destinatarioNombre);
+                    map.put("destinatarioCorreo", destinatarioCorreo);
+
+                    salida.add(map);
+                }
+            }
+        }
+
+        return salida;
+    }
 }
+
+
