@@ -26,6 +26,7 @@ import com.mercadopago.resources.preference.Preference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -61,6 +62,9 @@ public class PagoController {
     private ResidenteRepository residenteRepository;
     @Autowired
     private PropietarioRepository propietarioRepository;
+
+    @Value("${mercado.pago.api.key}")
+    private String mercadoPagoApiKey;
 
     // --------- Helpers: mapeo Pago -> PagoDTO ----------
     private PagoDTO toDTO(Pago p) {
@@ -128,7 +132,7 @@ public class PagoController {
     // ----------------- Helper: crear preferencia (hardcodeado como en la nube) -----------------
     private Preference crearPreferenciaParaPago(Pago pago) throws MPException, MPApiException {
         // Token hardcodeado (igual que en la nube)
-        MercadoPagoConfig.setAccessToken("TEST-6124805663082328-040417-a023ca85ac047fbfca3fc9fb2316df41-2045469211");
+        MercadoPagoConfig.setAccessToken(mercadoPagoApiKey);
 
         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
                 .success("https://sac-253068519041.us-central1.run.app/ArchivosUsuarios/Pago/pago.html")
